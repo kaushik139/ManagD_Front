@@ -1,25 +1,18 @@
 <template>
     <div id="main">
-      <h2>Sign Up</h2>
-      
-      
-      <!-- Name -->
-      <input type="text" v-model="name" placeholder="Enter Name" class="text" /><br>
+      <h2>Log In</h2>
       <!-- E-mail -->
       <input type="text" v-model="mail" placeholder="Enter E-mail" class="text" /><br>
-      <!-- phone -->
-      <input type="tel" v-model="phone" placeholder="Enter Phone No" 
-      class="text" pattern="[6-9]{1}[0-9]{9}"/><br>
-      <!-- Location -->
-      <input type="address" class="text" placeholder="Enter Loaction">
       <!-- Password -->
       <input type="password" v-model="pass" placeholder="Enter Password" class="text" />
       <br />
       <br />
-      <button id="b1" type="submit" v-on:click="signUp">Sign Up</button><br><br>Already a user?
-      <a href="#" @click="login">Log In</a><br />
+      <button id="b1" type="submit" v-on:click="logIn">Log In</button><br><br>Not a user?
+      <a href="#" @click="signup">Sign Up</a><br />
     </div>
   </template>
+
+
   <script>
   import axios from "axios";
   export default {
@@ -35,28 +28,41 @@
     },
   
     methods: {
+      signup() {
+        this.$router.push({ name: "signUp" });
+      },
       login() {
-        this.$router.push({ name: "logIn" });
-      },
-      signUp() {
-        if (this.name && this.mail && this.pass && this.userType) {
-          axios
-            .post("http://localhost:3300/users", {
-              email: this.mail,
-              name: this.name,
-              password: this.pass,
-              userType: this.userType,
-            })
-            .then((response) => {
-              this.message = response.data;
-              alert(this.message);
-              if(this.message != 'E-mail already Exists.')
-                  this.$router.push({ name: "login" });
-            });
-        } else {
-          alert("Please fill the required details");
-        }
-      },
+      if(this.mail=== '' || this.pass === ''){
+        alert(`Please fill all the fields.`)
+      }
+      else{
+        axios.post("http://localhost:3300/verification", {
+          email: this.mail,
+          password: this.pass,
+        })
+        .then((response) => {
+          if (response.data === "Valid user") {
+            alert("Login Successful");
+            localStorage.setItem("user-mail",this.mail);
+            this.$router.push({ name: "homePage" });
+          } else {
+            alert(response.data);
+          }
+        })
+        .catch(error => console.log(error));
+        var reslt= "";
+        axios
+      .get(`http://localhost:3300/users/${this.mail}`)
+      .then((response) => {
+        console.log(response.data)
+        reslt = response.data;
+        console.log(reslt.role)
+        localStorage.setItem('user-role',reslt.role)
+      });
+      }
+    // const role = reslt.role;
+    // localStorage.setItem("user-role", role);
+    },
     },
     mounted() {
       let user = localStorage.getItem("user-mail");
