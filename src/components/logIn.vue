@@ -22,7 +22,6 @@
         name: "",
         mail: "",
         pass: "",
-        phone:'',
         userType: "user",
       };
     },
@@ -64,7 +63,8 @@
           });
 
       }
-
+    // const role = reslt.role;
+    // localStorage.setItem("user-role", role);
     },
     },
     mounted() {
@@ -95,7 +95,6 @@
     margin-top: 50px;
     max-width: 300px;
     max-height: 600px;
-    /* background: rgb(185, 203, 248); */
   }
   #b1 {
     width: 150px;
