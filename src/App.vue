@@ -14,6 +14,12 @@ this.$router.push({name:'signUp'})
 },
 login(){
 this.$router.push({name:'login'})
+},
+memberSignup(){
+  this.$router.push({name:'memberSignup'})
+},
+dashBoard(){
+  this.$router.push({name:'dashBoard'})
 }
 
   }

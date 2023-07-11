@@ -1,6 +1,6 @@
 <template>
     <div id="main">
-      <h2>Log In</h2>
+      <h2>Member Log In</h2>
       <!-- E-mail -->
       <input type="text" v-model="mail" placeholder="Enter E-mail" class="text" /><br>
       <!-- Password -->
@@ -29,7 +29,7 @@
   
     methods: {
       signup() {
-        this.$router.push({ name: "signUp" });
+        this.$router.push({ name: "memberSignup" });
       },
       login() {
       if(this.mail=== '' || this.pass === ''){
@@ -37,7 +37,7 @@
       }
       else{
         console.log('HERE')
-        axios.post("http://localhost:3000/loginOrganisation", {
+        axios.post("http://localhost:3000/loginMember", {
           email: this.mail,
           password: this.pass,
         })
@@ -49,9 +49,7 @@
             localStorage.setItem("email",response.data.email);
             localStorage.setItem("token",response.data.token);
             localStorage.setItem("id",response.data.id);
-            localStorage.setItem("name",response.data.name);
-            localStorage.setItem("phoneNo",response.data.phoneNo);
-            this.$router.push({ name: "dashBoard" });
+            // this.$router.push({ name: "homePage" });
           } else {
             console.log(response.status)
             alert(response.data);
