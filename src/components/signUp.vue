@@ -58,9 +58,9 @@ export default {
     },
   },
   mounted() {
-    let user = localStorage.getItem("user-mail");
+    let user = localStorage.getItem("token");
     if (user) {
-      this.$router.push({ name: "homePage" });
+      this.$router.push({ name: "dashBoard" });
     }
   },
 };
