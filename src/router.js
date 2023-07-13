@@ -5,6 +5,8 @@ import memberLogin from "./components/memberLogin.vue";
 import memberSignup from "./components/memberSignup.vue";
 import dashBoard from "./components/dashboard.vue";
 import addMember from "./components/addMember.vue";
+import profile from "./components/profile.vue";
+import progress from "./components/progress.vue";
 
 const routes = [
    
@@ -16,7 +18,7 @@ const routes = [
     {
         name: 'logIn',
         component: logIn,
-        path: '/logIn'
+        path: '/login'
     },
    {
         name: 'memberLogin',
@@ -37,6 +39,16 @@ const routes = [
     name:'addMembers',
     component: addMember,
     path: '/addMember'
+   },
+   {
+    name:'profile',
+    component: profile,
+    path: '/profile'
+   },
+   {
+    name:'progress',
+    component: progress,
+    path:'/progress'
    }
 ]
 

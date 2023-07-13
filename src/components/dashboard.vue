@@ -3,21 +3,40 @@
 
         <div class="sections">
             <div class="left-col">
-                <button class="button-menu">Profile</button>
+                <button class="button-menu" @click="profile">Profile</button>
                 <button class="button-menu" @click="member">Add Member</button>
                 <button class="button-menu">Check Progress</button>
                 <button class="button-menu" @click="dashboard">Dashboard</button>
-                <button class="button-menu">Option</button>
 
             </div>
+
             <div class="right-col">
-                <div class="header">Managd</div>
+                <div class="header" style="width:100%">Managd - Organisation Dashboard</div>
+                
+                <div class="mobile-navbar">
+                    <div class="hamburger" @click="menuCollapse"><i class="fa-solid fa-bars" ></i></div>
+                    <div class="accounts accounts-mob">
+                        <i class="fa-solid fa-bell "></i>
+                        <div style="display: flex; align-items: center; gap:5px">
+                            <span>Hi! {{organisation.name}}!</span>
+                            <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
+                        </div>
+                    </div>
+                    <div class="remove-navbar-content" id="nav-content">
+                        <button class="button-menu">Profile</button>
+                        <button class="button-menu" @click="member">Add Member</button>
+                        <button class="button-menu">Check Progress</button>
+                        <button class="button-menu" @click="dashboard">Dashboard</button>
+                        <!-- <button class="button-menu">Close</button> -->
+                    </div>
+
+            </div>
                 <div class="row-one">
                     <div class="search-sec">
-                        <input class="search" type="text" placeholder="Search">
+                        <input class="search" type="text" @change="searchResults" placeholder="Search">
                         <button class="search-button"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </div>
-                    <div class="accounts">
+                    <div class="accounts accounts-lg">
                         <i class="fa-solid fa-bell "></i>
                         <div style="display: flex; align-items: center; gap:5px">
                             <span>Hi! {{organisation.name}}!</span>
@@ -44,12 +63,12 @@
                     </div>
                     <div class="view-area-right">
                         <div>
-                            <h3>Member Details</h3>
+                            <h3>Organisation Details</h3>
                         </div>
                         <div>
-                            <p>Name: {{ currentMember.name }}</p>
-                            <p>Email: {{ currentMember.email }}</p>
-                            <p>Phone Number: {{ currentMember.phoneNo }}</p>
+                            <p>Name: {{ organisation.name }}</p>
+                            <p>Email: {{ organisation.email }}</p>
+                            <p>Phone Number: {{ organisation.phoneNo }}</p>
                             <!-- <p>Tasks: {{ currentMember.phoneNo }}</p> -->
                         </div>
                     </div>
@@ -62,17 +81,50 @@
             </div>
 
         </div>
-        <!-- <div style="width:150px;height:200px;"> -->
-            <!-- <VCalendar /> -->
 
-
-        <!-- </div> -->
     </div>
   </template>
     <style scoped>
+
+    .mobile-navbar{
+        display: flex;
+        /* justify-content: space-around; */
+        /* display: none; */
+    }
+
+    .mobile-navbar-content{
+        display: flex;
+        width: 100%;
+        /* display: none; */
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    @media only screen and (min-width:993px){
+        .accounts-mob{
+            display: none;
+        }
+    }
+    @media only screen  and (min-width:993px){
+        .mobile-navbar{
+            display: none;
+        }
+    }
+    .remove-navbar-content{
+        display: none;
+    }
     .header{
         background-color: black;
         color:white;
+        font-family: 'Inknut Antiqua', serif;
+    }
+
+    @media only screen and (max-width:992px){
+        .right-col{
+            width: 100%;
+        }
     }
     .dialog{
         position:fixed;
@@ -137,6 +189,19 @@
         align-items: center;
         gap:1rem;
     }
+
+    @media only screen and (max-width:993px){
+        .accounts-lg{
+            display: none;
+        }
+    }
+
+    .accounts-mob{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
         .row-one{
             display: flex;
             margin-top: 4px;
@@ -163,12 +228,22 @@
             align-items: center;
         }
 
+        @media only screen and (max-width:992px){
+            .search-sec{
+                width:100%;
+                margin-top: 10px;
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+
         .search{
             height: 25px;
         }
         .search-button{
             height: 31px;
         }
+
 
         .dashboard-section{
             margin-top: -59.8px;
@@ -186,6 +261,7 @@
             align-items: center;
             height:98.50vh;
         }
+
         .left-col{
             width:20%;
             height: 100%;
@@ -203,6 +279,48 @@
             /* background-color: red; */
         }
 
+        @media only screen and (max-width: 992px){
+            .sections{
+                flex-direction: row;
+                padding:10px;
+                gap:15px;
+            }
+
+            .left-col{
+                display: none;
+                /* width:100%; */
+            }
+
+            .right-col{
+                width: 100%;
+            }
+
+            .fa-bell{
+                font-size: 1rem;
+            }
+
+            .fa-right-from-bracket{
+                font-size: 1rem;
+            }
+
+            .accounts{
+                font-size: 0.7rem;
+            }
+
+            .view-area{
+                flex-direction: column;
+            }
+
+            .table{
+                width: 100%;
+            }
+            .view-area-right{
+                font-size: 12px;
+                font-weight: 400;
+                margin-top: 15px;
+            }
+        }
+
         .button-menu{
             height: 7%;
             background-color: white;
@@ -213,6 +331,7 @@
             outline: inherit;
             border-radius: 10px;
             transition: 0.6s;
+            font-family: 'Inknut Antiqua', serif;
         }
         .button-menu:hover{
             background-color: antiquewhite;
@@ -235,11 +354,38 @@
         members:"",
         currentMember:{},
         organisation:{},
-        attributes: []
+        attributes: [],
+        menuCollapsed:false
       };
     },
   
     methods: {
+        profile(){
+            this.$router.push({name:"profile"})
+        },
+
+        searchResults(event){
+            console.log(event.value)
+        },
+
+        menuCollapse(){
+            if(!this.menuCollapsed){
+                const menuBody = document.getElementById("nav-content")
+                menuBody.classList.add('mobile-navbar-content');
+                menuBody.classList.remove('remove-navbar-content');
+                document.getElementsByClassName("hamburger")[0].innerHTML='<i class="fa-solid fa-xmark"></i>';
+                document.getElementsByClassName("accounts-mob")[0].style.display="none";
+
+            }else{
+                const menuBody = document.getElementById("nav-content")
+                menuBody.classList.remove('mobile-navbar-content');
+                menuBody.classList.add('remove-navbar-content');
+                document.getElementsByClassName("hamburger")[0].innerHTML='<i class="fa-solid fa-bars" ></i>';
+                document.getElementsByClassName("accounts-mob")[0].style.display="flex";
+
+            }
+            this.menuCollapsed=!this.menuCollapsed;
+        },
         dashboard(){
             this.$router.push({name:'dashBoard'})
         },
@@ -314,7 +460,7 @@
                     content:'yellow',
                     // dot:true,
                     popover:{
-                        label:this.calendar[x]._id
+                        label:this.calendar[x].title
                     },
                     dates: new Date(this.calendar[x].startDate),
                     order: 20-cnt
@@ -325,7 +471,7 @@
                     content:'green',
                     // dot:true,
                     popover:{
-                        label:this.calendar[x].orgId
+                        label:this.calendar[x].title
 
                     },
                     dates: new Date(this.calendar[x].endDate),
