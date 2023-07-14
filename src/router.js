@@ -13,7 +13,7 @@ const routes = [
     {
         name: 'dragThree',
         component: dragThree,
-        path: '/drag'
+        path: '/dragThree'
     },
    
     {

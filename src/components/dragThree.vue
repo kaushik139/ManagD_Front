@@ -1,7 +1,5 @@
 <template>
   <dragBoardHead/>
-  <button @click="Test">Test</button>
-import DragBoardHead from './dragBoardHead.vue';
   <div id="container">
     <div
       class="box"
@@ -201,7 +199,7 @@ import dragBoardHead from './dragBoardHead.vue';
 export default {
   name: "dragThree",
   components: {
-    DragBoardHead
+    dragBoardHead,
 },
   props: {},
   data() {
