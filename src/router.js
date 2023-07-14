@@ -7,8 +7,14 @@ import dashBoard from "./components/dashboard.vue";
 import addMember from "./components/addMember.vue";
 import profile from "./components/profile.vue";
 import progress from "./components/progress.vue";
+import dragThree from "./components/dragThree.vue";
 
 const routes = [
+    {
+        name: 'dragThree',
+        component: dragThree,
+        path: '/drag'
+    },
    
     {
         name:'signUp',
