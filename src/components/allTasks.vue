@@ -24,9 +24,40 @@
           <label for="firstname" class="placeholder">Description</label>
         </div>
         <div class="input-container ic1">
-          <input id="firstname" class="input" type="text" placeholder=" " />
+          <input
+            id="gitUsername"
+            class="input"
+            @change="getGit"
+            type="text"
+            placeholder=" "
+          />
           <div class="cut cut-title" style="width: 55px"></div>
-          <label for="firstname" class="placeholder">GitHub</label>
+          <label for="firstname" class="placeholder">GitHub Username</label>
+        </div>
+        <div class="input-container ic1">
+          <input
+            id="gitRepo"
+            class="input"
+            @change="getGit"
+            type="text"
+            placeholder=" "
+          />
+          <div class="cut cut-title" style="width: 55px"></div>
+          <label for="firstname" class="placeholder">GitHub Repo</label>
+        </div>
+        <div class="input-container ic1">
+          <select id="firstname" class="input" type="text" placeholder=" ">
+            <option
+              v-for="(issue, index) in issues"
+              :key="index"
+              :value="issue.number"
+            >
+              {{ issue.title }}
+            </option>
+          </select>
+          <div class="cut"></div>
+
+          <label for="firstname" class="placeholder">GitHub Repo</label>
         </div>
         <div class="input-container ic2">
           <input id="lastname" class="input" type="date" placeholder=" " />
@@ -38,6 +69,7 @@
           <div class="cut"></div>
           <label for="lastname" class="placeholder">End Date</label>
         </div>
+
         <div class="input-container ic2">
           <select
             id="lastname"
@@ -63,10 +95,25 @@
             >{{ x }},</span
           >
         </div>
+
+        <div class="input-container ic2">
+          <input
+            id="lastname"
+            class="input"
+            disabled
+            type="text"
+            placeholder=" "
+            :value="Show1"
+          />
+          <div class="cut"></div>
+          <label for="lastname" class="placeholder">Status</label>
+        </div>
+
         <button type="submit" class="submit">Submit</button>
         <button @click="close">Close</button>
       </form>
     </div>
+
     <div
       class="box"
       @drop="onDrop($event, 1)"
@@ -86,7 +133,17 @@
           <p>{{ card.description }}</p>
           <!-- <progress :value="card.progress" max="100" data-label="10%">1%</progress> -->
           <div>
-            <i class="fa-brands fa-github"></i>: <span>{{ card.github }}</span>
+            <i class="fa-brands fa-github"></i>:
+            <a
+              target="_blank"
+              v-bind:href="
+                'https://github.com/' +
+                card.githubUsername +
+                '/' +
+                card.githubRepo
+              "
+              >{{ card.githubUsername }}/{{ card.githubRepo }}</a
+            >
           </div>
           <div class="days">
             <span>{{ card.startDate.slice(0, 10).replace(/-/g, "/") }}</span>
@@ -120,26 +177,6 @@
         <!-- <h5 v-if="message1" class="message1">Task Added Successfully!</h5> -->
         <!-- <h5 v-if="message5" class="message2">Please Fill all the Fields!</h5> -->
       </div>
-      <!-- <div v-if="Show1" class="add">
-        <input
-          type="text"
-          id="task_name"
-          placeholder="Task Name"
-          v-model="this.taskName1"
-        />
-        <textarea
-          rows="3"
-          id="task_description"
-          placeholder="Task Description"
-          v-model="this.taskDescription1"
-        ></textarea>
-        <br />
-        <button type="submit" class="Button1" @click="confirm_task(1)">
-          Submit
-        </button>
-        <button type="reset" class="Button1" @click="reset(1)">Reset</button>
-        <button class="Button1" @click="cancel">Cancel</button>
-      </div> -->
     </div>
 
     <div
@@ -161,7 +198,17 @@
           <p>{{ card.description }}</p>
           <!-- <progress :value="card.progress" max="100" data-label="10%">1%</progress> -->
           <div>
-            <i class="fa-brands fa-github"></i>: <span>{{ card.github }}</span>
+            <i class="fa-brands fa-github"></i>:
+            <a
+              target="_blank"
+              v-bind:href="
+                'https://github.com/' +
+                card.githubUsername +
+                '/' +
+                card.githubRepo
+              "
+              >{{ card.githubUsername }}/{{ card.githubRepo }}</a
+            >
           </div>
           <div class="days">
             <span>{{ card.startDate.slice(0, 10).replace(/-/g, "/") }}</span>
@@ -189,32 +236,10 @@
         <!-- <br /> -->
       </div>
 
-      <div class="card_Add" @click="AddTask(1)">
+      <div class="card_Add" @click="AddTask(2)">
         <img src="../assets/plus.png" alt="plus" class="icon1" />
         <h4>Add Task</h4>
-        <!-- <h5 v-if="message1" class="message1">Task Added Successfully!</h5> -->
-        <!-- <h5 v-if="message5" class="message2">Please Fill all the Fields!</h5> -->
       </div>
-      <!-- <div v-if="Show1" class="add">
-        <input
-          type="text"
-          id="task_name"
-          placeholder="Task Name"
-          v-model="this.taskName1"
-        />
-        <textarea
-          rows="3"
-          id="task_description"
-          placeholder="Task Description"
-          v-model="this.taskDescription1"
-        ></textarea>
-        <br />
-        <button type="submit" class="Button1" @click="confirm_task(1)">
-          Submit
-        </button>
-        <button type="reset" class="Button1" @click="reset(1)">Reset</button>
-        <button class="Button1" @click="cancel">Cancel</button>
-      </div> -->
     </div>
 
     <div
@@ -236,7 +261,17 @@
           <p>{{ card.description }}</p>
           <!-- <progress :value="card.progress" max="100" data-label="10%">1%</progress> -->
           <div>
-            <i class="fa-brands fa-github"></i>: <span>{{ card.github }}</span>
+            <i class="fa-brands fa-github"></i>:
+            <a
+              target="_blank"
+              v-bind:href="
+                'https://github.com/' +
+                card.githubUsername +
+                '/' +
+                card.githubRepo
+              "
+              >{{ card.githubUsername }}/{{ card.githubRepo }}</a
+            >
           </div>
           <div class="days">
             <span>{{ card.startDate.slice(0, 10).replace(/-/g, "/") }}</span>
@@ -264,78 +299,31 @@
         <!-- <br /> -->
       </div>
 
-      <div class="card_Add" @click="AddTask(1)">
+      <div class="card_Add" @click="AddTask(3)">
         <img src="../assets/plus.png" alt="plus" class="icon1" />
         <h4>Add Task</h4>
       </div>
       <!-- <div v-if="Show1" class="add">
-        <input
-          type="text"
-          id="task_name"
-          placeholder="Task Name"
-          v-model="this.taskName1"
-        />
-        <textarea
-          rows="3"
-          id="task_description"
-          placeholder="Task Description"
-          v-model="this.taskDescription1"
-        ></textarea>
-        <br />
-        <button type="submit" class="Button1" @click="confirm_task(1)">
-          Submit
-        </button>
-        <button type="reset" class="Button1" @click="reset(1)">Reset</button>
-        <button class="Button1" @click="cancel">Cancel</button>
-      </div> -->
+          <input
+            type="text"
+            id="task_name"
+            placeholder="Task Name"
+            v-model="this.taskName1"
+          />
+          <textarea
+            rows="3"
+            id="task_description"
+            placeholder="Task Description"
+            v-model="this.taskDescription1"
+          ></textarea>
+          <br />
+          <button type="submit" class="Button1" @click="confirm_task(1)">
+            Submit
+          </button>
+          <button type="reset" class="Button1" @click="reset(1)">Reset</button>
+          <button class="Button1" @click="cancel">Cancel</button>
+        </div> -->
     </div>
-
-    <!-- <div
-      class="box"
-      @drop="onDrop($event, 4)"
-      @dragover.prevent
-      @dragenter.prevent
-    >
-      <h2>Box 4</h2>
-      <div
-        v-for="card in listFour"
-        :key="card.id"
-        class="card"
-        draggable="true"
-        @dragstart="startDrag($event, card.id)"
-      >
-        <h3>{{ card.name }}</h3>
-        <br />
-        {{ card.description }}
-      </div>
-
-      <div class="card_Add" @click="AddTask(4)">
-        <img src="../assets/plus.png" alt="plus" class="icon1">
-        <h4>Add Task</h4>
-        <h5 v-if="message4" class="message1">Task Added Successfully!</h5>
-        <h5 v-if="message8" class="message2">Please Fill all the Fields!</h5>
-      </div>
-      <div v-if="Show4" class="add">
-        <input
-          type="text"
-          id="task_name"
-          placeholder="Task Name"
-          v-model="this.taskName4"
-        />
-        <textarea
-          rows="3"
-          id="task_description"
-          placeholder="Task Description"
-          v-model="this.taskDescription4"
-        ></textarea>
-        <br />
-        <button type="submit" class="Button1" @click="confirm_task(4)">
-          Submit
-        </button>
-        <button type="reset" class="Button1" @click="reset(4)">Reset</button>
-        <button class="Button1" @click="cancel">Cancel</button>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -390,6 +378,9 @@ export default {
       organisationMembers: [],
       addedMembers: [],
       taskDialog: false,
+      issues: [],
+      githubUsername: "",
+      githubRepo: "",
     };
   },
   methods: {
@@ -400,15 +391,23 @@ export default {
       if (e.target.value === "Select") return;
       this.addedMembers.push(e.target.value);
       this.organisationMembers = this.organisationMembers.filter((x) => {
-        console.log(x.email !== e.target.value);
         return x.email !== e.target.value;
       });
-
-      console.log(this.organisationMembers);
 
       // this.organisationMembers.splice(1)
     },
 
+    getGit() {
+      axios
+        .post("http://localhost:3000/getGitHubIssues", {
+          username: document.getElementById("gitUsername").value,
+          repo: document.getElementById("gitRepo").value,
+        })
+        .then((res) => {
+          this.issues = res.data;
+          console.log(this.issues)
+        });
+    },
     submitForm(e) {
       axios
         .post("http://localhost:3000/addTask", {
@@ -416,8 +415,9 @@ export default {
           description: e.target[1].value,
           githubUsername: e.target[2].value,
           githubRepo: e.target[3].value,
-          startDate: e.target[4].value,
-          endDate: e.target[5].value,
+          githubIssue:e.target[4].value,
+          startDate: e.target[5].value,
+          endDate: e.target[6].value,
           assignees: this.addedMembers,
           orgId: localStorage.getItem("orgId"),
           createdBy: localStorage.getItem("id"),
@@ -429,27 +429,17 @@ export default {
           this.taskDialog = false;
         });
     },
-    Test() {
-      console.log(this.box);
-    },
-
+    Test() {},
     AddTask(list) {
       this.taskDialog = true;
+      console.log({ list });
       if (list === 1) {
-        this.Show1 = true;
-        this.Show2 = false;
-        this.Show3 = false;
-        this.Show4 = false;
+        this.Show1 = "Ongoing";
       } else if (list === 2) {
-        this.Show2 = true;
-        this.Show1 = false;
-        this.Show3 = false;
-        this.Show4 = false;
+        console.log("here");
+        this.Show1 = "Halted";
       } else if (list === 3) {
-        this.Show3 = true;
-        this.Show2 = false;
-        this.Show1 = false;
-        this.Show4 = false;
+        this.Show1 = "Completed";
       } else if (list === 4) {
         this.Show4 = true;
         this.Show2 = false;
@@ -458,144 +448,15 @@ export default {
       }
     },
 
-    // confirm_task(list) {
-    //   if (list === 1) {
-    //     if (this.taskName1 && this.taskDescription1) {
-    //       const newCard = {
-    //         id: crypto.randomUUID(),
-    //         name: this.taskName1,
-    //         description: this.taskDescription1,
-    //         list: 1,
-    //       };
-    //       this.box.push(newCard);
-    //       this.Show1 = false;
-    //       this.reset(1);
-    //       this.message1 = true;
-    //       setTimeout(() => {
-    //         this.message1 = false;
-    //       }, 1000);
-    //     } else {
-    //       this.message5 = true;
-    //       setTimeout(() => {
-    //         this.message5 = false;
-    //       }, 3000);
-    //     }
-    //   } else if (list === 2) {
-    //     if (this.taskName2 && this.taskDescription2) {
-    //       const newCard = {
-    //         id: crypto.randomUUID(),
-    //         name: this.taskName2,
-    //         description: this.taskDescription2,
-    //         list: 2,
-    //       };
-    //       this.box.push(newCard);
-
-    //       this.Show2 = false;
-    //       this.reset(2);
-    //       this.message2 = true;
-    //       setTimeout(() => {
-    //         this.message2 = false;
-    //       }, 1000);
-    //     } else {
-    //       this.message6 = true;
-    //       setTimeout(() => {
-    //         this.message6 = false;
-    //       }, 3000);
-    //     }
-    //   } else if (list === 3) {
-    //     if (this.taskName3 && this.taskDescription3) {
-    //       const newCard = {
-    //         id: crypto.randomUUID(),
-    //         name: this.taskName3,
-    //         description: this.taskDescription3,
-    //         list: 3,
-    //       };
-    //       this.box.push(newCard);
-
-    //       this.Show3 = false;
-    //       this.reset(3);
-    //       this.message3 = true;
-    //       setTimeout(() => {
-    //         this.message3 = false;
-    //       }, 1000);
-    //     } else {
-    //       this.message7 = true;
-    //       setTimeout(() => {
-    //         this.message7 = false;
-    //       }, 3000);
-    //     }
-    //   } else if (list === 4) {
-    //     if (this.taskName4 && this.taskDescription4) {
-    //       const newCard = {
-    //         id: crypto.randomUUID(),
-    //         name: this.taskName4,
-    //         description: this.taskDescription4,
-    //         list: 4,
-    //       };
-    //       this.box.push(newCard);
-
-    //       this.Show4 = false;
-    //       this.reset(4);
-    //       this.message4 = true;
-    //       setTimeout(() => {
-    //         this.message4 = false;
-    //       }, 1000);
-    //     } else {
-    //       this.message8 = true;
-    //       setTimeout(() => {
-    //         this.message8 = false;
-    //       }, 3000);
-    //     }
-    //   }
-    // },
-
-    // reset(list) {
-    //   if (list === 1) {
-    //     this.taskName1 = "";
-    //     this.taskDescription1 = "";
-    //   } else if (list === 2) {
-    //     this.taskName2 = "";
-    //     this.taskDescription2 = "";
-    //   } else if (list === 3) {
-    //     this.taskName3 = "";
-    //     this.taskDescription3 = "";
-    //   } else if (list === 4) {
-    //     this.taskName4 = "";
-    //     this.taskDescription4 = "";
-    //   }
-    // },
-
-    // cancel() {
-    //   this.Show1 = false;
-    //   this.Show2 = false;
-    //   this.Show3 = false;
-    //   this.Show4 = false;
-    //   this.taskName1 = "";
-    //   this.taskDescription1 = "";
-    //   this.taskName2 = "";
-    //   this.taskDescription2 = "";
-    //   this.taskName3 = "";
-    //   this.taskDescription3 = "";
-    //   this.taskName4 = "";
-    //   this.taskDescription4 = "";
-    // },
-
     startDrag(evt, card, status) {
       console.log(evt, card, status);
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("cardID", status);
-      console.log("OO");
-      console.log(card);
-      // console.log(status)
     },
 
     onDrop(evt, list) {
-      console.log("PPPPPP");
       const cardID = evt.dataTransfer.getData("cardID");
-      // const card = this.box.find((card) => card.id === cardID);
-      // card.status = list;
-      console.log("Q", cardID);
       const updatedStatus =
         list === 1 ? "Ongoing" : list === 2 ? "Halted" : "Completed";
       axios
@@ -605,14 +466,9 @@ export default {
             status: updatedStatus,
           },
         })
-        .then((res) => {
+        .then(() => {
           this.$router.go();
-          console.log(res);
         });
-      console.log("W", list);
-
-      // switch(list)
-      // console.log(card.status)
     },
   },
 
@@ -623,17 +479,16 @@ export default {
       })
       .then((res) => {
         this.organisationMembers = res.data.members;
-        console.log(this.organisationMembers);
       });
 
     axios
-      .post("http://localhost:3000/getMemberTasks", {
-        id: localStorage.getItem("id"),
+      .post("http://localhost:3000/getTasksForOrganisation", {
+        id: localStorage.getItem("orgId"),
       })
       .then((res) => {
-        this.box = res.data.taskList;
+        console.log(res);
+        this.box = res.data.tasks;
         console.log(this.box);
-        // this.confirm_task(this.list)
       });
   },
   computed: {
@@ -749,6 +604,7 @@ progress:before {
   padding: 20px;
   width: 50%;
   height: auto;
+  margin-top: 10%;
   background-color: rgb(248, 249, 250);
   box-shadow: 0px 0px 8px gray;
 }

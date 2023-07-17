@@ -57,6 +57,7 @@ export default {
                 phoneNo:e.target[2].value,
                 location:e.target[3].value,
             }
+            console.log(this.editedDetails)
             axios.patch("http://localhost:3000/editOrganisationDetails",{
                 unsanitisedId:localStorage.getItem("id"),
                 editDetails:this.editedDetails
