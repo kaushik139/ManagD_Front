@@ -37,7 +37,7 @@
       }
       else{
         console.log('HERE')
-        axios.post("http://localhost:3000/loginMember", {
+        axios.post("http://localhost:3000/memberLogin", {
           email: this.mail,
           password: this.pass,
         })
@@ -45,10 +45,14 @@
           console.log(response.status)
           if (response.status===200) {
             alert("Login Successful");
+            console.log(response.data)
             console.log(response)
             localStorage.setItem("email",response.data.email);
             localStorage.setItem("token",response.data.token);
             localStorage.setItem("id",response.data.id);
+            localStorage.setItem("orgId",response.data.orgId);
+            this.$router.push({name:'/dragThree'})
+            // console.log(localStorage.getItem('orgId'))
             // this.$router.push({ name: "homePage" });
           } else {
             console.log(response.status)

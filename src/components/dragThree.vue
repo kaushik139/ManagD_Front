@@ -1,13 +1,58 @@
 <template>
-  <dragBoardHead/>
+  <!-- <dragBoardHead/> -->
   <div id="container">
+    
+    <div class="centered" v-if="taskDialog">
+        <form class="form" @submit.prevent="submitForm">
+        <div class="title">Add Task</div>
+        <!-- <div class="subtitle">Let's create your account!</div> -->
+        <div class="input-container ic1">
+          <input id="firstname" class="input" type="text" placeholder=" " />
+          <div class="cut cut-title"></div>
+          <label for="firstname" class="placeholder">Title</label>
+        </div>
+        <div class="input-container ic1">
+          <textarea id="firstname" class="input" type="text-area" rows="4"  cols="50" placeholder=" " />
+          <div class="cut"></div>
+          <label for="firstname" class="placeholder">Description</label>
+        </div>
+        <div class="input-container ic1" >
+          <input id="firstname" class="input" type="text" placeholder=" " />
+          <div class="cut cut-title" style="width: 55px;"></div>
+          <label for="firstname" class="placeholder">GitHub</label>
+        </div>
+        <div class="input-container ic2" >
+          <input id="lastname" class="input" type="date" placeholder=" " />
+          <div class="cut"></div>
+          <label for="lastname" class="placeholder">Start Date</label>
+        </div>
+        <div class="input-container ic2">
+          <input id="lastname" class="input" type="date" placeholder=" " />
+          <div class="cut"></div>
+          <label for="lastname" class="placeholder">End Date</label>
+        </div>
+        <div class="input-container ic2">
+          <select id="lastname" class="input" type="text" placeholder=" " @change="selectMember">
+            <option>Select</option>
+
+            <option v-for="(member,index) in organisationMembers" :key="index">{{ member.email }}</option>
+          </select>
+          <div class="cut cut-members"></div>
+          <label for="lastname" class="placeholder">Assigned Members</label>
+        </div>
+        <div class="avatar-row" style="color:black;max-height: 30px; overflow-y: auto;">
+          <span class="avatar" v-for="(x,index) in addedMembers" :key="index">{{ x }},</span>
+        </div>
+        <button type="text" class="submit">Submit</button>
+      </form>
+    </div>
     <div
       class="box"
       @drop="onDrop($event, 1)"
       @dragover.prevent
       @dragenter.prevent
     >
-      <h2>Box 1</h2>
+      <h2>On Going</h2>
       <div
         v-for="card in listOne"
         :key="card.id"
@@ -24,10 +69,10 @@
       <div class="card_Add" @click="AddTask(1)">
         <img src="../assets/plus.png" alt="plus" class="icon1">
         <h4>Add Task</h4>
-        <h5 v-if="message1" class="message1">Task Added Successfully!</h5>
-        <h5 v-if="message5" class="message2">Please Fill all the Fields!</h5>
+        <!-- <h5 v-if="message1" class="message1">Task Added Successfully!</h5> -->
+        <!-- <h5 v-if="message5" class="message2">Please Fill all the Fields!</h5> -->
       </div>
-      <div v-if="Show1" class="add">
+      <!-- <div v-if="Show1" class="add">
         <input
           type="text"
           id="task_name"
@@ -46,7 +91,7 @@
         </button>
         <button type="reset" class="Button1" @click="reset(1)">Reset</button>
         <button class="Button1" @click="cancel">Cancel</button>
-      </div>
+      </div> -->
     </div>
 
     <div
@@ -55,7 +100,7 @@
       @dragover.prevent
       @dragenter.prevent
     >
-      <h2>Box 2</h2>
+      <h2>Halted</h2>
       <div
         v-for="card in listTwo"
         :key="card.id"
@@ -102,7 +147,7 @@
       @dragover.prevent
       @dragenter.prevent
     >
-      <h2>Box 3</h2>
+      <h2>Completed</h2>
       <div
         v-for="card in listThree"
         :key="card.id"
@@ -142,7 +187,7 @@
       </div>
     </div>
 
-    <div
+    <!-- <div
       class="box"
       @drop="onDrop($event, 4)"
       @dragover.prevent
@@ -187,19 +232,20 @@
         <button type="reset" class="Button1" @click="reset(4)">Reset</button>
         <button class="Button1" @click="cancel">Cancel</button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
-import dragBoardHead from './dragBoardHead.vue';
+import axios from "axios";
+// import dragBoardHead from './dragBoardHead.vue';
 
 
 export default {
   name: "dragThree",
   components: {
-    dragBoardHead,
+    // dragBoardHead,
 },
   props: {},
   data() {
@@ -227,22 +273,65 @@ export default {
       boxNo: "",
       cardID: "",
       id: "",
-      list: "",
+      list:[],
       box: ref([]),
       dragOptions: {
         animation: 400,
         group: "box1",
         handle: ".card",
       },
+      title:"",
+      description:"",
+      startDate:new Date(),
+      endDate:new Date(),
+      assignedMembers:[],
+      organisationMembers:[],
+      addedMembers:[],
+      taskDialog:false
     };
   },
   methods: {
+
+    selectMember(e){
+      if(e.target.value==='Select') return;
+      this.addedMembers.push(e.target.value);
+      this.organisationMembers = this.organisationMembers.filter((x)=>{
+        console.log(x.email!==e.target.value)
+        return x.email!==e.target.value
+
+      })
+
+      console.log(this.organisationMembers)
+
+      // this.organisationMembers.splice(1)
+    },
+
+    submitForm(e){
+      axios.post("http://localhost:3000/addTask",{
+        title:e.target[0].value,
+        description: e.target[1].value,
+        github: e.target[2].value,
+        startDate: e.target[3].value,
+        endDate: e.target[4].value,
+        assignees: this.addedMembers,
+        orgId:localStorage.getItem('orgId'),
+        createdBy:localStorage.getItem('id'),
+        status:"Ongoing",
+        progress:0
+      })
+      .then((res)=>{
+        alert(res);
+        this.taskDialog=false;
+
+      })
+    },
     Test(){
       console.log(this.box);
     },
 
 
     AddTask(list) {
+      this.taskDialog=true
       if (list === 1) {
         this.Show1 = true;
         this.Show2 = false;
@@ -394,6 +483,7 @@ export default {
       evt.dataTransfer.setData("cardID", card);
       console.log(card);
       console.log(this.box);
+
     },
 
     onDrop(evt, list) {
@@ -401,8 +491,25 @@ export default {
       const card = this.box.find((card) => card.id === cardID);
       card.list = list;
     },
+
   },
 
+  mounted(){
+      axios.post("http://localhost:3000/getAllMembers",{
+        id:localStorage.getItem('orgId')
+      })
+      .then((res)=>{
+        this.organisationMembers=res.data.members;
+        console.log(this.organisationMembers)
+      })
+
+      axios.post("http://localhost:3000/getMemberTasks",{
+        id: localStorage.getItem('id')
+      }).then((res)=>{
+        this.list=res.data;
+        this.confirm_task(this.list)
+      })
+    },
   computed: {
     listOne() {
       return this.box.filter((item) => item.list === 1);
@@ -422,33 +529,191 @@ export default {
 
 
 <style scoped>
+
+.avatar-row{
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 10px;
+  margin-top: 10px;
+}
+
+.form {
+  background-color: #15172b;
+  border-radius: 20px;
+  box-sizing: border-box;
+  padding: 20px;
+  width: 50%;
+  height:auto;
+  background-color: rgb(248,249,250);
+  box-shadow: 0px 0px 8px gray;
+}
+
+.title {
+  color: #000;
+  font-family: sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.subtitle {
+  color: #000;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.input-container {
+  min-height: 50px;
+  position: relative;
+  width: 100%;
+}
+
+.ic1 {
+  margin-top: 20px;
+}
+
+.ic2 {
+  margin-top: 20px;
+}
+
+.input {
+  background-color: rgb(207, 207, 207);
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: black;
+  font-size: 14px;
+  min-height: 50px;
+  position: relative;
+  outline: 0;
+  padding: 2px 10px 0;
+  width: 100%;
+}
+
+.cut {
+  background-color: rgb(248,249,250);
+  border-radius: 10px;
+  height: 20px;
+  left: 20px;
+  position: absolute;
+  top: -20px;
+  transform: translateY(0);
+  transition: transform 200ms;
+  width: 76px;
+}
+
+.cut-members{
+  width: 120px;
+}
+
+.cut-title{
+  width: 40px;
+}
+
+.cut-short {
+  width: 50px;
+}
+
+.input:focus ~ .cut,
+.input:not(:placeholder-shown) ~ .cut {
+  transform: translateY(8px);
+}
+
+.placeholder {
+  color: #65657b;
+  font-family: sans-serif;
+  left: 20px;
+  line-height: 14px;
+  pointer-events: none;
+  position: absolute;
+  transform-origin: 0 50%;
+  transition: transform 200ms, color 200ms;
+  top: 20px;
+}
+
+.input:focus ~ .placeholder,
+.input:not(:placeholder-shown) ~ .placeholder {
+  transform: translateY(-30px) translateX(10px) scale(0.75);
+}
+
+.input:not(:placeholder-shown) ~ .placeholder {
+  color: #808097;
+}
+
+.input:focus ~ .placeholder {
+  color: #504DFF;
+}
+
+.submit {
+  background-color: #08d;
+  border-radius: 12px;
+  border: 0;
+  box-sizing: border-box;
+  color: #eee;
+  cursor: pointer;
+  font-size: 18px;
+  height: 50px;
+  margin-top: 38px;
+  /* // outline: 0; */
+  text-align: center;
+  width: 100%;
+}
+
+.submit:active {
+  background-color: #06b;
+}
+
+.centered{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+
 #container {
   margin-top: 5%;
   justify-content: center;
   display: grid;
-  grid-template-columns: 24% 24% 24% 24%;
+  grid-template-columns: 30% 30% 30%;
   align-items: flex-start;
 }
 .box {
   border-radius: 7px;
   text-align: center;
   margin: 5px;
-  background-color: #9b9b9b;
+  background-color: #504DFF !important;
+  color:white;
 }
 .card {
-  background-color: rgb(216, 213, 213);
-  border: 3px solid #9b9b9b;
+  background-color: #9ec5fe;
+  border: 3px solid #9ec5fe;
   border-radius: 7px;
   min-height: 40px;
 }
 .card_Add {
-  background-color: rgb(216, 213, 213);
-  border: 3px solid #9b9b9b;
+  background-color: #9ec5fe;
+  border: 3px solid #504DFF;
+  border-top:none;
   border-radius: 7px;
-  display: grid;
-  grid-template-columns: 30% 70%;
+  /* display: grid; */
+  /* grid-template-columns: 30% 70%; */
   height: 40px;
   justify-content: left;
+  display: flex;
+  justify-content: center;
+  gap:8px;
+}
+
+.card_Add:hover{
+  cursor: pointer;
+  background-color: #87b1f0;
 }
 .message1 {
   color: rgb(0, 26, 255);
