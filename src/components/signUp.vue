@@ -48,12 +48,7 @@ export default {
           })
           .then((response) => {
             this.message = response.data;
-            alert('Sign Up Successful! Welcome to ManagD!');
-            localStorage.setItem('id',response.data.id);
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('email',response.data.email);
-            localStorage.setItem('name',this.name);
-            localStorage.setItem('phoneNo',this.phone);
+            alert(this.message);
             if(this.message != 'E-mail already Exists.')
                 this.$router.push({ name: "login" });
           });
