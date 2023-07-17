@@ -43,7 +43,7 @@
         .then((response) => {
           console.log(response.status)
           if (response.status===200) {
-            alert("Login Successful");
+            alert("Login Successful!");
             console.log(response)
             localStorage.setItem("email",response.data.email);
             localStorage.setItem("token",response.data.token);
