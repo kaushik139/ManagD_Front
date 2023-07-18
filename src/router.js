@@ -8,7 +8,8 @@ import addMember from "./components/addMember.vue";
 import profile from "./components/profile.vue";
 import progress from "./components/progress.vue";
 import dragThree from "./components/dragThree.vue";
-
+import getTasksForOrganisation from "./components/allTasks.vue"
+import taskDetail from "./components/taskDetail.vue"
 const routes = [
     {
         name: 'dragThree',
@@ -55,6 +56,16 @@ const routes = [
     name:'progress',
     component: progress,
     path:'/progress'
+   },
+   {
+    name:'getTasksForOrganisation',
+    component: getTasksForOrganisation,
+    path:'/alltasks'
+   },
+   {
+    name:'task',
+    component: taskDetail,
+    path:'/task/:id'
    }
 ]
 
