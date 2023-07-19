@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <h2>Log In</h2>
+    <h2>Organisation Log In</h2>
     <!-- E-mail -->
     <input
       type="text"

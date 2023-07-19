@@ -46,6 +46,7 @@
     <br />
     <button id="b1" type="submit" v-on:click="signUp">Sign Up</button
     ><br /><br />Already a user? <a href="#" @click="login">Log In</a><br />
+    For Organisations <a href="#" @click="oSignUp">Organisation SignUp</a>
   </div>
 </template>
 <script>
@@ -64,6 +65,9 @@ export default {
   methods: {
     login() {
       this.$router.push({ name: "memberLogin" });
+    },
+    oSignUp(){
+      this.$router.push({name: "signUp"})
     },
     signUp() {
       if (this.name && this.mail && this.pass && this.phone) {
@@ -84,7 +88,7 @@ export default {
             localStorage.setItem("phoneNo",response.data.phoneNo);
             localStorage.setItem("orgId", response.data.orgId);
             if (this.message != "E-mail already Exists.")
-              this.$router.push({ name: "login" });
+              this.$router.push({ name: "memberProfile" });
           });
       } else {
         alert("Please fill the required details");
