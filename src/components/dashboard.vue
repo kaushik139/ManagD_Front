@@ -6,6 +6,7 @@
         <button class="button-menu" @click="member">Add Member</button>
         <button class="button-menu" @click="progress">Check Progress</button>
         <button class="button-menu" @click="dashboard">Dashboard</button>
+        <button class="button-menu" @click="kanban">Kanban Board</button>
       </div>
 
       <div class="right-col">
@@ -31,6 +32,7 @@
               Check Progress
             </button>
             <button class="button-menu" @click="dashboard">Dashboard</button>
+            <button class="button-menu" @click="kanban">Kanban Board</button>
           </div>
         </div>
         <div class="row-one">
@@ -57,7 +59,7 @@
           <div style="overflow-x: auto" class="table">
             <div style="width: 100%">Current Members</div>
 
-            <table style="border-radius: 10px;">
+            <table style="border-radius: 10px">
               <tr>
                 <th>Name</th>
                 <th>Email</th>
@@ -94,15 +96,18 @@
   </div>
 </template>
 <style scoped>
-
-tr{
-    border-radius: 10px;
+/* tr {
+  border-radius: 10px;
 }
 
-td{
-    border-radius: 10px;
-}
+td {
+  border-radius: 10px;
+} */
 
+table{
+  border-collapse: collapse;
+  border-radius: 10px;
+}
 .mobile-navbar {
   display: flex;
   /* justify-content: space-around; */
@@ -371,11 +376,14 @@ export default {
   },
 
   methods: {
+    kanban(){
+      this.$router.push({name:'orgKanban'})
+    },
     profile() {
       this.$router.push({ name: "profile" });
     },
-    progress(){
-        this.$router.push({name:"progress"})
+    progress() {
+      this.$router.push({ name: "progress" });
     },
     searchResults(event) {
       console.log(event.value);
@@ -446,10 +454,10 @@ export default {
       .then((res) => {
         this.calendar = res.data.tasks;
         let cnt = 0;
-        console.log(this.calendar)
+        console.log(this.calendar);
         let sample = [];
         for (var x in this.calendar) {
-        //   console.log(this.calendar[x]);
+          //   console.log(this.calendar[x]);
           const startAttribute = {
             key: x,
             content: "yellow",
@@ -460,10 +468,18 @@ export default {
             order: 20 - cnt,
           };
           cnt++;
-          const decideColor = new Date(this.calendar[x].endDate).getTime()<new Date().getTime()
+          const decideColor =
+            new Date(this.calendar[x].endDate).getTime() < new Date().getTime();
           const endAttribute = {
             key: x + cnt + 100,
-            content: this.calendar[x].status==='Completed'?'green':this.calendar[x].status==='Ongoing'?decideColor?'red':'blue':'orange',
+            content:
+              this.calendar[x].status === "Completed"
+                ? "green"
+                : this.calendar[x].status === "Ongoing"
+                ? decideColor
+                  ? "red"
+                  : "blue"
+                : "orange",
             // dot:true,
             popover: {
               label: this.calendar[x].title,

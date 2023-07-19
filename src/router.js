@@ -12,6 +12,7 @@ import progress from "./components/progress.vue";
 import dragThree from "./components/dragThree.vue";
 import getTasksForOrganisation from "./components/allTasks.vue"
 import taskDetail from "./components/taskDetail.vue"
+import orgKanban from "./components/orgKanban.vue"
 
 const routes = [
     {
@@ -79,6 +80,11 @@ const routes = [
     name:'task',
     component: taskDetail,
     path:'/task/:id'
+   },
+   {
+    name:'orgKanban',
+    component: orgKanban,
+    path:'/orgKanban'
    }
 ]
 
