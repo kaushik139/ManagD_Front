@@ -2,7 +2,7 @@
   <div class="profile">
     <div class="sections">
       <div class="left-col">
-        <button class="button-menu">Profile</button>
+        <button class="button-menu" @click="profile">Profile</button>
         <button class="button-menu" @click="Oragnisations">Organisations</button>
         <button class="button-menu">Check Progress</button>
         <button class="button-menu" @click="dashboard">Dashboard</button>
@@ -47,7 +47,7 @@
             </div>
           </div>
           <div class="remove-navbar-content" id="nav-content">
-            <button class="button-menu">Profile</button>
+            <button class="button-menu" @click="profile">Profile</button>
             <button class="button-menu" @click="Oragnisations">Organisations</button>
             <button class="button-menu">Check Progress</button>
             <button class="button-menu" @click="dashboard">Dashboard</button>
@@ -131,7 +131,7 @@
             <p>Name: {{ organisation.name }}</p>
             <p>Phone Number: {{ organisation.phoneNo }}</p>
             <p>Email: {{ organisation.email }}</p>
-            <!-- <p>Location: {{ organisation.location }}</p> -->
+           
           </div>
 
           <div>Current Organisation:</div>
@@ -176,6 +176,9 @@ export default {
     opened() {
       this.dialogOpen = true;
     },
+    profile() {
+      this.$router.push({ name: "memberProfile" });
+    },
     menuCollapse() {
       if (!this.menuCollapsed) {
         const menuBody = document.getElementById("nav-content");
@@ -214,6 +217,24 @@ export default {
       this.$router.push({name: "orgView"})
     },
 
+getMemberDetails(){
+
+ 
+  axios
+      .post("http://localhost:3000/getMemberDetails", {
+        id: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email"),
+      })
+      .then((res) => {
+        this.member = res.data.member;
+        console.log();
+        this.notifications = res.data.member.notifications;
+        this.organisation = res.data.member;
+      })
+
+},
+
     logout() {
       localStorage.removeItem("token");
       localStorage.removeItem("email");
@@ -227,6 +248,8 @@ export default {
     if (!this.token) {
       this.$router.push({ name: "memberLogin" });
     }
+
+    this.getMemberDetails();
     // axios
     //   .post("http://localhost:3000/getOrganisationDetails", {
     //     unsanitisedId: localStorage.getItem("id"),
@@ -238,37 +261,6 @@ export default {
     //   });
 
     // console.log(localStorage.getItem("id"));
-
-    // axios
-    //   .post("http://localhost:3000/getAllMembers", {
-    //     id : this.id,
-    //   })
-    //   .then((res) => {
-    //     this.currentMembers = res.data.members;
-        // console.log(this.currentMembers);
-    //   });
-    // console.log( this.token );
-
-
-    axios
-      .post("http://localhost:3000/getMemberDetails", {
-        id: localStorage.getItem("id"),
-        token: localStorage.getItem("token"),
-        email: localStorage.getItem("email"),
-      })
-      .then((res) => {
-        this.notifications = res.data.member.notifications;
-        this.organisation = res.data.member;
-      })
-    //   .catch(() => {
-    //     alert("Session Expired! Please relogin again.");
-    //     localStorage.removeItem("email");
-    //     localStorage.removeItem("id");
-    //     localStorage.removeItem("token");
-    //     localStorage.removeItem("name");
-    //     localStorage.removeItem("phoneNo");
-    //     this.$router.push({ name: "memberLogin" });
-    //   });
   },
 };
 </script>

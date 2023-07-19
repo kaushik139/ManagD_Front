@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="remove-navbar-content" id="nav-content">
-                        <button class="button-menu">Profile</button>
+                        <button class="button-menu" @click="profile">Profile</button>
                         <button class="button-menu" @click="member1">Organisations</button>
                         <button class="button-menu">Check Progress</button>
                         <button class="button-menu" @click="dashboard">Dashboard</button>
