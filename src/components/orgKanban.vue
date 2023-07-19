@@ -1,5 +1,9 @@
 <template>
   <!-- <dragBoardHead/> -->
+  <div class="kanban-header">
+    <div>ManagD - {{ organisationName }} Kanban Board</div>
+    <div class="kanban-header-icons"><i class="fa-solid fa-house" @click="home"></i></div>
+  </div>
   <div id="container">
     <div class="centered" v-if="taskDialog">
       <!-- <button>X</button> -->
@@ -115,7 +119,7 @@
     </div>
 
     <div
-      class="box"
+      class="box box-on"
       @drop="onDrop($event, 1)"
       @dragover.prevent
       @dragenter.prevent
@@ -180,12 +184,12 @@
     </div>
 
     <div
-      class="box"
+      class="box box-halt"
       @drop="onDrop($event, 2)"
       @dragover.prevent
       @dragenter.prevent
     >
-      <h2>On Going</h2>
+      <h2>Halted</h2>
       <div
         v-for="(card, index) in listTwo"
         :key="card._id"
@@ -243,12 +247,13 @@
     </div>
 
     <div
-      class="box"
+      class="box box-complete"
+      :key="disp"
       @drop="onDrop($event, 3)"
       @dragover.prevent
       @dragenter.prevent
     >
-      <h2>On Going</h2>
+      <h2>Completed</h2>
       <div
         v-for="(card, index) in listThree"
         :key="card._id"
@@ -311,6 +316,7 @@
 import { ref } from "vue";
 import axios from "axios";
 // import dragBoardHead from './dragBoardHead.vue';
+const disp = ref(0);
 
 export default {
   name: "dragThree",
@@ -361,6 +367,8 @@ export default {
       issues: [],
       githubUsername: "",
       githubRepo: "",
+      organisationName: "",
+      // disp:0
     };
   },
   methods: {
@@ -385,7 +393,7 @@ export default {
         })
         .then((res) => {
           this.issues = res.data;
-          console.log(this.issues)
+          console.log(this.issues);
         });
     },
     submitForm(e) {
@@ -395,14 +403,14 @@ export default {
           description: e.target[1].value,
           githubUsername: e.target[2].value,
           githubRepo: e.target[3].value,
-          githubIssue:e.target[4].value,
+          githubIssue: e.target[4].value,
           startDate: e.target[5].value,
           endDate: e.target[6].value,
           assignees: this.addedMembers,
           orgId: localStorage.getItem("id"),
           createdBy: localStorage.getItem("id"),
           status: "Ongoing",
-          progress: 0, 
+          progress: 0,
         })
         .then((res) => {
           alert(res);
@@ -433,6 +441,7 @@ export default {
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("cardID", status);
+      disp.value++;
     },
 
     onDrop(evt, list) {
@@ -447,9 +456,22 @@ export default {
           },
         })
         .then(() => {
-          this.$router.go();
+          // this.$router.go();
+          axios
+            .post("http://localhost:3000/getTasksForOrganisation", {
+              id: localStorage.getItem("id"),
+            })
+            .then((res) => {
+              console.log(res);
+              this.box = res.data.tasks;
+              console.log(this.box);
+              disp.value++;
+            });
         });
     },
+    home(){
+        this.$router.push({name:"dashBoard"})
+    }
   },
 
   mounted() {
@@ -470,6 +492,8 @@ export default {
         this.box = res.data.tasks;
         console.log(this.box);
       });
+
+    this.organisationName = localStorage.getItem("name");
   },
   computed: {
     listOne() {
@@ -491,6 +515,29 @@ export default {
 </script>
 
 <style scoped>
+.kanban-header {
+  margin-top: -60px;
+  font-weight: 900;
+  font-size: 1.4rem;
+  font-family: "Nunito", sans-serif !important;
+  background-color: #000;
+  color: white;
+  box-shadow: 0px 0px 5px gray;
+  padding: 10px;
+  /* display: flex;
+  justify-content: center; */
+}
+
+.kanban-header div {
+  display: inline-block;
+}
+
+.kanban-header-icons {
+  /* right:0; */
+  float: right;
+  /* margin-right: auto; */
+}
+
 .card {
   background-color: #9ec5fe;
   border: 3px solid blue;
@@ -728,10 +775,21 @@ progress:before {
   border-radius: 7px;
   text-align: center;
   margin: 5px;
-  background-color: #504dff !important;
   color: white;
+    font-family: "Nunito", sans-serif;
 }
 
+.box-complete{
+  background-color: rgb(79,197,86);
+
+}
+.box-halt{
+    background-color: rgb(247,180,68);
+}
+
+.box-on{
+    background-color: rgb(85,122,203);
+}
 .card_Add {
   background-color: #9ec5fe;
   border: 3px solid #504dff;

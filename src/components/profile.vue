@@ -162,6 +162,9 @@
     box-shadow: 0px 0px 5px gray;
 }
 
+table{
+  border-collapse: collapse;
+}
 .edit-btn {
   align-self: start;
   background: none;

@@ -130,23 +130,23 @@
         >
           <div class="chart-area">
             <div>
-              <Line id="my-line-id" :options="lineOptions" :data="lineData" />
+              <Line id="my-line-id" :options="lineOptions" :data="lineData" :key="comp" />
             </div>
             <div>
-              <Line id="my-lin" :options="lineOptions" :data="lineData2" />
+              <Line id="my-lin" :options="lineOptions" :data="lineData2" :key="hlt"/>
             </div>
           </div>
           <div class="chart-area">
             <div>
-              <Line id="my-lin" :options="lineOptions" :data="lineData3" />
+              <Line id="my-lin" :options="lineOptions" :data="lineData3" :key="ong"/>
             </div>
             <div>
-              <Line id="my-lin" :options="lineOptions" :data="lineData4" />
+              <Line id="my-lin" :options="lineOptions" :data="lineData4" :key="del"/>
             </div>
           </div>
           <div class="chart-area">
             <div style="width: 70%">
-              <Line id="my-lin" :options="lineOptions" :data="lineData5" />
+              <Line id="my-lin" :options="lineOptions" :data="lineData5" :key="comp"/>
             </div>
           </div>
         </div>
@@ -567,6 +567,10 @@ export default {
       currentMembers: [],
       notifications: [],
       membersList: [],
+      comp:false,
+      hlt:false,
+      del:false,
+      ong:false,
       //   months:[0,0,0,0,0,0,20,0,0,0,0,0],
 
       options: {
@@ -755,18 +759,112 @@ export default {
 
   methods: {
     selecterchange(e) {
+
       console.log(e.target.value);
       const member = this.membersList[e.target.value];
-      console.log(member);
+      console.log({member});
       const taskArray = [];
       member.tasks.map((x) => {
+        console.log({x})
         axios
           .post("http://localhost:3000/getTask", {
             id: x,
           })
           .then((res) => {
             taskArray.push(res);
-            console.log(taskArray);
+            const onGoing = [];
+            const completed = [];
+            const halted = [];
+            const delayed = [];
+            for (var i = 0; i < taskArray.length; i++) {
+              if (taskArray[i].data.task.status === "Ongoing") {
+                onGoing.push(taskArray[i]);
+              } else if (taskArray[i].data.task.status === "Completed") {
+                completed.push(taskArray[i]);
+              } else if (taskArray[i].data.task.status === "Halted") {
+                halted.push(taskArray[i]);
+              } else {
+                delayed.push(taskArray[i]);
+              }
+            }
+
+            // console.
+            // log({onGoing:onGoing})
+            console.log({completed});
+            const monthComplete = new Map();
+            const monthHalted = new Map();
+            const monthOngoing = new Map();
+            const monthDelayed = new Map();
+            completed.map((x) => {
+              console.log({X:x})
+              if (!monthComplete.get(new Date(x.data.task.endDate).getMonth())) {
+                monthComplete.set(new Date(x.data.task.endDate).getMonth(), 1);
+              } else {
+                const value =
+                  monthComplete.get(new Date(x.data.task.endDate).getMonth()) + 1;
+                console.log("V", value);
+                monthComplete.set(new Date(x.data.task.endDate).getMonth(), value);
+              }
+            });
+
+            onGoing.map((x) => {
+              if (!monthOngoing.get(new Date(x.data.task.endDate).getMonth())) {
+                monthOngoing.set(new Date(x.data.task.endDate).getMonth(), 1);
+              } else {
+                const value =
+                  monthOngoing.get(new Date(x.data.task.endDate).getMonth()) + 1;
+                monthOngoing.set(new Date(x.data.task.endDate).getMonth(), value);
+              }
+            });
+
+            halted.map((x) => {
+              if (!monthHalted.get(new Date(x.data.task.endDate).getMonth())) {
+                monthHalted.set(new Date(x.data.task.endDate).getMonth(), 1);
+              } else {
+                const value =
+                  monthHalted.get(new Date(x.data.task.endDate).getMonth()) + 1;
+                monthHalted.set(new Date(x.data.task.endDate).getMonth(), value);
+              }
+            });
+
+            delayed.map((x) => {
+              if (!monthDelayed.get(new Date(x.data.task.endDate).getMonth())) {
+                monthDelayed.set(new Date(x.data.task.endDate).getMonth(), 1);
+              } else {
+                const value =
+                  monthDelayed.get(new Date(x.data.task.endDate).getMonth()) + 1;
+                monthDelayed.set(new Date(x.data.task.endDate).getMonth(), value);
+              }
+            });
+
+            console.log({month:monthComplete})
+
+            monthComplete.forEach((value, key) => {
+              this.lineData.datasets[0].data[key] = value;
+              this.lineData5.datasets[0].data[key] = value;
+            });
+
+            console.log("LD",this.lineData)
+
+            monthHalted.forEach((value, key) => {
+              this.lineData2.datasets[0].data[key] = value;
+              this.lineData5.datasets[1].data[key] = value;
+            });
+            monthOngoing.forEach((value, key) => {
+              this.lineData3.datasets[0].data[key] = value;
+              this.lineData5.datasets[2].data[key] = value;
+            });
+            monthDelayed.forEach((value, key) => {
+              this.lineData4.datasets[0].data[key] = value;
+              this.lineData5.datasets[3].data[key] = value;
+            });
+
+            console.log({monthHalted})
+            this.comp=!this.comp;
+            this.hlt=!this.hlt;
+            this.del=!this.del;
+            this.ong=!this.ong;
+            // console.log({halted:halted})
           });
       });
     },
@@ -849,7 +947,7 @@ export default {
     if (!token) {
       this.$router.push({ name: "signUp" });
     }
- 
+
     axios
       .post("http://localhost:3000/getTasksForOrganisation", {
         id: localStorage.getItem("id"),
@@ -1029,7 +1127,7 @@ export default {
       .then((res) => {
         console.log(res);
         this.membersList = res.data.members;
-        console.log(this.membersList);
+        // console.log(this.membersList);
       });
 
     axios
