@@ -1,30 +1,36 @@
 <template>
-
-    <div class="container">
-        <form @submit="changed">
-            <div class="row">
-                <h4>Edit Profile</h4>
-                <div class="input-group input-group-icon"><input type="text" :value="organisation.name" />
-                    <div class="input-icon"><i class="fa fa-user"></i></div>
-                </div>
-                <div class="input-group input-group-icon"><input type="email" placeholder="Email Adress" :value="organisation.email"/>
-                    <div class="input-icon"><i class="fa fa-envelope"></i></div>
-                </div>
-                <div class="input-group input-group-icon"><input type="tel" placeholder="Telephone" :value="organisation.phoneNo"/>
-                    <div class="input-icon"><i class="fa-solid fa-phone"></i></div>
-                </div>
-                <div class="input-group input-group-icon"><input type="text" placeholder="Location" :value="organisation.location"/>
-                    <div class="input-icon"><i class="fa-solid fa-location-dot"></i></div>
-                </div>
-                <div class="input-group input-group-icon"><input type="password" placeholder="Password" />
-                    <div class="input-icon"><i class="fa fa-key"></i></div>
-                </div>
-                <button type="submit">Submit</button>
-
-            </div>
-        </form>
-
-    </div>
+  <div class="container">
+    <form @submit="changed">
+      <div class="row">
+        <h4>Edit Profile</h4>
+        <div class="input-group input-group-icon">
+          <input type="text" :value="entity.name" />
+          <div class="input-icon"><i class="fa fa-user"></i></div>
+        </div>
+        <div class="input-group input-group-icon">
+          <input
+            type="email"
+            placeholder="Email Adress"
+            :value="entity.email"
+          />
+          <div class="input-icon"><i class="fa fa-envelope"></i></div>
+        </div>
+        <div class="input-group input-group-icon">
+          <input type="tel" placeholder="Telephone" :value="entity.phoneNo" />
+          <div class="input-icon"><i class="fa-solid fa-phone"></i></div>
+        </div>
+        <div class="input-group input-group-icon" v-if="isLocationVisible">
+          <input type="text" placeholder="Location" :value="entity.location" />
+          <div class="input-icon"><i class="fa-solid fa-location-dot"></i></div>
+        </div>
+        <div class="input-group input-group-icon">
+          <input type="password" placeholder="Password" />
+          <div class="input-icon"><i class="fa fa-key"></i></div>
+        </div>
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
 </template>
 <script>
 import axios from "axios";
@@ -37,6 +43,7 @@ export default {
             email:'',
             phoneNo:'',
             location:'',
+            entity: {},
             organisation: {},
             currentMembers:[],
             notifications:[],
@@ -45,7 +52,8 @@ export default {
                 email:'',
                 phoneNo:0,
                 location:''
-            }
+            },
+            isLocationVisible: false,
         };
     },
     methods: {
@@ -57,7 +65,40 @@ export default {
                 phoneNo:e.target[2].value,
                 location:e.target[3].value,
             }
-            console.log(this.editedDetails)
+
+              // Checking whether Org or Member
+      let orgID = localStorage.getItem("orgId");
+      if (orgID === "null" || orgID == "") {
+        console.log("Its a Member");
+
+        // For Members
+        axios
+          .patch("http://localhost:3000/editMemberDetails", {
+            unsanitisedId: localStorage.getItem("id"),
+            editDetails: this.editedDetails,
+          })
+          .then((res) => {
+            console.log(res);
+            axios
+              .post("http://localhost:3000/getMemberDetails", {
+                id: localStorage.getItem("id"),
+              })
+              .then((res) => {
+                console.log(res.data.member);
+                this.entity = res.data.member;
+                this.editedDetails = {
+                  name: this.entity.name,
+                  email: this.entity.email,
+                  phoneNo: this.entity.phoneNo,
+                };
+                // console.log(this.entity._id);
+              });
+          });
+      }
+
+
+      // For Org:
+      else {
             axios.patch("http://localhost:3000/editOrganisationDetails",{
                 unsanitisedId:localStorage.getItem("id"),
                 editDetails:this.editedDetails
@@ -75,38 +116,65 @@ export default {
                 phoneNo:this.organisation.phoneNo
             }
             console.log(this.organisation._id)
-        })  
-            })
+        })  ;
+            });
         }
-        
+      }
     },
-    mounted(){
-        let token = localStorage.getItem("token");
-        if (!token) {
-            this.$router.push({ name: "signUp" });
-        }
-        axios.post("http://localhost:3000/getOrganisationDetails",{
-            unsanitisedId:localStorage.getItem("id")
+  mounted() {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      this.$router.push({ name: "memberLogin" });
+    }
+
+    // Checking whether Org or Member
+    let orgID = localStorage.getItem("orgId");
+    if (orgID === "null" || orgID == "") {
+      console.log("Its a Member");
+
+      // For Members
+      axios
+        .post("http://localhost:3000/getMemberDetails", {
+          id: localStorage.getItem("id"),
         })
-        .then((res)=>{
-            this.organisation=res.data;
-            this.editedDetails = {
-                name:this.organisation.name,
-                email:this.organisation.email,
-                location:this.organisation.location,
-                phoneNo:this.organisation.phoneNo
-            }
-            console.log(this.organisation._id)
-        })  
+        .then((res) => {
+          console.log(res.data.member);
+          this.entity = res.data.member;
+          this.editedDetails = {
+            name: this.entity.name,
+            email: this.entity.email,
+            location: this.entity.location,
+            phoneNo: this.entity.phoneNo,
+          };
+          console.log(this.entity._id);
+        });
+    }
 
-        }
-}
+    // For Org(s)
+    else {
+      this.isLocationVisible = true;
 
+      console.log("Its an Organisation");
+      axios
+        .post("http://localhost:3000/getOrganisationDetails", {
+          unsanitisedId: localStorage.getItem("id"),
+        })
+        .then((res) => {
+          this.entity = res.data;
+          this.editedDetails = {
+            name: this.entity.name,
+            email: this.entity.email,
+            location: this.entity.location,
+            phoneNo: this.entity.phoneNo,
+          };
+        });
+    }
+  },
+};
 </script>
 <style scoped>
-
 h4 {
-  color: #504DFF;
+  color: #504dff;
 }
 input,
 select option,
@@ -124,13 +192,13 @@ select {
 }
 input:focus {
   outline: 0;
-  border-color: #504DFF;
+  border-color: #504dff;
 }
 input:focus + .input-icon i {
-  color: #504DFF;
+  color: #504dff;
 }
 input:focus + .input-icon:after {
-  border-right-color: #504DFF;
+  border-right-color: #504dff;
 }
 /*  */
 
@@ -221,5 +289,4 @@ input:focus + .input-icon:after {
     padding-right: 0;
   }
 }
-
 </style>

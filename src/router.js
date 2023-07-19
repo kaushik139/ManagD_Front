@@ -6,10 +6,13 @@ import memberSignup from "./components/memberSignup.vue";
 import dashBoard from "./components/dashboard.vue";
 import addMember from "./components/addMember.vue";
 import profile from "./components/profile.vue";
+import memberProfile from "./components/memberProfile.vue";
+import orgView from "./components/orgView.vue";
 import progress from "./components/progress.vue";
 import dragThree from "./components/dragThree.vue";
 import getTasksForOrganisation from "./components/allTasks.vue"
 import taskDetail from "./components/taskDetail.vue"
+
 const routes = [
     {
         name: 'dragThree',
@@ -25,7 +28,7 @@ const routes = [
     {
         name: 'logIn',
         component: logIn,
-        path: '/login'
+        path: '/logIn'
     },
    {
         name: 'memberLogin',
@@ -51,6 +54,16 @@ const routes = [
     name:'profile',
     component: profile,
     path: '/profile'
+   },
+   {
+    name:'orgView',
+    component: orgView,
+    path: '/orgView'
+   },
+   {
+    name:'memberProfile',
+    component: memberProfile,
+    path: '/memberProfile'
    },
    {
     name:'progress',
