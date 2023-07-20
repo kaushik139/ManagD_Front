@@ -2,108 +2,18 @@
   <div class="profile">
     <div class="sections">
       <div class="left-col">
-        <button class="button-menu">Profile</button>
-        <button class="button-menu" @click="member">Add Member</button>
-        <button class="button-menu">Check Progress</button>
-        <button class="button-menu" @click="dashboard">Dashboard</button>
+     <LeftCol :name="organisation.name"></LeftCol>
       </div>
       <div class="right-col" style="overflow-y: scroll">
         <div class="header" style="width: 100%">
           Managd - Organisation Dashboard
         </div>
 
-        <div class="mobile-navbar">
-          <div class="hamburger" @click="menuCollapse">
-            <i class="fa-solid fa-bars"></i>
-          </div>
-          <div class="accounts accounts-mob">
-            {{ notifications.length }}
-            <span v-if="notifications.length" style="position: relative">
-              <div><i class="fa-solid fa-bell"></i></div>
-              <div
-                style="
-                  height: 10px;
-                  width: 10px;
-                  display: inline;
-                  background-color: red;
-                  border-radius: 50%;
-                  position: absolute;
-                  z-index: 999;
-                  top: -2px;
-                "
-              >
-                {{ notifications.length }}
-              </div>
-              <div class="dropdown">
-                <div v-for="(notification, idx) in notifications" :key="idx">
-                  <p @click="clearNotice(idx)">{{ notification }}</p>
-                </div>
-              </div>
-            </span>
-            <i v-else class="fa-solid fa-bell"></i>
-            <div style="display: flex; align-items: center; gap: 5px">
-              <span>Hi! {{ organisation.name }}!</span>
-              <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-            </div>
-          </div>
-          <div class="remove-navbar-content" id="nav-content">
-            <button class="button-menu">Profile</button>
-            <button class="button-menu" @click="member">Add Member</button>
-            <button class="button-menu">Check Progress</button>
-            <button class="button-menu" @click="dashboard">Dashboard</button>
-            <!-- <button class="button-menu">Close</button> -->
-          </div>
+        <div>
+          <MobileNavbar :name="organisation.name"></MobileNavbar>
         </div>
-        <div class="row-one">
-          <div class="search-sec">
-            <input class="search" type="text" placeholder="Search" />
-            <button class="search-button">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-          </div>
-          <div class="accounts accounts-lg">
-            <span
-              v-if="notifications.length"
-              style="position: relative"
-              class="active"
-            >
-              <div><i class="fa-solid fa-bell"></i></div>
-              <div
-                style="
-                  height: 15px;
-                  width: 15px;
-                  display: inline;
-                  background-color: red;
-                  border-radius: 50%;
-                  position: absolute;
-                  z-index: 999;
-                  top: -2px;
-                "
-              >
-                {{ notifications.length }}
-              </div>
-              <div
-                class="dropdown"
-                style="
-                  position: absolute;
-                  width: 170px;
-                  margin-left: -70px;
-                  background-color: #504dff;
-                  color: white;
-                  padding: 2px;
-                "
-              >
-                <div v-for="(notification, idx) in notifications" :key="idx">
-                  <p @click="clearNotice(idx)">{{ notification }}</p>
-                </div>
-              </div>
-            </span>
-            <i v-else class="fa-solid fa-bell"></i>
-            <div style="display: flex; align-items: center; gap: 5px">
-              <span>Hi! {{ organisation.name }}!</span>
-              <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-            </div>
-          </div>
+        <div>
+         <Header :name="organisation.name"></Header>
         </div>
         <div style="width: 1%">
           <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
@@ -144,8 +54,8 @@
               <Line id="my-lin" :options="lineOptions" :data="lineData4" :key="del"/>
             </div>
           </div>
-          <div class="chart-area">
-            <div style="width: 70%">
+          <div style="width:100%" class="chart-area">
+            <div>
               <Line id="my-lin" :options="lineOptions" :data="lineData5" :key="comp"/>
             </div>
           </div>
@@ -495,21 +405,7 @@ th {
   }
 }
 
-.button-menu {
-  height: 7%;
-  background-color: white;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  border-radius: 10px;
-  transition: 0.6s;
-}
 
-.button-menu:hover {
-  background-color: antiquewhite;
-}
 
 dialog {
   border: none;
@@ -526,6 +422,9 @@ dialog {
 <script>
 import axios from "axios";
 import { Bar, Line, Pie } from "vue-chartjs";
+import LeftCol from "./leftCol.vue";
+import MobileNavbar from "./mobileNavbar.vue";
+import Header from "./header.vue"
 import {
   Chart as ChartJS,
   Title,
@@ -555,7 +454,7 @@ ChartJS.register(
 
 export default {
   name: "OrgProfile",
-  components: { Bar, Line, Pie },
+  components: { Bar, Line, Pie, LeftCol, MobileNavbar, Header },
   data() {
     return {
       name: "",
@@ -1024,6 +923,11 @@ export default {
           this.lineData4.datasets[0].data[key] = value;
           this.lineData5.datasets[3].data[key] = value;
         });
+
+        this.comp=!this.comp;
+            this.hlt=!this.hlt;
+            this.del=!this.del;
+            this.ong=!this.ong;
 
         console.log({ assignedMembers });
 

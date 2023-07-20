@@ -2,52 +2,21 @@
   <div class="dashboard-section">
     <div class="sections">
       <div class="left-col">
-        <button class="button-menu" @click="profile">Profile</button>
-        <button class="button-menu">Add Member</button>
-        <button class="button-menu">Check Progress</button>
-        <button class="button-menu" @click="dashboard">Dashboard</button>
+        <LeftCol :name="organisation.name"></LeftCol>
       </div>
       <div class="right-col">
         <div class="header" style="width: 100%">
           Managd - Organisation Dashboard
         </div>
 
-        <div class="mobile-navbar">
-          <div class="hamburger" @click="menuCollapse">
-            <i class="fa-solid fa-bars"></i>
-          </div>
-          <div class="accounts accounts-mob">
-            <i class="fa-solid fa-bell"></i>
-            <div style="display: flex; align-items: center; gap: 5px">
-              <span>Hi! {{ organisation.name }}!</span>
-              <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-            </div>
-          </div>
-          <div class="remove-navbar-content" id="nav-content">
-            <button class="button-menu" @click="profile">Profile</button>
-            <button class="button-menu" @click="member">Add Member</button>
-            <button class="button-menu">Check Progress</button>
-            <button class="button-menu" @click="dashboard">Dashboard</button>
-            <!-- <button class="button-menu">Close</button> -->
-          </div>
+        <div>
+          <MobileNavbar :name="organisation.name"></MobileNavbar>
         </div>
-        <div >
-          <div class="row-one"  >
-            <div>
-              <input class="search" type="text" placeholder="Search" />
-              <button class="search-button">
-                <i class="fa-solid fa-magnifying-glass"></i>
-              </button>
-            </div>
-            <div class="accounts accounts-lg">
-              <i class="fa-solid fa-bell"></i>
-              <div style="display: flex; align-items: center; gap: 5px">
-                <span>Hi! {{ organisation.name }}!</span>
-                <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-              </div>
-            </div>
+        <div>
+          <div>
+            <Header :name="organisation.name"></Header>
           </div>
-          <div class="view-area" >
+          <div class="view-area">
             <div>
               <h1>Add New Members</h1>
               <form @submit.prevent="submit($event)">
@@ -84,67 +53,66 @@
                 Click to remove members
               </button>
             </div>
-        </div>
-        <h2>Current Members</h2>
-        <div class="tab-div">
+          </div>
+          <h2>Current Members</h2>
+          <div class="tab-div">
             <table class="table">
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone No</th>
-                    <th>ID</th>
-                    <th>Tasks Count
-                        <span style="position:absolute">
-                            <!-- <i class="fa-solid fa-caret-up"></i>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone No</th>
+                <th>ID</th>
+                <th>
+                  Tasks Count
+                  <span style="position: absolute">
+                    <!-- <i class="fa-solid fa-caret-up"></i>
                             <i class="fa-solid fa-caret-down"></i> -->
-                        </span>
-                    </th>
-                </tr>
+                  </span>
+                </th>
+              </tr>
 
-                <tr v-for="member in members" :key="member._id">
-                    <td>{{member.name}}</td>
-                    <td>{{member.email}}</td>
-                    <td>{{member.phoneNo}}</td>
-                    <td>{{member._id}}</td>
-                    <td>{{member.tasks.length}}</td>
-                </tr>
+              <tr v-for="member in members" :key="member._id">
+                <td>{{ member.name }}</td>
+                <td>{{ member.email }}</td>
+                <td>{{ member.phoneNo }}</td>
+                <td>{{ member._id }}</td>
+                <td>{{ member.tasks.length }}</td>
+              </tr>
             </table>
-
-        </div>
+          </div>
           <!-- <ul>
 <li style="list-style: none;" v-for="member in members" :key="member._id">{{member.name}}</li>
           </ul> -->
-
         </div>
       </div>
     </div>
   </div>
 </template>
 <style scoped>
-
-tr:nth-child(even){
-    background-color: rgb(238,238,238);
+tr:nth-child(even) {
+  background-color: rgb(238, 238, 238);
 }
 
-td{
-    padding:10px;
+td {
+  padding: 10px;
 }
 
-.table{
-    width:80%;
-    border-collapse: collapse;
+.table {
+  width: 80%;
+  border-collapse: collapse;
+  /* overflow-x:auto; */
 }
 
-th{
-    border:1px solid black;
-    background-color: black;
-    color:white;
+th {
+  border: 1px solid black;
+  background-color: black;
+  color: white;
 }
 
-.tab-div{
-    width:100%;
-    display: flex;
-    justify-content: center;
+.tab-div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 .members-send {
   background: none;
@@ -201,35 +169,12 @@ h3 {
   /* margin-bottom:-2px; */
 }
 
-.mobile-navbar {
-  display: flex;
-  /* justify-content: space-around; */
-  /* display: none; */
-}
-
-.mobile-navbar-content {
-  display: flex;
-  width: 100%;
-  /* display: none; */
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
 @media only screen and (min-width: 993px) {
   .accounts-mob {
     display: none;
   }
 }
-@media only screen and (min-width: 993px) {
-  .mobile-navbar {
-    display: none;
-  }
-}
-.remove-navbar-content {
-  display: none;
-}
+
 .header {
   background-color: black;
   color: white;
@@ -281,18 +226,7 @@ h3 {
   gap: 70px;
   margin-right: 10px;
 }
-.fa-bell {
-  font-size: 2rem;
-  color: #504dff;
-}
 
-.fa-right-from-bracket {
-  font-size: 2rem;
-  color: #504dff;
-}
-.fa-right-from-bracket:hover {
-  cursor: pointer;
-}
 .search-sec {
   display: flex;
   justify-content: center;
@@ -343,8 +277,8 @@ h3 {
 }
 .right-col {
   width: 80%;
- height: 100%;
- overflow-y: auto;
+  height: 100%;
+  overflow-y: auto;
   /* background-color: red; */
 }
 @media only screen and (max-width: 992px) {
@@ -363,14 +297,6 @@ h3 {
     width: 100%;
   }
 
-  .fa-bell {
-    font-size: 1rem;
-  }
-
-  .fa-right-from-bracket {
-    font-size: 1rem;
-  }
-
   .accounts {
     font-size: 0.7rem;
   }
@@ -386,26 +312,14 @@ h3 {
   }
 }
 
-.button-menu {
-  height: 7%;
-  background-color: white;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  border-radius: 10px;
-  transition: 0.6s;
-}
-.button-menu:hover {
-  background-color: antiquewhite;
-}
-
 .button-menu:focus {
 }
 </style>
 <script>
 import axios from "axios";
+import LeftCol from "./leftCol.vue";
+import MobileNavbar from "./mobileNavbar.vue";
+import Header from "./header.vue";
 export default {
   name: "AddMembers",
   data() {
@@ -420,7 +334,7 @@ export default {
       removedMembers: [],
     };
   },
-
+  components: { LeftCol, MobileNavbar, Header },
   methods: {
     profile() {
       this.$router.push({ name: "profile" });
@@ -451,7 +365,6 @@ export default {
     submitRemoves(event) {
       this.removedMembers.push(...[event.target[0].value]);
     },
-
     async removeMember() {
       axios
         .post("http://localhost:3000/removeMember", {
@@ -523,13 +436,14 @@ export default {
       email: localStorage.getItem("email"),
       phoneNo: localStorage.getItem("phoneNo"),
     };
-
-    axios.post("http://localhost:3000/getAllMembers",{
-        id:localStorage.getItem("id")
-    }).then((res)=>{
+    axios
+      .post("http://localhost:3000/getAllMembers", {
+        id: localStorage.getItem("id"),
+      })
+      .then((res) => {
         this.members = res.data.members;
-        console.log(this.members)
-    })
+        console.log(this.members);
+      });
   },
 };
 </script>
