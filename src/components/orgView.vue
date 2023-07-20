@@ -2,13 +2,17 @@
     <div class="profile">
         <div class="sections">
             <div class="left-col">
+
              <MemberLeftCol></MemberLeftCol>
+
             </div>
             <div class="right-col">
                 <div class="header" style="width: 100%">Managd - User Profile</div>
 
+
                 <div>
                   <MemberMobileNavbar></MemberMobileNavbar>
+
                 </div>
                 <div class="row-one">
                     <div class="search-sec">
@@ -57,7 +61,7 @@
                 <div class="view-area" >
 
                     <h2>Current Organisation:</h2>
-                    <h4 v-if="this.orgId != 'null'" :key="this.accept" >{{ currentOrganisation.name }}<br>
+                    <h4 v-if="this.orgId != null" :key="this.accept" >{{ currentOrganisation.name }}<br>
                         <img src="../assets/location.png" alt="location" class="icon">
                         {{ currentOrganisation.location }} <br>
                         <img src="../assets/telephone.png" alt="phone" class="icon">
@@ -162,7 +166,7 @@ export default {
         this.confirm = false;
       }
       else if(this.methd == "join"){
-        if(this.orgId != 'null'){
+        if(this.orgId != null){
           this.eligible = false;
           this.errorMessage = true;
         }
@@ -203,11 +207,11 @@ export default {
       });
     },
     leave() {
-      this.orgId = "null";
+      this.orgId = null;
       localStorage.removeItem("orgId");
       axios.patch("http://localhost:3000/editMemberDetails", {
         unsanitisedId: localStorage.getItem("id"),
-        editDetails: { orgId: "null" },
+        editDetails: { orgId: null },
       });
       this.accept = !this.accept;
     },
@@ -237,8 +241,8 @@ export default {
       }
       this.menuCollapsed = !this.menuCollapsed;
     },
-    dashboard() {
-      this.$router.push({ name: "dragThree" });
+    memberDashboard() {
+      this.$router.push({ name: "memberDashboard" });
     },
 
     profile() {
@@ -290,7 +294,7 @@ export default {
         this.pendingID = res.data.member.pendingOrgId;
 
         //   Checking for current Organisation
-        if (this.orgId != "null") {
+        if (this.orgId != null) {
           this.getOrganisationDetails(this.orgId, "current");
         }
 

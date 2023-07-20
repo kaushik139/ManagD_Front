@@ -215,6 +215,7 @@ import axios from "axios";
 import MobileNavbar from "./mobileNavbar.vue";
 import Header from "./header.vue";
 export default {
+
     name: "DashBoard",
     data() {
         return {
@@ -228,6 +229,7 @@ export default {
             attributes: [],
             menuCollapsed: false,
         };
+
 
     },
     components:{ LeftCol, MobileNavbar, Header },
@@ -262,6 +264,7 @@ export default {
             this.currentMember = this.members[x];
         },
     },
+
     mounted() {
         let token = localStorage.getItem("token");
         if (!token) {

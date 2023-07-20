@@ -36,39 +36,38 @@
 import axios from "axios";
 
 export default {
-    name: "editForm",
-    data() {
-        return {
-            name:'',
-            email:'',
-            phoneNo:'',
-            location:'',
-            entity: {},
-            organisation: {},
-            currentMembers:[],
-            notifications:[],
-            editedDetails:{
-                name:'',
-                email:'',
-                phoneNo:0,
-                location:''
-            },
-            isLocationVisible: false,
-        };
-    },
-    methods: {
-        async changed(e){
-            console.log(this.editedDetails.name)
-            this.editedDetails = {
-                name:e.target[0].value,
-                email:e.target[1].value,
-                phoneNo:e.target[2].value,
-                location:e.target[3].value,
-            }
+  name: "editForm",
+  data() {
+    return {
+      name: "",
+      email: "",
+      phoneNo: "",
+      location: "",
+      entity: {},
+      organisation: {},
+      currentMembers: [],
+      notifications: [],
+      editedDetails: {
+        name: "",
+        email: "",
+        phoneNo: 0,
+        location: "",
+      },
+      isLocationVisible: false,
+    };
+  },
+  methods: {
+    async changed(e) {
+      this.editedDetails = {
+        name: e.target[0].value,
+        email: e.target[1].value,
+        phoneNo: e.target[2].value,
+        location: e.target[3].value,
+      };
 
-              // Checking whether Org or Member
+      // Checking whether Org or Member
       let orgID = localStorage.getItem("orgId");
-      if (orgID === "null" || orgID == "") {
+      if (orgID === "null" || orgID) {
         console.log("Its a Member");
 
         // For Members
@@ -77,8 +76,7 @@ export default {
             unsanitisedId: localStorage.getItem("id"),
             editDetails: this.editedDetails,
           })
-          .then((res) => {
-            console.log(res);
+          .then(() => {
             axios
               .post("http://localhost:3000/getMemberDetails", {
                 id: localStorage.getItem("id"),
@@ -96,31 +94,32 @@ export default {
           });
       }
 
-
       // For Org:
       else {
-            axios.patch("http://localhost:3000/editOrganisationDetails",{
-                unsanitisedId:localStorage.getItem("id"),
-                editDetails:this.editedDetails
-            })
-            .then(()=>{
-                axios.post("http://localhost:3000/getOrganisationDetails",{
-            unsanitisedId:localStorage.getItem("id")
-        })
-        .then((res)=>{
-            this.organisation=res.data;
-            this.editedDetails = {
-                name:this.organisation.name,
-                email:this.organisation.email,
-                location:this.organisation.location,
-                phoneNo:this.organisation.phoneNo
-            }
-            console.log(this.organisation._id)
-        })  ;
-            });
-        }
+        axios
+          .patch("http://localhost:3000/editOrganisationDetails", {
+            unsanitisedId: localStorage.getItem("id"),
+            editDetails: this.editedDetails,
+          })
+          .then(() => {
+            axios
+              .post("http://localhost:3000/getOrganisationDetails", {
+                unsanitisedId: localStorage.getItem("id"),
+              })
+              .then((res) => {
+                this.organisation = res.data;
+                this.editedDetails = {
+                  name: this.organisation.name,
+                  email: this.organisation.email,
+                  location: this.organisation.location,
+                  phoneNo: this.organisation.phoneNo,
+                };
+                // console.log(this.organisation._id)
+              });
+          });
       }
     },
+  },
   mounted() {
     let token = localStorage.getItem("token");
     if (!token) {
@@ -129,16 +128,14 @@ export default {
 
     // Checking whether Org or Member
     let orgID = localStorage.getItem("orgId");
-    if (orgID === "null" || orgID == "") {
-      console.log("Its a Member");
-
+    if (orgID == "null" || orgID) {
       // For Members
       axios
         .post("http://localhost:3000/getMemberDetails", {
           id: localStorage.getItem("id"),
         })
         .then((res) => {
-          console.log(res.data.member);
+          console.log("Res Data" + res.data.member);
           this.entity = res.data.member;
           this.editedDetails = {
             name: this.entity.name,
@@ -146,7 +143,7 @@ export default {
             location: this.entity.location,
             phoneNo: this.entity.phoneNo,
           };
-          console.log(this.entity._id);
+          // console.log(this.entity._id);
         });
     }
 

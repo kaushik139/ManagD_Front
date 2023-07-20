@@ -400,11 +400,11 @@ export default {
       if (e.target.value === "Select") return;
       this.addedMembers.push(e.target.value);
       this.organisationMembers = this.organisationMembers.filter((x) => {
-        console.log(x.email !== e.target.value);
+        // console.log(x.email !== e.target.value);
         return x.email !== e.target.value;
       });
 
-      console.log(this.organisationMembers);
+      // console.log(this.organisationMembers);
 
       // this.organisationMembers.splice(1)
     },
@@ -430,7 +430,7 @@ export default {
         });
     },
     Test() {
-      console.log(this.box);
+      // console.log(this.box);
     },
 
     AddTask(list) {
@@ -581,21 +581,21 @@ export default {
     // },
 
     startDrag(evt, card, status) {
-      console.log(evt, card, status);
+      // console.log(evt, card, status);
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("cardID", status);
-      console.log("OO");
-      console.log(card);
+      // console.log("OO");
+      // console.log(card);
       // console.log(status)
     },
 
     onDrop(evt, list) {
-      console.log("PPPPPP");
+      // console.log("PPPPPP");
       const cardID = evt.dataTransfer.getData("cardID");
       // const card = this.box.find((card) => card.id === cardID);
       // card.status = list;
-      console.log("Q", cardID);
+      // console.log("Q", cardID);
       const updatedStatus =
         list === 1 ? "Ongoing" : list === 2 ? "Halted" : "Completed";
       axios
@@ -605,11 +605,11 @@ export default {
             status: updatedStatus,
           },
         })
-        .then((res) => {
+        .then(() => {
           this.$router.go();
-          console.log(res);
+          // console.log(res);
         });
-      console.log("W", list);
+      // console.log("W", list);
 
       // switch(list)
       // console.log(card.status)
@@ -623,7 +623,7 @@ export default {
       })
       .then((res) => {
         this.organisationMembers = res.data.members;
-        console.log(this.organisationMembers);
+        // console.log(this.organisationMembers);
       });
 
     axios
@@ -632,7 +632,7 @@ export default {
       })
       .then((res) => {
         this.box = res.data.taskList;
-        console.log(this.box);
+        // console.log(this.box);
         // this.confirm_task(this.list)
       });
   },

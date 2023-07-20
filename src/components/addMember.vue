@@ -339,6 +339,7 @@ export default {
     profile() {
       this.$router.push({ name: "profile" });
     },
+
     member() {
       this.$router.push({ name: "/addMember" });
     },

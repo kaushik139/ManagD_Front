@@ -8,13 +8,23 @@
       placeholder="Enter E-mail"
       class="text"
     /><br />
-    <!-- Password -->
-    <input
+ <!-- Password -->
+ <input v-if="this.isPasswordVisible == false"
       type="password"
       v-model="pass"
       placeholder="Enter Password"
-      class="text"
-    />
+      required
+      class="text"/>
+      <input 
+      v-if="this.isPasswordVisible == true"
+      type="test"
+      v-model="pass"
+      placeholder="Enter Password"
+      required
+      class="text"/>
+    <i @click="this.isPasswordVisible = !this.isPasswordVisible"
+     class="fas" :class="{ 'fa-eye-slash': showPassword, 'fa-eye': !showPassword }">
+    </i>
     <br />
     <br />
     <button id="b1" type="submit" v-on:click="login">Log In</button
@@ -32,6 +42,7 @@ export default {
       mail: "",
       pass: "",
       userType: "user",
+      isPasswordVisible: false,
     };
   },
 
@@ -49,7 +60,7 @@ export default {
             password: this.pass,
           })
           .then((response) => {
-            console.log(response.status);
+            // console.log(response.status);
             if (response.status === 200) {
               localStorage.setItem("email", response.data.email);
               localStorage.setItem("token", response.data.token);
@@ -112,5 +123,10 @@ h3 {
   border-radius: 7px;
   border: solid 1px;
   margin: 10px;
+}
+.fas{
+  margin: 24px 0px 0px -45px;
+  z-index: 999;
+  position:absolute;
 }
 </style>

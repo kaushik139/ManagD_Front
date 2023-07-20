@@ -26,23 +26,50 @@
       class="text"
       pattern="[6-9]{1}[0-9]{9}"
     /><br />
-    <!-- Location -->
-    <input
-      type="address"
-      v-model="location"
-      class="text"
-      required
-      placeholder="Enter Location"
-    />
-    <!-- Password -->
-    <input
+    <!-- Password 1 -->
+    <input v-if="this.isPasswordVisible == false"
       type="password"
       v-model="pass"
       placeholder="Enter Password"
       required
-      class="text"
-    />
+      class="text"/>
+      <input 
+      v-if="this.isPasswordVisible == true"
+      type="test"
+      v-model="pass"
+      placeholder="Enter Password"
+      required
+      class="text"/>
+      <i v-if="this.isPasswordVisible == false" 
+    @click="this.isPasswordVisible = !this.isPasswordVisible" id="eyeOpen"
+      class="fa-solid fa-eye" style="color: #504dff"></i>
+    <i v-if="this.isPasswordVisible == true" 
+    @click="this.isPasswordVisible = !this.isPasswordVisible" id="eyeClose"
+    class="fa-solid fa-eye-slash" style="color: #504dff;"></i>
     <br />
+    <!-- Password 2 -->
+    <input v-if="this.isPasswordVisible2 == false"
+      type="password"
+      v-model="pass2"
+      placeholder="Re-enter Password"
+      required
+      class="text"/>
+      <input 
+      v-if="this.isPasswordVisible2 == true"
+      type="test"
+      v-model="pass2"
+      placeholder="Re-enter Password"
+      required
+      class="text"/>
+      <i v-if="this.isPasswordVisible2 == false" 
+    @click="this.isPasswordVisible2 = !this.isPasswordVisible2" id="eyeOpen"
+      class="fa-solid fa-eye" style="color: #504dff;"></i>
+    <i v-if="this.isPasswordVisible2 == true" 
+    @click="this.isPasswordVisible2 = !this.isPasswordVisible2" id="eyeClose"
+    class="fa-solid fa-eye-slash" style="color: #504dff;"></i>
+    <br>
+    <h6 v-show="this.noMatchPassword == true" id="matcher">
+      Passwords do not Match! Please re-enter Password!</h6>
     <br />
     <button id="b1" type="submit" v-on:click="signUp">Sign Up</button
     ><br /><br />Already a user? <a href="#" @click="login">Log In</a><br />
@@ -58,7 +85,11 @@ export default {
       name: "",
       mail: "",
       pass: "",
+      pass2: "",
       phone: "",
+      isPasswordVisible: '',
+      isPasswordVisible2: '',
+      noMatchPassword: false,
     };
   },
 
@@ -70,7 +101,8 @@ export default {
       this.$router.push({name: "signUp"})
     },
     signUp() {
-      if (this.name && this.mail && this.pass && this.phone) {
+      if (this.name && this.mail && this.pass && this.phone && 
+      this.pass == this.pass2) {
         axios
           .post("http://localhost:3000/memberSignup", {
             email: this.mail,
@@ -86,11 +118,18 @@ export default {
             localStorage.setItem("id", response.data.id);
             localStorage.setItem("name",response.data.name);
             localStorage.setItem("phoneNo",response.data.phoneNo);
-            localStorage.setItem("orgId", response.data.orgId);
+            if(response.data.orgId){
+              localStorage.setItem("orgId", response.data.orgId);
+            }
             if (this.message != "E-mail already Exists.")
-              this.$router.push({ name: "memberProfile" });
+              this.$router.push({ name: "memberDashboard" });
           });
-      } else {
+         } 
+         else if(this.pass != this.pass2){
+          this.noMatchPassword = true;
+          this.pass2 = "";
+         }
+         else {
         alert("Please fill the required details");
       }
     },
@@ -140,5 +179,21 @@ h3 {
   border-radius: 7px;
   border: solid 1px;
   margin: 10px;
+  align-self: center;
+  position: relative;
+}
+#eyeOpen{
+  margin: 24px 0px 0px -45px;
+  z-index: 999;
+  position:absolute;
+}
+#eyeClose{
+  margin: 24px 0px 0px -45px;
+  z-index: 999;
+  position:absolute;
+}
+#matcher{
+  color: red;
+  margin: 0px 0px -20px 0px;
 }
 </style>
