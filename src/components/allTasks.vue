@@ -385,7 +385,7 @@ export default {
         })
         .then((res) => {
           this.issues = res.data;
-          console.log(this.issues)
+          console.log(this.issues);
         });
     },
     submitForm(e) {
@@ -395,14 +395,14 @@ export default {
           description: e.target[1].value,
           githubUsername: e.target[2].value,
           githubRepo: e.target[3].value,
-          githubIssue:e.target[4].value,
+          githubIssue: e.target[4].value,
           startDate: e.target[5].value,
           endDate: e.target[6].value,
           assignees: this.addedMembers,
           orgId: localStorage.getItem("id"),
           createdBy: localStorage.getItem("id"),
           status: "Ongoing",
-          progress: 0, 
+          progress: 0,
         })
         .then((res) => {
           alert(res);

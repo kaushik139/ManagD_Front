@@ -13,18 +13,28 @@ import dragThree from "./components/dragThree.vue";
 import getTasksForOrganisation from "./components/allTasks.vue"
 import taskDetail from "./components/taskDetail.vue"
 import orgKanban from "./components/orgKanban.vue"
-
+import allTasksForMember from "./components/allTasksForMember.vue"
+import memberProgress from "./components/memberProgress.vue"
 const routes = [
     {
         name: 'dragThree',
         component: dragThree,
         path: '/dragThree'
     },
-   
+   {
+        name:'allTasksForMember',
+        component: allTasksForMember,
+        path:"/member/allTasksForMember"
+   },
     {
         name:'signUp',
         component: signUp,
         path:'/'
+    },
+    {
+        name:'memberProgress',
+        component: memberProgress,
+        path:'/memberProgress'
     },
     {
         name: 'logIn',

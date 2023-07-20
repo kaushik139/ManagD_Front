@@ -2,55 +2,13 @@
     <div class="profile">
         <div class="sections">
             <div class="left-col">
-                <button class="button-menu" @click="profile">Profile</button>
-                <button class="button-menu" @click="Oragnisations">
-                    Organisations
-                </button>
-                <button class="button-menu">Check Progress</button>
-                <button class="button-menu" @click="dashboard">Dashboard</button>
+             <MemberLeftCol></MemberLeftCol>
             </div>
             <div class="right-col">
                 <div class="header" style="width: 100%">Managd - User Profile</div>
 
-                <div class="mobile-navbar">
-                    <div class="hamburger" @click="menuCollapse">
-                        <i class="fa-solid fa-bars"></i>
-                    </div>
-                    <div class="accounts accounts-mob">
-                        {{ notifications.length }}
-                        <span v-if="notifications.length" style="position: relative">
-                            <div><i class="fa-solid fa-bell"></i></div>
-                            <div style="
-                  height: 10px;
-                  width: 10px;
-                  display: inline;
-                  background-color: red;
-                  border-radius: 50%;
-                  position: absolute;
-                  z-index: 999;
-                  top: -2px;
-                ">
-                                {{ notifications.length }}
-                            </div>
-                            <div class="dropdown">
-                                <div v-for="(notification, idx) in notifications" :key="idx">
-                                    <p @click="clearNotice(idx)">{{ notification }}</p>
-                                </div>
-                            </div>
-                        </span>
-                        <i v-else class="fa-solid fa-bell"></i>
-                        <div style="display: flex; align-items: center; gap: 5px">
-                            <span>Hi! {{ organisation.name }}!</span>
-                            <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-                        </div>
-                    </div>
-                    <div class="remove-navbar-content" id="nav-content">
-                        <button class="button-menu">Profile</button>
-                        <button class="button-menu" @click="member1">Organisations</button>
-                        <button class="button-menu">Check Progress</button>
-                        <button class="button-menu" @click="dashboard">Dashboard</button>
-                        <!-- <button class="button-menu">Close</button> -->
-                    </div>
+                <div>
+                  <MemberMobileNavbar></MemberMobileNavbar>
                 </div>
                 <div class="row-one">
                     <div class="search-sec">
@@ -165,9 +123,11 @@
 
 <script>
 import axios from "axios";
+import MemberLeftCol from "./memberLeftCol.vue";
+import MemberMobileNavbar from "./memberMobileNavbar.vue";
 export default {
   name: "orgView",
-  components: {},
+  components: {MemberLeftCol, MemberMobileNavbar},
   data() {
     return {
       name: "",
