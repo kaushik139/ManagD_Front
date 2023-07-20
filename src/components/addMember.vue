@@ -362,7 +362,7 @@
         },
         submit(event){
             this.selectedMembers.push(...[event.target[0].value])
-            console.log(this.selectedMembers)
+            // console.log(this.selectedMembers)
         },
         logout(){
             localStorage.removeItem("token");

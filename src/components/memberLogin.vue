@@ -10,11 +10,26 @@
     /><br />
     <!-- Password -->
     <input
+      v-if="this.isPasswordVisible == false"
       type="password"
       v-model="pass"
       placeholder="Enter Password"
       class="text"
     />
+    <input
+      v-if="this.isPasswordVisible == true"
+      type="text"
+      v-model="pass"
+      placeholder="Enter Password"
+      class="text"
+    />
+
+    <i
+      @click="this.isPasswordVisible = !this.isPasswordVisible"
+      class="fas"
+      :class="{ 'fa-eye-slash': showPassword, 'fa-eye': !showPassword }"
+    >
+    </i>
     <br />
     <br />
     <button id="b1" type="submit" v-on:click="login">Log In</button
@@ -33,6 +48,7 @@ export default {
       pass: "",
       phone: "",
       userType: "user",
+      isPasswordVisible: false,
     };
   },
 
@@ -44,29 +60,22 @@ export default {
       if (this.mail === "" || this.pass === "") {
         alert(`Please fill all the fields.`);
       } else {
-        console.log("HERE"), console.log(this.mail);
-        console.log(this.pass);
         axios
           .post("http://localhost:3000/memberLogin", {
             email: this.mail,
             password: this.pass,
           })
           .then((response) => {
-            // console.log(response.status)
-            // console.log('response:');
-            // console.log(response);
             if (response.status === 200) {
               alert("Login Successful");
-              // console.log(response.data)
-              // console.log(response)
               localStorage.setItem("email", response.data.email);
               localStorage.setItem("token", response.data.token);
               localStorage.setItem("id", response.data.id);
               localStorage.setItem("orgId", response.data.orgId);
-              this.$router.push({ name: "memberProfile" });
-            } 
-            else {
-              console.log(response.status);
+              localStorage.setItem("name", response.data.name);
+              localStorage.setItem("phoneNo", response.data.phoneNo);
+              this.$router.push({ name: "memberDashboard" });
+            } else {
               alert(response.data);
             }
           })
@@ -122,5 +131,11 @@ h3 {
   border-radius: 7px;
   border: solid 1px;
   margin: 10px;
+  position: relative;
+}
+.fas {
+  margin: 24px 0px 0px -45px;
+  z-index: 999;
+  position: absolute;
 }
 </style>

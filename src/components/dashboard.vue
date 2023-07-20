@@ -377,8 +377,8 @@ export default {
     progress(){
         this.$router.push({name:"progress"})
     },
-    searchResults(event) {
-      console.log(event.value);
+    searchResults() {
+      // console.log(event.value);
     },
 
     menuCollapse() {
@@ -446,7 +446,7 @@ export default {
       .then((res) => {
         this.calendar = res.data.tasks;
         let cnt = 0;
-        console.log(this.calendar)
+        // console.log(this.calendar)
         let sample = [];
         for (var x in this.calendar) {
         //   console.log(this.calendar[x]);

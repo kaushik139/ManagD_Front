@@ -405,7 +405,7 @@ export default {
         })
         .then((res) => {
           this.issues = res.data;
-          console.log(this.issues)
+          // console.log(this.issues)
         });
     },
     submitForm(e) {
@@ -432,11 +432,11 @@ export default {
     Test() {},
     AddTask(list) {
       this.taskDialog = true;
-      console.log({ list });
+      // console.log({ list });
       if (list === 1) {
         this.Show1 = "Ongoing";
       } else if (list === 2) {
-        console.log("here");
+        // console.log("here");
         this.Show1 = "Halted";
       } else if (list === 3) {
         this.Show1 = "Completed";
@@ -449,7 +449,7 @@ export default {
     },
 
     startDrag(evt, card, status) {
-      console.log(evt, card, status);
+      // console.log(evt, card, status);
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("cardID", status);
@@ -486,9 +486,9 @@ export default {
         id: localStorage.getItem("orgId"),
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         this.box = res.data.tasks;
-        console.log(this.box);
+        // console.log(this.box);
       });
   },
   computed: {

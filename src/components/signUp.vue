@@ -34,15 +34,50 @@
       required
       placeholder="Enter Location"
     />
-    <!-- Password -->
-    <input
+     <!-- Password 1 -->
+     <input v-if="this.isPasswordVisible == false"
       type="password"
       v-model="pass"
       placeholder="Enter Password"
       required
-      class="text"
-    />
+      class="text"/>
+      <input 
+      v-if="this.isPasswordVisible == true"
+      type="test"
+      v-model="pass"
+      placeholder="Enter Password"
+      required
+      class="text"/>
+      <i v-if="this.isPasswordVisible == false" 
+    @click="this.isPasswordVisible = !this.isPasswordVisible" id="eyeOpen"
+      class="fa-solid fa-eye" style="color: #504dff"></i>
+    <i v-if="this.isPasswordVisible == true" 
+    @click="this.isPasswordVisible = !this.isPasswordVisible" id="eyeClose"
+    class="fa-solid fa-eye-slash" style="color: #504dff;"></i>
     <br />
+    <!-- Password 2 -->
+    <input v-if="this.isPasswordVisible2 == false"
+      type="password"
+      v-model="pass2"
+      placeholder="Re-enter Password"
+      required
+      class="text"/>
+      <input 
+      v-if="this.isPasswordVisible2 == true"
+      type="test"
+      v-model="pass2"
+      placeholder="Re-enter Password"
+      required
+      class="text"/>
+      <i v-if="this.isPasswordVisible2 == false" 
+    @click="this.isPasswordVisible2 = !this.isPasswordVisible2" id="eyeOpen"
+      class="fa-solid fa-eye" style="color: #504dff;"></i>
+    <i v-if="this.isPasswordVisible2 == true" 
+    @click="this.isPasswordVisible2 = !this.isPasswordVisible2" id="eyeClose"
+    class="fa-solid fa-eye-slash" style="color: #504dff;"></i>
+    <br>
+    <h6 v-show="this.noMatchPassword == true" id="matcher">
+      Passwords do not Match! Please re-enter Password!</h6>
     <br />
     <button id="b1" type="submit" v-on:click="signUp">Sign Up</button
     ><br /><br />Already Registered? <a href="#" @click="login">Log In</a><br />
@@ -60,6 +95,9 @@ export default {
       pass: "",
       phone: "",
       location: "",
+      isPasswordVisible: false,
+      isPasswordVisible2: false,
+      noMatchPassword: false,
     };
   },
 
@@ -73,7 +111,8 @@ export default {
     },
     signUp() {
       // If all details are provided, then post the request to the server
-      if (this.name && this.mail && this.pass && this.location && this.phone) {
+      if (this.name && this.mail && this.pass && this.location && this.phone
+      && this.pass == this.pass2) {
         axios
           .post("http://localhost:3000/addOrganisation", {
             email: this.mail,
@@ -93,7 +132,12 @@ export default {
             if(this.message != 'E-mail already Exists.')
                 this.$router.push({ name: "login" });
           });
-      } else {
+      }
+      else if(this.pass != this.pass2){
+          this.noMatchPassword = true;
+          this.pass2 = "";
+         }
+      else {
         alert("Please fill the required details");
       }
     },
@@ -143,5 +187,19 @@ h3 {
   border-radius: 7px;
   border: solid 1px;
   margin: 10px;
+}
+#eyeOpen{
+  margin: 24px 0px 0px -45px;
+  z-index: 999;
+  position:absolute;
+}
+#eyeClose{
+  margin: 24px 0px 0px -45px;
+  z-index: 999;
+  position:absolute;
+}
+#matcher{
+  color: red;
+  margin: 0px 0px -20px 0px;
 }
 </style>

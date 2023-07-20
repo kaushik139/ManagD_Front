@@ -4,6 +4,7 @@ import logIn from "./components/logIn.vue";
 import memberLogin from "./components/memberLogin.vue";
 import memberSignup from "./components/memberSignup.vue";
 import dashBoard from "./components/dashboard.vue";
+import memberDashboard from "./components/memberDashboard.vue";
 import addMember from "./components/addMember.vue";
 import profile from "./components/profile.vue";
 import memberProfile from "./components/memberProfile.vue";
@@ -44,6 +45,11 @@ const routes = [
     name: 'dashBoard',
     component: dashBoard,
     path: '/dashBoard'
+   },
+   {
+    name: 'memberDashboard',
+    component: memberDashboard,
+    path: '/memberDashboard'
    },
    {
     name:'addMembers',

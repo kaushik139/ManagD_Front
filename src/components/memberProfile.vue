@@ -3,14 +3,14 @@
     <div class="sections">
       <div class="left-col">
         <button class="button-menu" @click="profile">Profile</button>
-        <button class="button-menu" @click="Oragnisations">Organisations</button>
+        <button class="button-menu" @click="Oragnisations">
+          Organisations
+        </button>
         <button class="button-menu">Check Progress</button>
-        <button class="button-menu" @click="dashboard">Dashboard</button>
+        <button class="button-menu" @click="memberDashboard">Dashboard</button>
       </div>
       <div class="right-col">
-        <div class="header" style="width: 100%">
-          Managd - User Profile
-        </div>
+        <div class="header" style="width: 100%">Managd - User Profile</div>
 
         <div class="mobile-navbar">
           <div class="hamburger" @click="menuCollapse">
@@ -42,15 +42,19 @@
             </span>
             <i v-else class="fa-solid fa-bell"></i>
             <div style="display: flex; align-items: center; gap: 5px">
-              <span>Hi! {{ organisation.name }}!</span>
+              <span>Hi! {{ member.name }}!</span>
               <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
             </div>
           </div>
           <div class="remove-navbar-content" id="nav-content">
             <button class="button-menu" @click="profile">Profile</button>
-            <button class="button-menu" @click="Oragnisations">Organisations</button>
+            <button class="button-menu" @click="Oragnisations">
+              Organisations
+            </button>
             <button class="button-menu">Check Progress</button>
-            <button class="button-menu" @click="dashboard">Dashboard</button>
+            <button class="button-menu" @click="memberDashboard">
+              Dashboard
+            </button>
             <!-- <button class="button-menu">Close</button> -->
           </div>
         </div>
@@ -100,15 +104,16 @@
             </span>
             <i v-else class="fa-solid fa-bell"></i>
             <div style="display: flex; align-items: center; gap: 5px">
-              <span>Hi! {{ organisation.name }}!</span>
+              <span>Hi! {{ member.name }}!</span>
               <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
             </div>
           </div>
         </div>
         <div class="view-area">
           <div>
-            <h3>Member Profile</h3>
-            <button class="edit-btn" @click="opened"><span>Edit</span></button>
+            <h3 style="text-transform: uppercase">
+              {{ member.name }}'s Profile
+            </h3>
           </div>
           <div class="dialog-container" v-if="dialogOpen">
             <dialog id="dialog">
@@ -116,26 +121,71 @@
               <button @click="closed" className="close">
                 <i class="fa-solid fa-circle-xmark"></i>
               </button>
-              <!-- <h4>Edit Profile</h4>
-                            <form @submit="editProfile">
-                                <label for="name">Name: </label>
-                                <input type="text" id="name" :value="organisation.name"/>
-                                <br/>
-                                <label for="phone">Phone No: </label>
-                                <input type="text" id="phone" :value="organisation.phoneNo"/>
-
-                            </form> -->
             </dialog>
           </div>
-          <div>
-            <p>Name: {{ organisation.name }}</p>
-            <p>Phone Number: {{ organisation.phoneNo }}</p>
-            <p>Email: {{ organisation.email }}</p>
-           
-          </div>
 
-          <div>Current Organisation:</div>
-         
+          <div class="member-detail-p">Name: {{ member.name }}</div>
+          <div class="member-detail-p">Phone Number: {{ member.phoneNo }}</div>
+          <div class="member-detail-p">Email: {{ member.email }}</div>
+          <div class="member-detail-p">
+            Current Organisation:{{ currentOrganisation }}
+          </div>
+          <!-- <br> -->
+          <button class="edit-btn" @click="opened"><span>Edit</span></button>
+          <!-- members that are part of same organisation -->
+          <br />
+          <div v-if="this.areOtherMembers">
+            <h4>
+              Other members from
+              <span style="text-transform: uppercase">{{
+                currentOrganisation
+              }}</span>
+            </h4>
+            <div style="height: 80px; overflow-y: scroll">
+              <table id="table">
+                <tr>
+                  <th>Name</th>
+                  <th>E-mail</th>
+                  <th>Ph. Number</th>
+                </tr>
+                <tr v-for="item in this.otherMembers" :key="item">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.email }}</td>
+                  <td>{{ item.phoneNo }}</td>
+                </tr>
+                <tr>
+                  <td>Dummy data</td>
+                  <td>To Show</td>
+                  <td>Scroll function</td>
+                </tr>
+                <tr>
+                  <td>Dummy data</td>
+                  <td>To Show</td>
+                  <td>Scroll function</td>
+                </tr>
+                <tr>
+                  <td>Dummy data</td>
+                  <td>To Show</td>
+                  <td>Scroll function</td>
+                </tr>
+                <tr>
+                  <td>Dummy data</td>
+                  <td>To Show</td>
+                  <td>Scroll function</td>
+                </tr>
+                <tr>
+                  <td>Dummy data</td>
+                  <td>To Show</td>
+                  <td>Scroll function</td>
+                </tr>
+                <tr>
+                  <td>Dummy data</td>
+                  <td>To Show</td>
+                  <td>Scroll function</td>
+                </tr>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -160,12 +210,14 @@ export default {
       phone: "",
       members: "",
       member: {},
-      currentOrganisation: [],
+      currentOrganisation: "",
       notifications: [],
       dialogOpen: false,
-      organisation:{},
       token: localStorage.getItem("token"),
       id: localStorage.getItem("id"),
+      orgId: localStorage.getItem("orgId"),
+      otherMembers: [],
+      areOtherMembers: false,
     };
   },
 
@@ -199,8 +251,8 @@ export default {
       }
       this.menuCollapsed = !this.menuCollapsed;
     },
-    dashboard() {
-      this.$router.push({ name: "dragThree" });
+    memberDashboard() {
+      this.$router.push({ name: "memberDashboard" });
     },
 
     async clearNotice(idx) {
@@ -213,36 +265,63 @@ export default {
           this.notifications = res.data.notifications;
         });
     },
-    Oragnisations(){
-      this.$router.push({name: "orgView"})
+    Oragnisations() {
+      this.$router.push({ name: "orgView" });
     },
 
-getMemberDetails(){
+    getMemberDetails() {
+      axios
+        .post("http://localhost:3000/getMemberDetails", {
+          id: localStorage.getItem("id"),
+          token: localStorage.getItem("token"),
+          email: localStorage.getItem("email"),
+        })
+        .then((res) => {
+          this.member = res.data.member;
+          this.notifications = res.data.member.notifications;
+          this.organisation = res.data.member;
+          //  console.log(res.data.member);
+        });
+    },
 
- 
-  axios
-      .post("http://localhost:3000/getMemberDetails", {
-        id: localStorage.getItem("id"),
-        token: localStorage.getItem("token"),
-        email: localStorage.getItem("email"),
-      })
-      .then((res) => {
-        this.member = res.data.member;
-        console.log();
-        this.notifications = res.data.member.notifications;
-        this.organisation = res.data.member;
-      })
-
-},
+    getOrganisationDetails(ID) {
+      axios
+        .post("http://localhost:3000/getOrganisationDetails", {
+          unsanitisedId: ID,
+        })
+        .then((res) => {
+          this.currentOrganisation = res.data.name;
+          console.log(res.data.name);
+        });
+    },
 
     logout() {
       localStorage.removeItem("token");
       localStorage.removeItem("email");
-      localStorage.removeItem("id"); 
+      localStorage.removeItem("id");
       localStorage.removeItem("orgId");
       this.$router.push({ name: "memberLogin" });
     },
-    
+
+    getAllMembers(id) {
+      axios
+        .post("http://localhost:3000/getAllMembers", {
+          id: id,
+        })
+        .then((res) => {
+          console.log("API Fired!!!");
+          if (res.data.members.length) {
+            console.log(res.data.members);
+            console.log("_id:" + res.data.members[0]._id);
+            for (let i = 0; i < res.data.members.length; i++) {
+              if (res.data.members[i]._id != this.id) {
+                this.otherMembers.push(res.data.members[i]);
+                this.areOtherMembers = true;
+              }
+            }
+          }
+        });
+    },
   },
   async mounted() {
     if (!this.token) {
@@ -250,17 +329,13 @@ getMemberDetails(){
     }
 
     this.getMemberDetails();
-    // axios
-    //   .post("http://localhost:3000/getOrganisationDetails", {
-    //     unsanitisedId: localStorage.getItem("id"),
-    //   })
-    //   .then((res) => {
-    //     this.organisation = res.data;
-    //     // console.log("here")
-    //     // console.log(this.organisation._id);
-    //   });
-
-    // console.log(localStorage.getItem("id"));
+    let orgId = localStorage.getItem("orgId");
+    if (orgId != null || orgId) {
+      this.getOrganisationDetails(orgId);
+      this.getAllMembers(this.orgId);
+    } else {
+      this.areOtherMembers = false;
+    }
   },
 };
 </script>
@@ -289,7 +364,7 @@ getMemberDetails(){
   /* display: flex; */
   /* flex-direction: column; */
   /* justify-content: center; */
-  /* align-items: center; */
+  align-self: center;
   padding-bottom: 0.4rem;
   border-radius: 10px;
   box-shadow: 0px 0px 5px gray;
@@ -508,6 +583,19 @@ th {
   /* background-color: blue; */
 }
 
+.member-detail-p {
+  background-color: #f2f2f2;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 20px;
+  font-size: 16px;
+  width: fit-content;
+  text-align: left;
+  padding-left: 30px;
+  padding-right: 30px;
+  box-shadow: 0px 0px 5px gray;
+  align-self: center;
+}
 .right-col {
   width: 80%;
   height: 100%;
@@ -578,6 +666,12 @@ dialog {
   background: transparent;
 }
 
+table {
+  width: 100%;
+  height: 100px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 /* .button-menu:focus {} */
 </style>
 
