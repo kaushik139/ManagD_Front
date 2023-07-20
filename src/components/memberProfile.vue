@@ -2,112 +2,17 @@
   <div class="profile">
     <div class="sections">
       <div class="left-col">
-        <button class="button-menu" @click="profile">Profile</button>
-        <button class="button-menu" @click="Oragnisations">
-          Organisations
-        </button>
-        <button class="button-menu">Check Progress</button>
-        <button class="button-menu" @click="memberDashboard">Dashboard</button>
+
+        <MemberLeftCol></MemberLeftCol>
       </div>
       <div class="right-col">
         <div class="header" style="width: 100%">Managd - User Profile</div>
-
-        <div class="mobile-navbar">
-          <div class="hamburger" @click="menuCollapse">
-            <i class="fa-solid fa-bars"></i>
-          </div>
-          <div class="accounts accounts-mob">
-            {{ notifications.length }}
-            <span v-if="notifications.length" style="position: relative">
-              <div><i class="fa-solid fa-bell"></i></div>
-              <div
-                style="
-                  height: 10px;
-                  width: 10px;
-                  display: inline;
-                  background-color: red;
-                  border-radius: 50%;
-                  position: absolute;
-                  z-index: 999;
-                  top: -2px;
-                "
-              >
-                {{ notifications.length }}
-              </div>
-              <div class="dropdown">
-                <div v-for="(notification, idx) in notifications" :key="idx">
-                  <p @click="clearNotice(idx)">{{ notification }}</p>
-                </div>
-              </div>
-            </span>
-            <i v-else class="fa-solid fa-bell"></i>
-            <div style="display: flex; align-items: center; gap: 5px">
-              <span>Hi! {{ member.name }}!</span>
-              <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-            </div>
-          </div>
-          <div class="remove-navbar-content" id="nav-content">
-            <button class="button-menu" @click="profile">Profile</button>
-            <button class="button-menu" @click="Oragnisations">
-              Organisations
-            </button>
-            <button class="button-menu">Check Progress</button>
-            <button class="button-menu" @click="memberDashboard">
-              Dashboard
-            </button>
-            <!-- <button class="button-menu">Close</button> -->
-          </div>
+        <div>
+          <MemberMobileNavbar></MemberMobileNavbar>
         </div>
-        <div class="row-one">
-          <div class="search-sec">
-            <input class="search" type="text" placeholder="Search" />
-            <button class="search-button">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-          </div>
-          <div class="accounts accounts-lg">
-            <span
-              v-if="notifications.length"
-              style="position: relative"
-              class="active"
-            >
-              <div><i class="fa-solid fa-bell"></i></div>
-              <div
-                style="
-                  height: 15px;
-                  width: 15px;
-                  display: inline;
-                  background-color: red;
-                  border-radius: 50%;
-                  position: absolute;
-                  z-index: 999;
-                  top: -2px;
-                "
-              >
-                {{ notifications.length }}
-              </div>
-              <div
-                class="dropdown"
-                style="
-                  position: absolute;
-                  width: 170px;
-                  margin-left: -70px;
-                  background-color: #504dff;
-                  color: white;
-                  padding: 2px;
-                "
-              >
-                <div v-for="(notification, idx) in notifications" :key="idx">
-                  <p @click="clearNotice(idx)">{{ notification }}</p>
-                </div>
-              </div>
-            </span>
-            <i v-else class="fa-solid fa-bell"></i>
-            <div style="display: flex; align-items: center; gap: 5px">
-              <span>Hi! {{ member.name }}!</span>
-              <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-            </div>
-          </div>
+        <div>
+          <MemberHeader :name="'Albert'"></MemberHeader>
+
         </div>
         <div class="view-area">
           <div>
@@ -123,6 +28,7 @@
               </button>
             </dialog>
           </div>
+
 
           <div class="member-detail-p">Name: {{ member.name }}</div>
           <div class="member-detail-p">Phone Number: {{ member.phoneNo }}</div>
@@ -186,21 +92,26 @@
               </table>
             </div>
           </div>
+
         </div>
       </div>
     </div>
   </div>
 </template>
 
-
-
 <script>
 import axios from "axios";
 import editForm from "./editForm.vue";
+import MemberMobileNavbar from "./memberMobileNavbar.vue";
+import MemberHeader from "./memberHeader.vue";
+import MemberLeftCol from "./memberLeftCol.vue";
 export default {
   name: "memberProfile",
   components: {
     editForm,
+    MemberMobileNavbar,
+    MemberHeader,
+    MemberLeftCol,
   },
   data() {
     return {
@@ -213,6 +124,7 @@ export default {
       currentOrganisation: "",
       notifications: [],
       dialogOpen: false,
+
       token: localStorage.getItem("token"),
       id: localStorage.getItem("id"),
       orgId: localStorage.getItem("orgId"),
@@ -228,6 +140,7 @@ export default {
     opened() {
       this.dialogOpen = true;
     },
+
     profile() {
       this.$router.push({ name: "memberProfile" });
     },
@@ -255,6 +168,7 @@ export default {
       this.$router.push({ name: "memberDashboard" });
     },
 
+
     async clearNotice(idx) {
       axios
         .post("http://localhost:3000/clearNotification", {
@@ -267,6 +181,7 @@ export default {
     },
     Oragnisations() {
       this.$router.push({ name: "orgView" });
+
     },
 
     getMemberDetails() {
@@ -336,14 +251,24 @@ export default {
     } else {
       this.areOtherMembers = false;
     }
+=======
+    },
+  },
+  async mounted() {
+    axios
+      .post("http://localhost:3000/getMemberDetails", {
+        id: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email"),
+      })
+      .then((res) => {
+        this.notifications = res.data.member.notifications;
+        this.organisation = res.data.member;
+      });
+
   },
 };
 </script>
-
-
-
-
-
 
 <style scoped>
 .edit-btn {
@@ -674,4 +599,3 @@ table {
 }
 /* .button-menu:focus {} */
 </style>
-
