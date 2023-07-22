@@ -2,7 +2,7 @@
   <div class="row-one">
     <div class="accounts accounts-lg">
       <span
-        v-if="notifications.length"
+        v-if="1"
         style="position: relative"
         class="active"
       >
@@ -19,7 +19,7 @@
             top: -2px;
           "
         >
-          {{ notifications.length }}
+          <!-- {{ notifications.length }} -->
         </div>
         <div
           class="dropdown"
@@ -39,12 +39,66 @@
       </span>
       <i v-else class="fa-solid fa-bell"></i>
       <div style="display: flex; align-items: center; gap: 5px">
-        <span>Hi! {{ name }}!</span>
+        <span >Hi! <span style="text-transform: uppercase">{{ this.name }}</span></span>
         <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
       </div>
     </div>
   </div>
 </template>
+
+
+
+<script>
+// import axios from "axios";
+export default {
+  name: "HeaderSection",
+  // props: ["name"],
+  data() {
+    return {
+      notifications: [],
+      name: localStorage.getItem("name"),
+    };
+  },
+  methods: {
+    test(){   console.log("name:"+this.name);},
+    logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("id");
+      this.$router.push({ name: "memberLogin" });
+    },
+  },
+  async mounted() {
+    let token = localStorage.getItem("token");
+    // console.log("p");
+    if (!token) {
+      this.$router.push({ name: "memberLogin" });
+    }
+ 
+    // axios
+    //   .post("http://localhost:3000/getNotificationsForMember", {
+    //     id: localStorage.getItem("id"),
+    //     token: token,
+    //     email: localStorage.getItem("email"),
+    //   })
+    //   .then((res) => {
+    //     this.notifications = res.data.notifications;
+    //     // console.log("N", this.notifications);
+    //   })
+    //   .catch(() => {
+    //     alert("Session Expired! Please relogin again.");
+    //     localStorage.removeItem("email");
+    //     localStorage.removeItem("id");
+    //     localStorage.removeItem("token");
+    //     localStorage.removeItem("name");
+    //     localStorage.removeItem("phoneNo");
+    //     // localStorage.removeItem("email")
+    //     this.$router.push({ name: "memberLogin" });
+    //   });
+  },
+};
+</script>
+
 
 <style scoped>
 .accounts {
@@ -131,51 +185,3 @@
   display: inline;
 }
 </style>
-
-<script>
-import axios from "axios";
-export default {
-  name: "HeaderSection",
-  props: ["name"],
-  data() {
-    return {
-      notifications: [],
-    };
-  },
-  methods: {
-    logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("email");
-      localStorage.removeItem("id");
-      this.$router.push({ name: "logIn" });
-    },
-  },
-  async mounted() {
-    let token = localStorage.getItem("token");
-    console.log("p");
-    if (!token) {
-      this.$router.push({ name: "signUp" });
-    }
-    axios
-      .post("http://localhost:3000/getNotificationsForMember", {
-        id: localStorage.getItem("id"),
-        token: token,
-        email: localStorage.getItem("email"),
-      })
-      .then((res) => {
-        this.notifications = res.data.notifications;
-        console.log("N", this.notifications);
-      })
-      .catch(() => {
-        alert("Session Expired! Please relogin again.");
-        localStorage.removeItem("email");
-        localStorage.removeItem("id");
-        localStorage.removeItem("token");
-        localStorage.removeItem("name");
-        localStorage.removeItem("phoneNo");
-        // localStorage.removeItem("email")
-        this.$router.push({ name: "logIn" });
-      });
-  },
-};
-</script>

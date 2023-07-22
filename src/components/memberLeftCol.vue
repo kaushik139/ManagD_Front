@@ -14,19 +14,19 @@
     name:"LeftCol",
     methods:{
       profile(){
-        this.$router.push({name:"/member/profile"})
+        this.$router.push({name:"memberProfile"})
       },
       progress(){
-        this.$router.push({name:"/member/progress"})
+        this.$router.push({name:"memberProgress"})
       },
       kanban(){
         this.$router.push({name:"allTasksForMember"})
       },
       dashboard() {
-        this.$router.push({ name: "/member/dashBoard" });
+        this.$router.push({ name: "memberDashboard" });
       },
       member() {
-        this.$router.push({ name: "/member/addMembers" });
+        this.$router.push({ name: "orgView" });
       },
       logout() {
         localStorage.removeItem("orgId");
@@ -34,7 +34,7 @@
         localStorage.removeItem("id");
         localStorage.removeItem("token");
         // localStorage.removeItem("token");
-        this.$router.push({ name: "logIn" });
+        this.$router.push({ name: "memberLogin" });
       },
     }
   }

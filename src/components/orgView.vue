@@ -3,7 +3,7 @@
         <div class="sections">
             <div class="left-col">
 
-             <MemberLeftCol></MemberLeftCol>
+             <MemberLeftCol/>
 
             </div>
             <div class="right-col">
@@ -11,57 +11,20 @@
 
 
                 <div>
-                  <MemberMobileNavbar></MemberMobileNavbar>
+                  <memberMobileNavbar/>
 
                 </div>
                 <div class="row-one">
-                    <div class="search-sec">
-                        <input class="search" type="text" placeholder="Search" />
-                        <button class="search-button">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                    </div>
-                    <div class="accounts accounts-lg">
-                        <span v-if="notifications.length" style="position: relative" class="active">
-                            <div><i class="fa-solid fa-bell"></i></div>
-                            <div style="
-                  height: 15px;
-                  width: 15px;
-                  display: inline;
-                  background-color: red;
-                  border-radius: 50%;
-                  position: absolute;
-                  z-index: 999;
-                  top: -2px;
-                ">
-                                {{ notifications.length }}
-                            </div>
-                            <div class="dropdown" style="
-                  position: absolute;
-                  width: 170px;
-                  margin-left: -70px;
-                  background-color: #504dff;
-                  color: white;
-                  padding: 2px;
-                ">
-                                <div v-for="(notification, idx) in notifications" :key="idx">
-                                    <p @click="clearNotice(idx)">{{ notification }}</p>
-                                </div>
-                            </div>
-                        </span>
-                        <i v-else class="fa-solid fa-bell"></i>
-                        <div style="display: flex; align-items: center; gap: 5px">
-                            <span>Hi! {{ organisation.name }}!</span>
-                            <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-                        </div>
-                    </div>
+                  <MemberHeader/>
                 </div>
 
                 <!-- View Area -->
                 <div class="view-area" >
-
+                  <div class="container">
                     <h2>Current Organisation:</h2>
-                    <h4 v-if="this.orgId != null" :key="this.accept" >{{ currentOrganisation.name }}<br>
+                    <h4 v-if="this.orgId != null" :key="this.accept" >
+                      <h3 style="text-transform: uppercase">
+                      {{ currentOrganisation.name }}</h3><br>
                         <img src="../assets/location.png" alt="location" class="icon">
                         {{ currentOrganisation.location }} <br>
                         <img src="../assets/telephone.png" alt="phone" class="icon">
@@ -76,10 +39,11 @@
                       alt="exit" class="icon"></button>
                     </h4>
                     <!-- IF no current Organisation -->
-                    <h4 v-else>You are not a Member of any Organisation Yet!
-                      <br>
-                      Please join one!
-                    </h4><br><br>
+                    <h4 v-else>You are not a Member of any Organisation Yet!    <br>
+                    Please join one!
+                    </h4>
+                    </div>
+                    <br><br>
                     <!-- Confirmation Pop Up -->
                     <div v-if="this.confirm" id="confirmBox">
                       <h4 id="confirmHeadding">Are You Sure? {{ this.methd }} the Oraganisation?</h4>
@@ -115,8 +79,8 @@
                         </tr>
                     </table>
                     </div>
-                    <div v-else>
-                      <h4>You do not have any new Organisation Invites!</h4>
+                    <div v-if="this.orgId == null && !this.invite">
+                      <h5  style="color: red;">You do not have any new Organisation Invites!</h5>
                     </div>
 
                 </div>
@@ -128,10 +92,11 @@
 <script>
 import axios from "axios";
 import MemberLeftCol from "./memberLeftCol.vue";
-import MemberMobileNavbar from "./memberMobileNavbar.vue";
+import memberMobileNavbar from "./memberMobileNavbar.vue";
+import MemberHeader from './memberHeader.vue';
 export default {
   name: "orgView",
-  components: {MemberLeftCol, MemberMobileNavbar},
+  components: {MemberLeftCol, memberMobileNavbar, MemberHeader},
   data() {
     return {
       name: "",
@@ -187,12 +152,20 @@ export default {
       this.errorMessage = false;
     },
     acceptORG(Oid) {
+      console.log("Oid");
+          console.log(Oid);
+          console.log("id");
+          console.log(localStorage.getItem("id"));
       axios
         .post("http://localhost:3000/acceptInvitation", {
-          id: this.id,
+          id: localStorage.getItem("id"),
           organisationId: Oid,
         })
-        .then(() => {
+        .then((res) => {
+          console.log("res");
+          console.log(res);
+          console.log("Oid");
+          console.log(Oid);
           this.orgId = Oid;
           localStorage.setItem("orgId", Oid);
           this.getMemberDetails();
@@ -207,13 +180,13 @@ export default {
       });
     },
     leave() {
-      this.orgId = null;
-      localStorage.removeItem("orgId");
-      axios.patch("http://localhost:3000/editMemberDetails", {
-        unsanitisedId: localStorage.getItem("id"),
+      axios.post("http://localhost:3000/editMemberDetails", {
+        id: localStorage.getItem("id"),
         editDetails: { orgId: null },
       });
       this.accept = !this.accept;
+      this.orgId = null;
+      localStorage.removeItem("orgId");
     },
     closed() {
       this.dialogOpen = false;
@@ -287,7 +260,9 @@ export default {
         email: localStorage.getItem("email"),
       })
       .then((res) => {
+        // console.log(res);
         this.notifications = res.data.member.notifications;
+        // console.log("note"+this.notifications.length);
         this.organisation = res.data.member;
         this.orgId = res.data.member.orgId;
         localStorage.setItem("orgId", this.orgId);
@@ -299,13 +274,16 @@ export default {
         }
 
         //   Checking for Organisation Invitations
-        if (this.pendingID != "null") {
+        if (this.pendingID.length > 0 ) {
+          // console.log("If block");
+          // console.log(this.pendingID.length);
           this.invite = true;
+          // console.log("pending ID:"+this.pendingID);
           for (let i = 0; i < this.pendingID.length; i++) {
             this.getOrganisationDetails(this.pendingID[i], "pending");
           }
         }
-        if(this.pendingID.length == ''){
+        if(this.pendingID.length == 0){
           this.invite = false;
         }
       });
@@ -710,6 +688,17 @@ dialog {
 #errorMessage{
   color: red;
 }
-
+.container {
+    background-color: #3f3cfd;
+    padding: 15px;
+    color: white;
+    font-weight: 800;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px gray;
+    font-size: 14px;
+    align-self: center;
+    width: 700px;
+    min-height: 160px;
+  }
 /* .button-menu:focus {} */
 </style>

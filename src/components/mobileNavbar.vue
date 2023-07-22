@@ -4,7 +4,7 @@
       <i class="fa-solid fa-bars"></i>
     </div>
     <div class="accounts accounts-mob">
-      <span v-if="notifications.length" style="position: relative">
+      <span v-if="1" style="position: relative">
         <div><i class="fa-solid fa-bell"></i></div>
         <div
           style="
@@ -18,7 +18,7 @@
             top: -2px;
           "
         >
-          {{ notifications.length }}
+          <!-- {{ notifications.length }} -->
         </div>
         <div class="dropdown">
           <div v-for="(notification, idx) in notifications" :key="idx">
@@ -212,7 +212,7 @@ export default {
       this.$router.push({ name: "signUp" });
     }
     axios
-      .post("http://localhost:3000/getNotificationsForOrganisation", {
+      .post("http://localhost:3000/getNotificationsForMember", {
         id: localStorage.getItem("id"),
         token: token,
         email: localStorage.getItem("email"),
@@ -229,7 +229,7 @@ export default {
         localStorage.removeItem("name");
         localStorage.removeItem("phoneNo");
         // localStorage.removeItem("email")
-        this.$router.push({ name: "logIn" });
+        this.$router.push({ name: "memberLogin" });
       });
   },
 };

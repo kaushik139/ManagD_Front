@@ -57,6 +57,57 @@
   </div>
 </template>
 
+
+
+<script>
+import axios from "axios";
+export default {
+  name: "HeaderSection",
+  props: ["name"],
+  data() {
+    return {
+      notifications: [],
+    };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("id");
+      this.$router.push({ name: "logIn" });
+    },
+  },
+  async mounted() {
+    let token = localStorage.getItem("token");
+    console.log("p");
+    if (!token) {
+      this.$router.push({ name: "signUp" });
+    }
+    axios
+      .post("http://localhost:3000/getNotificationsForOrganisation", {
+        id: localStorage.getItem("id"),
+        token: token,
+        email: localStorage.getItem("email"),
+      })
+      .then((res) => {
+        this.notifications = res.data.notifications;
+        console.log("N", this.notifications);
+      })
+      .catch(() => {
+        alert("Session Expired! Please relogin again.");
+        localStorage.removeItem("email");
+        localStorage.removeItem("id");
+        localStorage.removeItem("token");
+        localStorage.removeItem("name");
+        localStorage.removeItem("phoneNo");
+        // localStorage.removeItem("email")
+        this.$router.push({ name: "memberLogin" });
+      });
+  },
+};
+</script>
+
+
 <style scoped>
 .accounts {
   display: flex;
@@ -143,51 +194,3 @@
 }
 
 </style>
-
-<script>
-import axios from "axios";
-export default {
-  name: "HeaderSection",
-  props: ["name"],
-  data() {
-    return {
-      notifications: [],
-    };
-  },
-  methods: {
-    logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("email");
-      localStorage.removeItem("id");
-      this.$router.push({ name: "logIn" });
-    },
-  },
-  async mounted() {
-    let token = localStorage.getItem("token");
-    console.log("p");
-    if (!token) {
-      this.$router.push({ name: "signUp" });
-    }
-    axios
-      .post("http://localhost:3000/getNotificationsForOrganisation", {
-        id: localStorage.getItem("id"),
-        token: token,
-        email: localStorage.getItem("email"),
-      })
-      .then((res) => {
-        this.notifications = res.data.notifications;
-        console.log("N", this.notifications);
-      })
-      .catch(() => {
-        alert("Session Expired! Please relogin again.");
-        localStorage.removeItem("email");
-        localStorage.removeItem("id");
-        localStorage.removeItem("token");
-        localStorage.removeItem("name");
-        localStorage.removeItem("phoneNo");
-        // localStorage.removeItem("email")
-        this.$router.push({ name: "logIn" });
-      });
-  },
-};
-</script>

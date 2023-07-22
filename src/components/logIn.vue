@@ -22,9 +22,12 @@
       placeholder="Enter Password"
       required
       class="text"/>
-    <i @click="this.isPasswordVisible = !this.isPasswordVisible"
-     class="fas" :class="{ 'fa-eye-slash': showPassword, 'fa-eye': !showPassword }">
-    </i>
+      <i v-if="this.isPasswordVisible == false" 
+    @click="this.isPasswordVisible = !this.isPasswordVisible" id="eyeOpen"
+      class="fa-solid fa-eye" style="color: #504dff"></i>
+    <i v-if="this.isPasswordVisible == true" 
+    @click="this.isPasswordVisible = !this.isPasswordVisible" id="eyeClose"
+    class="fa-solid fa-eye-slash" style="color: #504dff;"></i>
     <br />
     <br />
     <button id="b1" type="submit" v-on:click="login">Log In</button
@@ -124,7 +127,12 @@ h3 {
   border: solid 1px;
   margin: 10px;
 }
-.fas{
+#eyeOpen{
+  margin: 24px 0px 0px -45px;
+  z-index: 999;
+  position:absolute;
+}
+#eyeClose{
   margin: 24px 0px 0px -45px;
   z-index: 999;
   position:absolute;

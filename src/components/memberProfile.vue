@@ -8,10 +8,10 @@
       <div class="right-col">
         <div class="header" style="width: 100%">Managd - User Profile</div>
         <div>
-          <MemberMobileNavbar></MemberMobileNavbar>
+          <memberMobileNavbar></memberMobileNavbar>
         </div>
         <div>
-          <MemberHeader :name="'Albert'"></MemberHeader>
+          <MemberHeader></MemberHeader>
 
         </div>
         <div class="view-area">
@@ -30,12 +30,15 @@
           </div>
 
 
-          <div class="member-detail-p">Name: {{ member.name }}</div>
+          <div class="member-detail-p" >Name: <span style="text-transform: uppercase">
+            {{ member.name }}</span></div>
           <div class="member-detail-p">Phone Number: {{ member.phoneNo }}</div>
           <div class="member-detail-p">Email: {{ member.email }}</div>
-          <div class="member-detail-p">
-            Current Organisation:{{ currentOrganisation }}
+          <div class="member-detail-p" v-if="this.ifJoinedOrg">
+            Current Organisation:<span style="text-transform: uppercase">
+            {{ currentOrganisation }}</span>
           </div>
+          <h6 v-else>No Organisation Joined Yet</h6>
           <!-- <br> -->
           <button class="edit-btn" @click="opened"><span>Edit</span></button>
           <!-- members that are part of same organisation -->
@@ -43,9 +46,7 @@
           <div v-if="this.areOtherMembers">
             <h4>
               Other members from
-              <span style="text-transform: uppercase">{{
-                currentOrganisation
-              }}</span>
+              <span style="text-transform: uppercase">{{currentOrganisation}}</span>
             </h4>
             <div style="height: 80px; overflow-y: scroll">
               <table id="table">
@@ -92,7 +93,6 @@
               </table>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -102,14 +102,14 @@
 <script>
 import axios from "axios";
 import editForm from "./editForm.vue";
-import MemberMobileNavbar from "./memberMobileNavbar.vue";
+import memberMobileNavbar from "./memberMobileNavbar.vue";
 import MemberHeader from "./memberHeader.vue";
 import MemberLeftCol from "./memberLeftCol.vue";
 export default {
   name: "memberProfile",
   components: {
     editForm,
-    MemberMobileNavbar,
+    memberMobileNavbar,
     MemberHeader,
     MemberLeftCol,
   },
@@ -124,7 +124,7 @@ export default {
       currentOrganisation: "",
       notifications: [],
       dialogOpen: false,
-
+      ifJoinedOrg: false,
       token: localStorage.getItem("token"),
       id: localStorage.getItem("id"),
       orgId: localStorage.getItem("orgId"),
@@ -193,7 +193,7 @@ export default {
         })
         .then((res) => {
           this.member = res.data.member;
-          this.notifications = res.data.member.notifications;
+          // this.notifications = res.data.member.notifications;
           this.organisation = res.data.member;
           //  console.log(res.data.member);
         });
@@ -206,7 +206,8 @@ export default {
         })
         .then((res) => {
           this.currentOrganisation = res.data.name;
-          console.log(res.data.name);
+          // console.log("CurrOrg");
+          // console.log(res.data.name);
         });
     },
 
@@ -224,10 +225,10 @@ export default {
           id: id,
         })
         .then((res) => {
-          console.log("API Fired!!!");
+          // console.log("API Fired!!!");
           if (res.data.members.length) {
-            console.log(res.data.members);
-            console.log("_id:" + res.data.members[0]._id);
+            // console.log(res.data.members);
+            // console.log("_id:" + res.data.members[0]._id);
             for (let i = 0; i < res.data.members.length; i++) {
               if (res.data.members[i]._id != this.id) {
                 this.otherMembers.push(res.data.members[i]);
@@ -242,31 +243,25 @@ export default {
     if (!this.token) {
       this.$router.push({ name: "memberLogin" });
     }
-
+    if(localStorage.getItem("orgId") === 'null'){
+      localStorage.removeItem("orgId")
+    }
     this.getMemberDetails();
     let orgId = localStorage.getItem("orgId");
-    if (orgId != null || orgId) {
+    if(localStorage.getItem("orgId")) {
+      // console.log("hi");
       this.getOrganisationDetails(orgId);
       this.getAllMembers(this.orgId);
     } else {
       this.areOtherMembers = false;
     }
-=======
-    },
-  },
-  async mounted() {
-    axios
-      .post("http://localhost:3000/getMemberDetails", {
-        id: localStorage.getItem("id"),
-        token: localStorage.getItem("token"),
-        email: localStorage.getItem("email"),
-      })
-      .then((res) => {
-        this.notifications = res.data.member.notifications;
-        this.organisation = res.data.member;
-      });
+    if(localStorage.getItem("orgId")){
+            this.ifJoinedOrg = true;
+          }
 
-  },
+    },
+  
+
 };
 </script>
 

@@ -24,12 +24,12 @@
       class="text"
     />
 
-    <i
-      @click="this.isPasswordVisible = !this.isPasswordVisible"
-      class="fas"
-      :class="{ 'fa-eye-slash': showPassword, 'fa-eye': !showPassword }"
-    >
-    </i>
+    <i v-if="this.isPasswordVisible == false" 
+    @click="this.isPasswordVisible = !this.isPasswordVisible" id="eyeOpen"
+      class="fa-solid fa-eye" style="color: #504dff"></i>
+    <i v-if="this.isPasswordVisible == true" 
+    @click="this.isPasswordVisible = !this.isPasswordVisible" id="eyeClose"
+    class="fa-solid fa-eye-slash" style="color: #504dff;"></i>
     <br />
     <br />
     <button id="b1" type="submit" v-on:click="login">Log In</button
@@ -71,9 +71,16 @@ export default {
               localStorage.setItem("email", response.data.email);
               localStorage.setItem("token", response.data.token);
               localStorage.setItem("id", response.data.id);
-              localStorage.setItem("orgId", response.data.orgId);
               localStorage.setItem("name", response.data.name);
               localStorage.setItem("phoneNo", response.data.phoneNo);
+              console.log(response.data.orgId);
+              if(response.data.orgId == 'null'){
+                console.log("detected");
+              localStorage.setItem("orgId", 1);
+            }
+            else{
+              localStorage.setItem("orgId", response.data.orgId);
+            }
               this.$router.push({ name: "memberDashboard" });
             } else {
               alert(response.data);
@@ -133,9 +140,14 @@ h3 {
   margin: 10px;
   position: relative;
 }
-.fas {
+#eyeOpen{
   margin: 24px 0px 0px -45px;
   z-index: 999;
-  position: absolute;
+  position:absolute;
+}
+#eyeClose{
+  margin: 24px 0px 0px -45px;
+  z-index: 999;
+  position:absolute;
 }
 </style>
