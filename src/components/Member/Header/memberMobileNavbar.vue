@@ -4,7 +4,7 @@
       <i class="fa-solid fa-bars"></i>
     </div>
     <div class="accounts accounts-mob">
-      <span v-if="1" style="position: relative">
+      <span v-if="notifications.length" style="position: relative" class="active">
         <div><i class="fa-solid fa-bell"></i></div>
         <div
           style="
@@ -18,7 +18,7 @@
             top: -2px;
           "
         >
-          <!-- {{ notifications.length }} -->
+          {{ notifications.length }}
         </div>
         <div class="dropdown">
           <div v-for="(notification, idx) in notifications" :key="idx">
@@ -43,10 +43,16 @@
 </template>
 
 <style scoped>
+
+.hamburger{
+  display: relative;
+  z-index: 999;
+}
 .accounts {
   display: flex;
   align-items: center;
   gap: 1rem;
+  justify-content: end;
 }
 
 .accounts {
@@ -64,6 +70,8 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  position: absolute;
+  right: 10px;
 }
 
 .button-menu {
@@ -83,12 +91,13 @@
 .mobile-navbar {
   display: flex;
   margin-top: 10px;
+  flex-direction: row;
 }
 
 .mobile-navbar-content {
   display: flex;
-  width: 100%;
-  position:relative;
+  width: 95%;
+  position:absolute;
   z-index: 9999;
   flex-direction: column;
   justify-content: center;
@@ -112,6 +121,17 @@
 }
 
 
+.dropdown{
+  display:none;
+  position: absolute;
+  background-color: #504dff;
+  color:white;
+  padding:5px;
+}
+
+.active:hover:hover .dropdown{
+  display: block;
+}
 
 .close {
   align-self: start;
@@ -172,6 +192,7 @@ export default {
       localStorage.removeItem("name");
       localStorage.removeItem("id");
       localStorage.removeItem("token");
+      localStorage.removeItem("orgId");
       this.$router.push({ name: "logIn" });
     },
     menuCollapse() {
@@ -221,16 +242,6 @@ export default {
         this.notifications = res.data.notifications;
         console.log("N", this.notifications);
       })
-      .catch(() => {
-        alert("Session Expired! Please relogin again.");
-        localStorage.removeItem("email");
-        localStorage.removeItem("id");
-        localStorage.removeItem("token");
-        localStorage.removeItem("name");
-        localStorage.removeItem("phoneNo");
-        // localStorage.removeItem("email")
-        this.$router.push({ name: "memberLogin" });
-      });
   },
 };
 </script>

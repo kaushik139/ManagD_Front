@@ -2,57 +2,22 @@
   <div class="dashboard-section">
     <div class="sections">
       <div class="left-col">
-        <button class="button-menu" @click="profile">Profile</button>
-        <button class="button-menu" @click="member">Add Member</button>
-        <button class="button-menu">Check Progress</button>
-        <button class="button-menu" @click="dashboard">Dashboard</button>
+        <MemberLeftCol></MemberLeftCol>
       </div>
 
       <div class="right-col">
         <div class="header" style="width: 100%">
           Managd - Member Task Details
         </div>
-
-        <div class="mobile-navbar">
-          <div class="hamburger" @click="menuCollapse">
-            <i class="fa-solid fa-bars"></i>
-          </div>
-          <div class="accounts accounts-mob">
-            <i class="fa-solid fa-bell"></i>
-            <div style="display: flex; align-items: center; gap: 5px">
-              <span>Hi! {{ organisation.name }}!</span>
-              <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-            </div>
-          </div>
-          <div class="remove-navbar-content" id="nav-content">
-            <button class="button-menu">Profile</button>
-            <button class="button-menu" @click="member">Add Member</button>
-            <button class="button-menu">Check Progress</button>
-            <button class="button-menu" @click="dashboard">Dashboard</button>
-            <!-- <button class="button-menu">Close</button> -->
-          </div>
+        <div>
+          <MemberMobileNavbar :name="organisation.name"></MemberMobileNavbar>
         </div>
-        <div class="row-one">
-          <div class="search-sec">
-            <input
-              class="search"
-              type="text"
-              @change="searchResults"
-              placeholder="Search"
-            />
-            <button class="search-button">
-              <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
+        <div>
+          <div>
+            <MemberHeader :name="organisation.name"></MemberHeader>
           </div>
-          <div class="accounts accounts-lg">
-            <i class="fa-solid fa-bell"></i>
-            <div style="display: flex; align-items: center; gap: 5px">
-              <span>Hi! {{ organisation.name }}!</span>
-              <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-            </div>
-          </div>
-        </div>
         <div class="view-area">
+
           <div class="task-card">
             <h3>{{ task.title }}</h3>
             <p>{{ task.description }}</p>
@@ -61,21 +26,53 @@
             <p><i class="fa-brands fa-github"></i>:</p>
             <p>Assigned to: {{ issue.assignee?.login }}</p>
             <p>Latest Pull Request (done 3 hours ago) by dev</p>
+            <button @click="showIframe">Schedule Meet</button>
+          </div>
+          <div style="display:none">
+            <MeetScheduler></MeetScheduler>
+          </div>
+          <div class="dg" v-if="iframeDisplay">
+            <iframe
+            src="https://calendly.com/chrysaor07">
+          </iframe>
+          <div @click="closeIframe">CLOSE</div >
+          <!-- <a href='#' onclick='this.parentNode.parentNode.removeChild(this.parentNode)'>Close</a> -->
           </div>
         </div>
       </div>
     </div>
   </div>
+  </div>
 </template>
 <style scoped>
+
+.dg{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top:100px;
+  top:70px;
+  /* width: 100%; */
+  /* position: absolute; */
+  /* background-color: red; */
+  position: absolute;
+}
+
+iframe{
+  height:400px;
+  width: 600px;
+}
 .task-card {
+  /* display: none; */
   background-color: white;
   min-height: 50%;
   width: 70%;
-  margin-top: -10%;
+  /* margin-top: -10%; */
   background-color: white;
   box-shadow: 0px 0px 10px gray;
   border-radius: 10px;
+  display: relative;
 }
 .mobile-navbar {
   display: flex;
@@ -130,7 +127,9 @@
 .view-area {
   display: flex;
   width: 100%;
-  height: 84.9%;
+  flex-direction: column;
+  position: relative;
+  /* height: 84.9%; */
   /* min-height: 75vh; */
   /* background-color: blue; */
   /* gap:20px; */
@@ -334,8 +333,13 @@ tr:nth-child(1):hover {
 </style>
 <script>
 import axios from "axios";
+import MemberLeftCol from "../LeftCol/memberLeftCol.vue";
+import MemberMobileNavbar from "../Header/memberMobileNavbar.vue";
+import MemberHeader from "../Header/memberHeader.vue";
+import MeetScheduler from "../../meetScheduler.vue";
 export default {
   name: "DashBoard",
+  components:{MemberLeftCol, MemberMobileNavbar, MemberHeader, MeetScheduler},
   data() {
     return {
       name: "",
@@ -348,11 +352,21 @@ export default {
       attributes: [],
       menuCollapsed: false,
       task: {},
-      issue:{}
+      issue:{},
+      iframeDisplay:false
     };
   },
 
   methods: {
+    showIframe(){
+      this.iframeDisplay=true;
+    },
+    closeIframe(){
+      this.iframeDisplay=false;
+    },
+    handleFocusOut(){
+      console.log("hererererer")
+    },
     profile() {
       this.$router.push({ name: "profile" });
     },
@@ -434,15 +448,15 @@ export default {
       .then((res) => {
         this.task = res.data.task;
         console.log(this.task);
-        axios
-          .post("http://localhost:3000/getGitHubIssueDetails", {
-            username: this.task.githubUsername,
-            repo: this.task.githubRepo,
-            number: this.task.githubIssue,
-          })
-          .then((res)=>
-          {this.issue=res.data
-        console.log(this.issue)});
+        // axios
+        //   .post("http://localhost:3000/getGitHubIssueDetails", {
+        //     username: this.task.githubUsername,
+        //     repo: this.task.githubRepo,
+        //     number: this.task.githubIssue,
+        //   })
+        //   .then((res)=>
+        //   {this.issue=res.data
+        // console.log(this.issue)});
       });
   },
 };

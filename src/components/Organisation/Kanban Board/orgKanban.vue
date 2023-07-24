@@ -171,12 +171,13 @@
               </p>
             </div>
           </div>
+          <div @click="taskDetail(card._id)">See More</div>
         </div>
         <!-- <br /> -->
       </div>
 
       <div class="card_Add" @click="AddTask(1)">
-        <img src="../assets/plus.png" alt="plus" class="icon1" />
+        <!-- <img src="../assets/plus.png" alt="plus" class="icon1" /> -->
         <h4>Add Task</h4>
         <!-- <h5 v-if="message1" class="message1">Task Added Successfully!</h5> -->
         <!-- <h5 v-if="message5" class="message2">Please Fill all the Fields!</h5> -->
@@ -236,12 +237,14 @@
               </p>
             </div>
           </div>
+          <div @click="taskDetail(card._id)">See More</div>
+
         </div>
         <!-- <br /> -->
       </div>
 
       <div class="card_Add" @click="AddTask(2)">
-        <img src="../assets/plus.png" alt="plus" class="icon1" />
+        <!-- <img src="../assets/plus.png" alt="plus" class="icon1" /> -->
         <h4>Add Task</h4>
       </div>
     </div>
@@ -300,12 +303,14 @@
               </p>
             </div>
           </div>
+          <div @click="taskDetail(card._id)">See More</div>
+
         </div>
         <!-- <br /> -->
       </div>
 
       <div class="card_Add" @click="AddTask(3)">
-        <img src="../assets/plus.png" alt="plus" class="icon1" />
+        <!-- <img src="../assets/plus.png" alt="plus" class="icon1" /> -->
         <h4>Add Task</h4>
       </div>
     </div>
@@ -372,6 +377,9 @@ export default {
     };
   },
   methods: {
+    taskDetail(id){
+      this.$router.push(`/organisation/task/${id}`)
+    },
     close() {
       this.taskDialog = false;
     },

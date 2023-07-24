@@ -209,11 +209,11 @@ tr:nth-child(1):hover {
 
 </style>
 <script>
-import LeftCol from "./leftCol.vue";
+import LeftCol from "../LeftCol/leftCol.vue";
 
 import axios from "axios";
-import MobileNavbar from "./mobileNavbar.vue";
-import Header from "./header.vue";
+import MobileNavbar from "../Header/mobileNavbar.vue";
+import Header from "../Header/header.vue";
 export default {
 
     name: "DashBoard",

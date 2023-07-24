@@ -60,36 +60,7 @@
                   <td>{{ item.email }}</td>
                   <td>{{ item.phoneNo }}</td>
                 </tr>
-                <tr>
-                  <td>Dummy data</td>
-                  <td>To Show</td>
-                  <td>Scroll function</td>
-                </tr>
-                <tr>
-                  <td>Dummy data</td>
-                  <td>To Show</td>
-                  <td>Scroll function</td>
-                </tr>
-                <tr>
-                  <td>Dummy data</td>
-                  <td>To Show</td>
-                  <td>Scroll function</td>
-                </tr>
-                <tr>
-                  <td>Dummy data</td>
-                  <td>To Show</td>
-                  <td>Scroll function</td>
-                </tr>
-                <tr>
-                  <td>Dummy data</td>
-                  <td>To Show</td>
-                  <td>Scroll function</td>
-                </tr>
-                <tr>
-                  <td>Dummy data</td>
-                  <td>To Show</td>
-                  <td>Scroll function</td>
-                </tr>
+                
               </table>
             </div>
           </div>
@@ -101,10 +72,10 @@
 
 <script>
 import axios from "axios";
-import editForm from "./editForm.vue";
-import memberMobileNavbar from "./memberMobileNavbar.vue";
-import MemberHeader from "./memberHeader.vue";
-import MemberLeftCol from "./memberLeftCol.vue";
+import editForm from "../../Shared/EditForm/editForm.vue";
+import memberMobileNavbar from "../Header/memberMobileNavbar.vue";
+import MemberHeader from "../Header/memberHeader.vue";
+import MemberLeftCol from "../LeftCol/memberLeftCol.vue";
 export default {
   name: "memberProfile",
   components: {
@@ -335,6 +306,7 @@ export default {
   display: flex;
   justify-content: center;
   overflow-x: auto;
+  height:200px;
 }
 table {
   width: 80%;

@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-section">
+  <div class="dashboard-section" :key="pageUpdateHelper">
     <div class="sections">
       <div class="left-col">
         <LeftCol :name="organisation.name"></LeftCol>
@@ -317,28 +317,23 @@ h3 {
 </style>
 <script>
 import axios from "axios";
-import LeftCol from "./leftCol.vue";
-import MobileNavbar from "./mobileNavbar.vue";
-import Header from "./header.vue";
+import LeftCol from "../LeftCol/leftCol.vue";
+import MobileNavbar from "../Header/mobileNavbar.vue";
+import Header from "../Header/header.vue";
 export default {
-  name: "AddMembers",
+  name: "MemberManagement",
   data() {
     return {
-      name: "",
-      mail: "",
-      pass: "",
-      phone: "",
+
       members: [],
       organisation: {},
       selectedMembers: [],
       removedMembers: [],
+      pageUpdateHelper:false
     };
   },
   components: { LeftCol, MobileNavbar, Header },
   methods: {
-    profile() {
-      this.$router.push({ name: "profile" });
-    },
 
     member() {
       this.$router.push({ name: "/addMember" });
@@ -376,11 +371,20 @@ export default {
         })
         .then((res) => {
           if (res.status == 200) alert("Removed valid members!");
+          this.pageUpdateHelper=!this.pageUpdateHelper;
+          this.removedMembers=[];
+          this.selectedMembers=[];
+          axios
+      .post("http://localhost:3000/getAllMembers", {
+        id: localStorage.getItem("id"),
+      })
+      .then((res) => {
+        this.members = res.data.members;
+        console.log(this.members);
+      });
         });
     },
-    dashboard() {
-      this.$router.push({ name: "dashBoard" });
-    },
+
     async sendInvites() {
       axios
         .post("http://localhost:3000/addMember", {
@@ -391,39 +395,14 @@ export default {
         })
         .then((res) => {
           if (res.status == 200) alert("Sent invites to valid members!");
+          this.pageUpdateHelper=!this.pageUpdateHelper
+          this.selectedMembers=[]
+          this.removedMembers=[]
         });
     },
     submit(event) {
       this.selectedMembers.push(...[event.target[0].value]);
       console.log(this.selectedMembers);
-    },
-    logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("email");
-      localStorage.removeItem("id");
-      this.$router.push({ name: "logIn" });
-    },
-    login() {
-      this.$router.push({ name: "memberLogin" });
-    },
-    signUp() {
-      if (this.name && this.mail && this.pass && this.phone) {
-        axios
-          .post("http://localhost:3000/memberSignup", {
-            email: this.mail,
-            name: this.name,
-            password: this.pass,
-            phoneNo: this.phone,
-          })
-          .then((response) => {
-            this.message = response.data;
-            alert(this.message);
-            if (this.message != "E-mail already Exists.")
-              this.$router.push({ name: "login" });
-          });
-      } else {
-        alert("Please fill the required details");
-      }
     },
   },
   mounted() {
