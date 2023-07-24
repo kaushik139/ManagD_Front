@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form @submit="changed">
+    <form @submit.prevent="changed">
       <div class="row">
         <h4>Edit Profile</h4>
         <div class="input-group input-group-icon">
@@ -65,13 +65,16 @@ export default {
         phoneNo: e.target[2].value,
         location: e.target[3].value,
       };
+      console.log("555");
+      console.log(this.editedDetails.name);
+      console.log(e.target[0].value);
+      console.log("555");
       // Checking whether Org or Member
       console.log("edName");
       console.log(this.editedDetails.name);
       let orgID = localStorage.getItem("orgId");
       if (orgID === 'null' || orgID) {
         console.log("Its a Member");
-        console.log(e.target[0].value);
 
         // For Members
         axios
