@@ -26,7 +26,7 @@ export default{
       this.$router.push({ name: "dashBoard" });
     },
     member() {
-      this.$router.push({ name: "addMembers" });
+      this.$router.push({ name: "memberManagement" });
     },
     logout() {
       localStorage.removeItem("email");

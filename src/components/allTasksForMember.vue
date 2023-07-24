@@ -1,373 +1,327 @@
 <template>
-  <div class="dashboard-section">
-    <div class="sections">
-        
-        <div class="header" style="width: 100%">Managd - User Tasks
-          <i  @click="home" id="houseIcon" class="fa-solid fa-house" style="color: #ffffff;"></i>
+  <!-- <dragBoardHead/> -->
+  <div class="kanban-header">
+    <div>ManagD - {{ organisationName }} Kanban Board</div>
+    <div class="kanban-header-icons"><i class="fa-solid fa-house" @click="home"></i></div>
+  </div>
+  <div id="container">
+    <div class="centered" v-if="taskDialog">
+      <!-- <button>X</button> -->
+      <form class="form" @submit.prevent="submitForm">
+        <div class="title">Add Task</div>
+        <!-- <div class="subtitle">Let's create your account!</div> -->
+        <div class="input-container ic1">
+          <input id="firstname" class="input" type="text" placeholder=" " />
+          <div class="cut cut-title"></div>
+          <label for="firstname" class="placeholder">Title</label>
+        </div>
+        <div class="input-container ic1">
+          <textarea
+            id="firstname"
+            class="input"
+            type="text-area"
+            rows="4"
+            cols="50"
+            placeholder=" "
+          />
+          <div class="cut"></div>
+          <label for="firstname" class="placeholder">Description</label>
+        </div>
+        <div class="input-container ic1">
+          <input
+            id="gitUsername"
+            class="input"
+            @change="getGit"
+            type="text"
+            placeholder=" "
+          />
+          <div class="cut cut-title" style="width: 55px"></div>
+          <label for="firstname" class="placeholder">GitHub Username</label>
+        </div>
+        <div class="input-container ic1">
+          <input
+            id="gitRepo"
+            class="input"
+            @change="getGit"
+            type="text"
+            placeholder=" "
+          />
+          <div class="cut cut-title" style="width: 55px"></div>
+          <label for="firstname" class="placeholder">GitHub Repo</label>
+        </div>
+        <div class="input-container ic1">
+          <select id="firstname" class="input" type="text" placeholder=" ">
+            <option
+              v-for="(issue, index) in issues"
+              :key="index"
+              :value="issue.number"
+            >
+              {{ issue.title }}
+            </option>
+          </select>
+          <div class="cut"></div>
+
+          <label for="firstname" class="placeholder">GitHub Repo</label>
+        </div>
+        <div class="input-container ic2">
+          <input id="lastname" class="input" type="date" placeholder=" " />
+          <div class="cut"></div>
+          <label for="lastname" class="placeholder">Start Date</label>
+        </div>
+        <div class="input-container ic2">
+          <input id="lastname" class="input" type="date" placeholder=" " />
+          <div class="cut"></div>
+          <label for="lastname" class="placeholder">End Date</label>
         </div>
 
-        <!-- <dragBoardHead/> -->
-        <div id="container">
-          <div class="centered" v-if="taskDialog">
-            <!-- <button>X</button> -->
-            <form class="form" @submit.prevent="submitForm">
-              <div class="title">Add Task</div>
-              <!-- <div class="subtitle">Let's create your account!</div> -->
-              <div class="input-container ic1">
-                <input
-                  id="firstname"
-                  class="input"
-                  type="text"
-                  placeholder=" "
-                />
-                <div class="cut cut-title"></div>
-                <label for="firstname" class="placeholder">Title</label>
-              </div>
-              <div class="input-container ic1">
-                <textarea
-                  id="firstname"
-                  class="input"
-                  type="text-area"
-                  rows="4"
-                  cols="50"
-                  placeholder=" "
-                />
-                <div class="cut"></div>
-                <label for="firstname" class="placeholder">Description</label>
-              </div>
-              <div class="input-container ic1">
-                <input
-                  id="gitUsername"
-                  class="input"
-                  @change="getGit"
-                  type="text"
-                  placeholder=" "
-                />
-                <div class="cut cut-title" style="width: 55px"></div>
-                <label for="firstname" class="placeholder"
-                  >GitHub Username</label
-                >
-              </div>
-              <div class="input-container ic1">
-                <input
-                  id="gitRepo"
-                  class="input"
-                  @change="getGit"
-                  type="text"
-                  placeholder=" "
-                />
-                <div class="cut cut-title" style="width: 55px"></div>
-                <label for="firstname" class="placeholder">GitHub Repo</label>
-              </div>
-              <div class="input-container ic1">
-                <select
-                  id="firstname"
-                  class="input"
-                  type="text"
-                  placeholder=" "
-                >
-                  <option
-                    v-for="(issue, index) in issues"
-                    :key="index"
-                    :value="issue.number"
-                  >
-                    {{ issue.title }}
-                  </option>
-                </select>
-                <div class="cut"></div>
+        <div class="input-container ic2">
+          <select
+            id="lastname"
+            class="input"
+            type="text"
+            placeholder=" "
+            @change="selectMember"
+          >
+            <option>Select</option>
 
-                <label for="firstname" class="placeholder">GitHub Repo</label>
-              </div>
-              <div class="input-container ic2">
-                <input
-                  id="lastname"
-                  class="input"
-                  type="date"
-                  placeholder=" "
-                />
-                <div class="cut"></div>
-                <label for="lastname" class="placeholder">Start Date</label>
-              </div>
-              <div class="input-container ic2">
-                <input
-                  id="lastname"
-                  class="input"
-                  type="date"
-                  placeholder=" "
-                />
-                <div class="cut"></div>
-                <label for="lastname" class="placeholder">End Date</label>
-              </div>
+            <option v-for="(member, index) in organisationMembers" :key="index">
+              {{ member.email }}
+            </option>
+          </select>
+          <div class="cut cut-members"></div>
+          <label for="lastname" class="placeholder">Assigned Members</label>
+        </div>
+        <div
+          class="avatar-row"
+          style="color: black; max-height: 30px; overflow-y: auto"
+        >
+          <span class="avatar" v-for="(x, index) in addedMembers" :key="index"
+            >{{ x }},</span
+          >
+        </div>
 
-              <div class="input-container ic2">
-                <select
-                  id="lastname"
-                  class="input"
-                  type="text"
-                  placeholder=" "
-                  @change="selectMember"
-                >
-                  <option>Select</option>
+        <div class="input-container ic2" :key="changed">
+          <input
+            id="lastname"
+            class="input"
+            disabled
+            type="text"
+            placeholder=" "
+            :value="Show1"
+          />
+          <div class="cut"></div>
+          <label for="lastname" class="placeholder">Status</label>
+        </div>
 
-                  <option
-                    v-for="(member, index) in organisationMembers"
-                    :key="index"
-                  >
-                    {{ member.email }}
-                  </option>
-                </select>
-                <div class="cut cut-members"></div>
-                <label for="lastname" class="placeholder"
-                  >Assigned Members</label
-                >
-              </div>
-              <div
-                class="avatar-row"
-                style="color: black; max-height: 30px; overflow-y: auto"
+        <button type="submit" class="submit">Submit</button>
+        <button @click="close">Close</button>
+      </form>
+    </div>
+
+    <div
+      class="box box-on"
+      @drop="onDrop($event, 1)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
+      <h2>On Going</h2>
+      <div
+        v-for="(card, index) in listOne"
+        :key="card._id"
+        class="card"
+        draggable="true"
+        @dragstart="startDrag($event, index, card._id)"
+      >
+        <div class="card-text">
+          <h3>{{ card.title }}</h3>
+          <p>{{ card.description }}</p>
+          <!-- <progress :value="card.progress" max="100" data-label="10%">1%</progress> -->
+          <div>
+            <i class="fa-brands fa-github"></i>:
+            <a
+              target="_blank"
+              v-bind:href="
+                'https://github.com/' +
+                card.githubUsername +
+                '/' +
+                card.githubRepo
+              "
+              >{{ card.githubUsername }}/{{ card.githubRepo }}</a
+            >
+          </div>
+          <div class="days">
+            <span>{{ card.startDate.slice(0, 10).replace(/-/g, "/") }}</span>
+            to
+            <span>{{ card.endDate.slice(0, 10).replace(/-/g, "/") }}</span>
+          </div>
+
+          <p v-if="card.extension">
+            {{ card.extension }}
+          </p>
+          <p style="margin-top: 10px">Created By: ADMIN</p>
+          <div>
+            Assigned to:
+            <div style="margin-top: 10px">
+              <p
+                class="assignee-icon"
+                v-for="(assigneed, index) in card.assignees"
+                :key="index"
               >
-                <span
-                  class="avatar"
-                  v-for="(x, index) in addedMembers"
-                  :key="index"
-                  >{{ x }},</span
-                >
-              </div>
-
-              <div class="input-container ic2" :key="changed">
-                <input
-                  id="lastname"
-                  class="input"
-                  disabled
-                  type="text"
-                  placeholder=" "
-                  :value="Show1"
-                />
-                <div class="cut"></div>
-                <label for="lastname" class="placeholder">Status</label>
-              </div>
-
-              <button type="submit" class="submit">Submit</button>
-              <button @click="close">Close</button>
-            </form>
-          </div>
-
-          <!-- Boxes begin Here -->
-          <div
-            class="box1"
-            @drop="onDrop($event, 1)"
-            @dragover.prevent
-            @dragenter.prevent
-          >
-            <h2>On Going</h2>
-            <div
-              v-for="(card, index) in listOne"
-              :key="card._id"
-              class="card"
-              draggable="true"
-              @dragstart="startDrag($event, index, card._id)"
-            >
-              <div class="card-text">
-                <h3>{{ card.title }}</h3>
-                <p>{{ card.description }}</p>
-                <!-- <progress :value="card.progress" max="100" data-label="10%">1%</progress> -->
-                <div>
-                  <i class="fa-brands fa-github"></i>:
-                  <a
-                    target="_blank"
-                    v-bind:href="
-                      'https://github.com/' +
-                      card.githubUsername +
-                      '/' +
-                      card.githubRepo
-                    "
-                    >{{ card.githubUsername }}/{{ card.githubRepo }}</a
-                  >
-                </div>
-                <div class="days">
-                  <span>{{
-                    card.startDate.slice(0, 10).replace(/-/g, "/")
-                  }}</span>
-                  to
-                  <span>{{
-                    card.endDate.slice(0, 10).replace(/-/g, "/")
-                  }}</span>
-                </div>
-
-                <p v-if="card.extension">
-                  {{ card.extension }}
-                </p>
-                <p style="margin-top: 10px">Created By: ADMIN</p>
-                <div>
-                  Assigned to:
-                  <div style="margin-top: 10px">
-                    <p
-                      class="assignee-icon"
-                      v-for="(assigneed, index) in card.assignees"
-                      :key="index"
-                    >
-                      {{ assigneed[0] }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <!-- <br /> -->
-            </div>
-
-            <div class="card_Add" @click="AddTask(1)">
-              <img src="../assets/plus.png" alt="plus" class="icon1" />
-              <h4>Add Task</h4>
-              <!-- <h5 v-if="message1" class="message1">Task Added Successfully!</h5> -->
-              <!-- <h5 v-if="message5" class="message2">Please Fill all the Fields!</h5> -->
-            </div>
-          </div>
-
-          <div
-            class="box2"
-            @drop="onDrop($event, 2)"
-            @dragover.prevent
-            @dragenter.prevent
-          >
-            <h2>Halted</h2>
-            <div
-              v-for="(card, index) in listTwo"
-              :key="card._id"
-              class="card"
-              draggable="true"
-              @dragstart="startDrag($event, index, card._id)"
-            >
-              <div class="card-text">
-                <h3>{{ card.title }}</h3>
-                <p>{{ card.description }}</p>
-                <!-- <progress :value="card.progress" max="100" data-label="10%">1%</progress> -->
-                <div>
-                  <i class="fa-brands fa-github"></i>:
-                  <a
-                    target="_blank"
-                    v-bind:href="
-                      'https://github.com/' +
-                      card.githubUsername +
-                      '/' +
-                      card.githubRepo
-                    "
-                    >{{ card.githubUsername }}/{{ card.githubRepo }}</a
-                  >
-                </div>
-                <div class="days">
-                  <span>{{
-                    card.startDate.slice(0, 10).replace(/-/g, "/")
-                  }}</span>
-                  to
-                  <span>{{
-                    card.endDate.slice(0, 10).replace(/-/g, "/")
-                  }}</span>
-                </div>
-
-                <p v-if="card.extension">
-                  {{ card.extension }}
-                </p>
-                <p style="margin-top: 10px">Created By: ADMIN</p>
-                <div>
-                  Assigned to:
-                  <div style="margin-top: 10px">
-                    <p
-                      class="assignee-icon"
-                      v-for="(assigneed, index) in card.assignees"
-                      :key="index"
-                    >
-                      {{ assigneed[0] }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <!-- <br /> -->
-            </div>
-
-            <div class="card_Add" @click="AddTask(2)">
-              <img src="../assets/plus.png" alt="plus" class="icon1" />
-              <h4>Add Task</h4>
-            </div>
-          </div>
-
-          <div
-            class="box3"
-            @drop="onDrop($event, 3)"
-            @dragover.prevent
-            @dragenter.prevent
-          >
-            <h2>Completed</h2>
-            <div
-              v-for="(card, index) in listThree"
-              :key="card._id"
-              class="card"
-              draggable="true"
-              @dragstart="startDrag($event, index, card._id)"
-            >
-              <div class="card-text">
-                <h3>{{ card.title }}</h3>
-                <p>{{ card.description }}</p>
-                <!-- <progress :value="card.progress" max="100" data-label="10%">1%</progress> -->
-                <div>
-                  <i class="fa-brands fa-github"></i>:
-                  <a
-                    target="_blank"
-                    v-bind:href="
-                      'https://github.com/' +
-                      card.githubUsername +
-                      '/' +
-                      card.githubRepo
-                    "
-                    >{{ card.githubUsername }}/{{ card.githubRepo }}</a
-                  >
-                </div>
-                <div class="days">
-                  <span>{{
-                    card.startDate.slice(0, 10).replace(/-/g, "/")
-                  }}</span>
-                  to
-                  <span>{{
-                    card.endDate.slice(0, 10).replace(/-/g, "/")
-                  }}</span>
-                </div>
-
-                <p v-if="card.extension">
-                  {{ card.extension }}
-                </p>
-                <p style="margin-top: 10px">Created By: ADMIN</p>
-                <div>
-                  Assigned to:
-                  <div style="margin-top: 10px">
-                    <p
-                      class="assignee-icon"
-                      v-for="(assigneed, index) in card.assignees"
-                      :key="index"
-                    >
-                      {{ assigneed[0] }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <!-- <br /> -->
-            </div>
-
-            <div class="card_Add" @click="AddTask(3)">
-              <img src="../assets/plus.png" alt="plus" class="icon1" />
-              <h4>Add Task</h4>
+                {{ assigneed[0] }}
+              </p>
             </div>
           </div>
         </div>
+        <!-- <br /> -->
+      </div>
+
+      <div class="card_Add" @click="AddTask(1)">
+        <img src="../assets/plus.png" alt="plus" class="icon1" />
+        <h4>Add Task</h4>
+        <!-- <h5 v-if="message1" class="message1">Task Added Successfully!</h5> -->
+        <!-- <h5 v-if="message5" class="message2">Please Fill all the Fields!</h5> -->
       </div>
     </div>
 
+    <div
+      class="box box-halt"
+      @drop="onDrop($event, 2)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
+      <h2>Halted</h2>
+      <div
+        v-for="(card, index) in listTwo"
+        :key="card._id"
+        class="card"
+        draggable="true"
+        @dragstart="startDrag($event, index, card._id)"
+      >
+        <div class="card-text">
+          <h3>{{ card.title }}</h3>
+          <p>{{ card.description }}</p>
+          <!-- <progress :value="card.progress" max="100" data-label="10%">1%</progress> -->
+          <div>
+            <i class="fa-brands fa-github"></i>:
+            <a
+              target="_blank"
+              v-bind:href="
+                'https://github.com/' +
+                card.githubUsername +
+                '/' +
+                card.githubRepo
+              "
+              >{{ card.githubUsername }}/{{ card.githubRepo }}</a
+            >
+          </div>
+          <div class="days">
+            <span>{{ card.startDate.slice(0, 10).replace(/-/g, "/") }}</span>
+            to
+            <span>{{ card.endDate.slice(0, 10).replace(/-/g, "/") }}</span>
+          </div>
+
+          <p v-if="card.extension">
+            {{ card.extension }}
+          </p>
+          <p style="margin-top: 10px">Created By: ADMIN</p>
+          <div>
+            Assigned to:
+            <div style="margin-top: 10px">
+              <p
+                class="assignee-icon"
+                v-for="(assigneed, index) in card.assignees"
+                :key="index"
+              >
+                {{ assigneed[0] }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- <br /> -->
+      </div>
+
+      <div class="card_Add" @click="AddTask(2)">
+        <img src="../assets/plus.png" alt="plus" class="icon1" />
+        <h4>Add Task</h4>
+      </div>
+    </div>
+
+    <div
+      class="box box-complete"
+      :key="disp"
+      @drop="onDrop($event, 3)"
+      @dragover.prevent
+      @dragenter.prevent
+    >
+      <h2>Completed</h2>
+      <div
+        v-for="(card, index) in listThree"
+        :key="card._id"
+        class="card"
+        draggable="true"
+        @dragstart="startDrag($event, index, card._id)"
+      >
+        <div class="card-text">
+          <h3>{{ card.title }}</h3>
+          <p>{{ card.description }}</p>
+          <!-- <progress :value="card.progress" max="100" data-label="10%">1%</progress> -->
+          <div>
+            <i class="fa-brands fa-github"></i>:
+            <a
+              target="_blank"
+              v-bind:href="
+                'https://github.com/' +
+                card.githubUsername +
+                '/' +
+                card.githubRepo
+              "
+              >{{ card.githubUsername }}/{{ card.githubRepo }}</a
+            >
+          </div>
+          <div class="days">
+            <span>{{ card.startDate.slice(0, 10).replace(/-/g, "/") }}</span>
+            to
+            <span>{{ card.endDate.slice(0, 10).replace(/-/g, "/") }}</span>
+          </div>
+
+          <p v-if="card.extension">
+            {{ card.extension }}
+          </p>
+          <p style="margin-top: 10px">Created By: ADMIN</p>
+          <div>
+            Assigned to:
+            <div style="margin-top: 10px">
+              <p
+                class="assignee-icon"
+                v-for="(assigneed, index) in card.assignees"
+                :key="index"
+              >
+                {{ assigneed[0] }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- <br /> -->
+      </div>
+
+      <div class="card_Add" @click="AddTask(3)">
+        <img src="../assets/plus.png" alt="plus" class="icon1" />
+        <h4>Add Task</h4>
+      </div>
+    </div>
+  </div>
 </template>
-  
-  <script>
+
+<script>
 import { ref } from "vue";
 import axios from "axios";
-
+// import dragBoardHead from './dragBoardHead.vue';
+const disp = ref(0);
 
 export default {
   name: "dragThree",
   components: {
+    // dragBoardHead,
   },
   props: {},
   data() {
@@ -413,12 +367,11 @@ export default {
       issues: [],
       githubUsername: "",
       githubRepo: "",
+      organisationName: "",
+      // disp:0
     };
   },
   methods: {
-    home(){
-      this.$router.push({name: "memberDashboard"})
-    },
     close() {
       this.taskDialog = false;
     },
@@ -454,7 +407,7 @@ export default {
           startDate: e.target[5].value,
           endDate: e.target[6].value,
           assignees: this.addedMembers,
-          orgId: localStorage.getItem("id"),
+          orgId: localStorage.getItem("orgId"),
           createdBy: localStorage.getItem("id"),
           status: "Ongoing",
           progress: 0,
@@ -488,6 +441,7 @@ export default {
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("cardID", status);
+      disp.value++;
     },
 
     onDrop(evt, list) {
@@ -502,9 +456,22 @@ export default {
           },
         })
         .then(() => {
-          this.$router.go();
+          // this.$router.go();
+          axios
+            .post("http://localhost:3000/getMemberTasks", {
+              id: localStorage.getItem("id"),
+            })
+            .then((res) => {
+              console.log(res);
+              this.box = res.data.taskList;
+              console.log(this.box);
+              disp.value++;
+            });
         });
     },
+    home(){
+        this.$router.push({name:"dashBoard"})
+    }
   },
 
   mounted() {
@@ -517,14 +484,16 @@ export default {
       });
 
     axios
-      .post("http://localhost:3000/getTasksForOrganisation", {
+      .post("http://localhost:3000/getMemberTasks", {
         id: localStorage.getItem("id"),
       })
       .then((res) => {
         console.log(res);
-        this.box = res.data.tasks;
+        this.box = res.data.taskList;
         console.log(this.box);
       });
+
+    this.organisationName = localStorage.getItem("name");
   },
   computed: {
     listOne() {
@@ -544,8 +513,31 @@ export default {
   },
 };
 </script>
-  
-  <style scoped>
+
+<style scoped>
+.kanban-header {
+  margin-top: -60px;
+  font-weight: 900;
+  font-size: 1.4rem;
+  font-family: "Nunito", sans-serif !important;
+  background-color: #000;
+  color: white;
+  box-shadow: 0px 0px 5px gray;
+  padding: 10px;
+  /* display: flex;
+  justify-content: center; */
+}
+
+.kanban-header div {
+  display: inline-block;
+}
+
+.kanban-header-icons {
+  /* right:0; */
+  float: right;
+  /* margin-right: auto; */
+}
+
 .card {
   background-color: #9ec5fe;
   border: 3px solid blue;
@@ -779,28 +771,25 @@ progress:before {
   grid-template-columns: 30% 30% 30%;
   align-items: flex-start;
 }
-.box1 {
+.box {
   border-radius: 7px;
   text-align: center;
   margin: 5px;
-  background-color: #504dff !important;
   color: white;
-}
-.box2 {
-  border-radius: 7px;
-  text-align: center;
-  margin: 5px;
-  background-color: rgb(247,180,68) !important;
-  color: white;
-}
-.box3 {
-  border-radius: 7px;
-  text-align: center;
-  margin: 5px;
-  background-color: rgb(79,197,86) !important;
-  color: white;
+    font-family: "Nunito", sans-serif;
 }
 
+.box-complete{
+  background-color: rgb(79,197,86);
+
+}
+.box-halt{
+    background-color: rgb(247,180,68);
+}
+
+.box-on{
+    background-color: rgb(85,122,203);
+}
 .card_Add {
   background-color: #9ec5fe;
   border: 3px solid #504dff;
@@ -836,245 +825,4 @@ h4 {
   text-align: left;
   margin-top: 14px;
 }
-
-.mobile-navbar {
-    display: flex;
-    /* justify-content: space-around; */
-    /* display: none; */
-  }
-  
-  .mobile-navbar-content {
-    display: flex;
-    width: 100%;
-    /* display: none; */
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  @media only screen and (min-width: 993px) {
-    .accounts-mob {
-      display: none;
-    }
-  }
-  @media only screen and (min-width: 993px) {
-    .mobile-navbar {
-      display: none;
-    }
-  }
-  .remove-navbar-content {
-    display: none;
-  }
-  .header {
-    background-color: rgb(0, 0, 0);
-    color: white;
-    font-weight: 900;
-    font-family: "Nunito", sans-serif !important;
-    width: 125%;
-    margin-top: -60px;
-  }
-  
-  @media only screen and (max-width: 992px) {
-    .right-col {
-      width: 100%;
-    }
-  }
-  .dialog {
-    position: fixed;
-    left: 20%;
-    top: 50%;
-    -ms-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-  }
-  .view-area {
-    display: flex;
-    width: 100%;
-    /* gap:20px; */
-    margin-top: 30px;
-    justify-content: space-around;
-    /* margin-left: 10px; */
-    /* justify-content: center; */
-  }
-  
-  .view-area-right {
-    background-color: #504dff;
-    padding: 15px;
-    color: white;
-    font-weight: 800;
-    border-radius: 15px;
-    box-shadow: 0px 0px 10px gray;
-    font-size: 14px;
-  }
-  .table {
-    width: 60%;
-  }
-  table {
-    border: 1px solid black;
-    width: 100%;
-    margin-top: 20px;
-  }
-  td {
-    border: 1px solid black;
-  }
-  tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  tr:nth-child(odd) {
-    background-color: #dadada;
-  }
-  
-  tr:nth-child(1) {
-    background-color: white;
-  }
-  
-  tr:hover {
-    background-color: #504dff;
-  }
-  tr:nth-child(1):hover {
-    background-color: white;
-  }
-  .accounts {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  
-  @media only screen and (max-width: 993px) {
-    .accounts-lg {
-      display: none;
-    }
-  }
-  
-  .accounts-mob {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-  .row-one {
-    display: flex;
-    margin-top: px;
-    justify-content: end;
-    gap: 70px;
-    margin-right: 10px;
-    width: 125%;
-  }
-  .fa-bell {
-    font-size: 2rem;
-    color: #504dff;
-  }
-  
-  .fa-right-from-bracket {
-    font-size: 2rem;
-    color: #504dff;
-  }
-  .fa-right-from-bracket:hover {
-    cursor: pointer;
-  }
-  .search-sec {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  @media only screen and (max-width: 992px) {
-    .search-sec {
-      width: 100%;
-      margin-top: 10px;
-      margin-left: 0;
-      margin-right: 0;
-    }
-  }
-  
-  .search {
-    height: 25px;
-  }
-  .search-button {
-    height: 31px;
-  }
-  
-
-  
-  .left-col {
-    width: 20%;
-    height: 100%;
-    background: #504dff;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    padding: 10px;
-  }
-  .right-col {
-    width: 80%;
-    height: 100%;
-    /* background-color: red; */
-  }
-  
-  @media only screen and (max-width: 992px) {
-    .sections {
-      flex-direction: row;
-      padding: 10px;
-      gap: 15px;
-    }
-  
-    .left-col {
-      display: none;
-      /* width:100%; */
-    }
-  
-    .right-col {
-      width: 100%;
-    }
-  
-    .fa-bell {
-      font-size: 1rem;
-    }
-  
-    .fa-right-from-bracket {
-      font-size: 1rem;
-    }
-  
-    .accounts {
-      font-size: 0.7rem;
-    }
-  
-    .view-area {
-      flex-direction: column;
-    }
-  
-    .table {
-      width: 100%;
-    }
-    .view-area-right {
-      font-size: 12px;
-      font-weight: 400;
-      margin-top: 15px;
-    }
-  }
-  
-  .button-menu {
-    height: 7%;
-    background-color: white;
-    border: none;
-    padding: 0;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
-    border-radius: 10px;
-    transition: 0.6s;
-    font-weight: 700;
-    font-family: "Nunito", sans-serif !important;
-  }
-  .button-menu:hover {
-    background-color: antiquewhite;
-  }
-  #houseIcon{
-    align-self: right ;
-    float: right;
-    margin: 3px 2px 0px 0px;
-  }
 </style>
-  

@@ -312,10 +312,10 @@ dialog {
 </style>
 <script>
 import axios from "axios";
-import editForm from "./editForm.vue";
-import LeftCol from "./leftCol.vue";
-import MobileNavbar from "./mobileNavbar.vue";
-import Header from "./header.vue";
+import editForm from "../../Shared/EditForm/editForm.vue";
+import LeftCol from "../LeftCol/leftCol.vue";
+import MobileNavbar from "../Header/mobileNavbar.vue";
+import Header from "../Header/header.vue";
 export default {
   name: "OrgProfile",
   components: {

@@ -34,7 +34,7 @@
         localStorage.removeItem("id");
         localStorage.removeItem("token");
         // localStorage.removeItem("token");
-        this.$router.push({ name: "memberLogin" });
+        this.$router.push({ name: "logIn" });
       },
     }
   }

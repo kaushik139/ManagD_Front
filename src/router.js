@@ -3,19 +3,23 @@ import signUp from "./components/signUp.vue";
 import logIn from "./components/logIn.vue";
 import memberLogin from "./components/memberLogin.vue";
 import memberSignup from "./components/memberSignup.vue";
-import dashBoard from "./components/dashboard.vue";
-import memberDashboard from "./components/memberDashboard.vue";
-import addMember from "./components/addMember.vue";
-import profile from "./components/profile.vue";
-import memberProfile from "./components/memberProfile.vue";
-import orgView from "./components/orgView.vue";
-import progress from "./components/progress.vue";
+import dashBoard from "./components/Organisation/DashBoard/dashboard.vue";
+import profile from "./components/Organisation/Profile/profile.vue";
+// import orgView from "./components/orgView.vue";
+import progress from "./components/Organisation/Progress/progress.vue";
 import dragThree from "./components/dragThree.vue";
 import getTasksForOrganisation from "./components/allTasks.vue"
-import taskDetail from "./components/taskDetail.vue"
-import orgKanban from "./components/orgKanban.vue"
+import taskDetail from "./components/Member/TaskDetail/taskDetail.vue"
+import orgKanban from "./components/Organisation/Kanban Board/orgKanban.vue"
 import allTasksForMember from "./components/allTasksForMember.vue"
-import memberProgress from "./components/memberProgress.vue"
+import memberManagement from "./components/Organisation/MemberManagement/memberManagement.vue"
+// Member Imports
+import memberDashboard from "./components/Member/Dashboard/memberDashboard.vue";
+import memberProfile from "./components/Member/Profile/memberProfile.vue";
+import memberProgress from "./components/Member/Progress/memberProgress.vue"
+import organisationManagement from "./components/Member/Organisation Management/organisationManagement.vue"
+
+import meetScheduler from  "./components/meetScheduler.vue"
 const routes = [
     {
         name: 'dragThree',
@@ -55,7 +59,7 @@ const routes = [
    {
     name: 'dashBoard',
     component: dashBoard,
-    path: '/dashBoard'
+    path: '/organisation/dashboard'
    },
    {
     name: 'memberDashboard',
@@ -63,19 +67,19 @@ const routes = [
     path: '/memberDashboard'
    },
    {
-    name:'addMembers',
-    component: addMember,
-    path: '/addMember'
+    name:'memberManagement',
+    component: memberManagement,
+    path: '/organisation/member/manage'
    },
    {
     name:'profile',
     component: profile,
-    path: '/profile'
+    path: '/organisation/profile'
    },
    {
     name:'orgView',
-    component: orgView,
-    path: '/orgView'
+    component: organisationManagement,
+    path: '/member/organisation/manage'
    },
    {
     name:'memberProfile',
@@ -85,7 +89,7 @@ const routes = [
    {
     name:'progress',
     component: progress,
-    path:'/progress'
+    path:'/organisation/progress'
    },
    {
     name:'getTasksForOrganisation',
@@ -95,12 +99,17 @@ const routes = [
    {
     name:'task',
     component: taskDetail,
-    path:'/task/:id'
+    path:'/member/task/:id'
    },
    {
     name:'orgKanban',
     component: orgKanban,
-    path:'/orgKanban'
+    path:'/organisation/kanban'
+   },
+   {
+    name:'meet',
+    component: meetScheduler,
+    path:'/meet'
    }
 ]
 

@@ -410,9 +410,9 @@
   <script>
   import axios from "axios";
   import { Bar, Line, Pie } from "vue-chartjs";
-  import MemberLeftCol from "./memberLeftCol.vue";
-  import memberMobileNavbar from "./memberMobileNavbar.vue";
-  import MemberHeader from "./memberHeader.vue"
+  import MemberLeftCol from "../LeftCol/memberLeftCol.vue";
+  import memberMobileNavbar from "../Header/memberMobileNavbar.vue";
+  import MemberHeader from "../Header/memberHeader.vue"
   import {
     Chart as ChartJS,
     Title,

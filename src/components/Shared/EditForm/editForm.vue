@@ -27,7 +27,7 @@
           <input type="password" placeholder="Password" />
           <div class="input-icon"><i class="fa fa-key"></i></div>
         </div>
-        <button @click="changed" type="submit">Submit</button>
+        <button type="submit">Submit</button>
       </div>
     </form>
   </div>
@@ -59,11 +59,12 @@ export default {
   methods: {
      async changed(e) {
       console.log("Same");
+      let nameMember = e.target[0].value;
       this.editedDetails = {
-        name: e.target[0].value,
+        name: nameMember,
         email: e.target[1].value,
         phoneNo: e.target[2].value,
-        location: e.target[3].value,
+        // location: e.target[3].value,
       };
       console.log("555");
       console.log(this.editedDetails.name);
@@ -74,11 +75,11 @@ export default {
       console.log(this.editedDetails.name);
       let orgID = localStorage.getItem("orgId");
       if (orgID === 'null' || orgID) {
-        console.log("Its a Member");
+        console.log(this.editedDetails);
 
         // For Members
         axios
-          .patch("http://localhost:3000/editMemberDetails", {
+          .post("http://localhost:3000/editMemberDetails", {
             id: localStorage.getItem("id"),
             editDetails: this.editedDetails,
           })

@@ -42,9 +42,9 @@
 
 <script>
 import axios from "axios";
-import memberMobileNavbar from "./memberMobileNavbar.vue";
-import MemberHeader from "./memberHeader.vue";
-import MemberLeftCol from "./memberLeftCol.vue";
+import memberMobileNavbar from "../Header/memberMobileNavbar.vue"
+import MemberHeader from "../Header/memberHeader.vue";
+import MemberLeftCol from "../LeftCol/memberLeftCol.vue";
 export default {
   name: "memberDashboard",
   components: {
