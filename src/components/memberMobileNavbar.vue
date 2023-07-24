@@ -4,7 +4,7 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="accounts accounts-mob">
-        <span v-if="notifications.length" style="position: relative">
+        <span v-if="1" style="position: relative">
           <div><i class="fa-solid fa-bell"></i></div>
           <div
             style="
@@ -18,17 +18,17 @@
               top: -2px;
             "
           >
-            {{ notifications.length }}
+            <!-- {{ this.notifications.length }} -->
           </div>
           <div class="dropdown">
-            <div v-for="(notification, idx) in notifications" :key="idx">
+            <div v-for="(notification, idx) in this.notifications" :key="idx">
               <p @click="clearNotice(idx)">{{ notification }}</p>
             </div>
           </div>
         </span>
         <i v-else class="fa-solid fa-bell"></i>
         <div style="display: flex; align-items: center; gap: 5px">
-          <span>Hi! {{ name }}!</span>
+          <span>Hi! <span style="text-transform: uppercase">{{ this.name }}</span></span>
           <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
         </div>
       </div>
@@ -42,7 +42,104 @@
     </div>
   </template>
   
-  <style scoped>
+ 
+  
+  <script>
+  import axios from "axios";
+  export default {
+    name: "memberMobileNavbar",
+    data() {
+      return {
+        notifications: [],
+        name: localStorage.getItem("name"),
+      };
+    },
+    methods: {
+      profile() {
+        this.$router.push({ name: "memberProfile" });
+      },
+      progress() {
+        this.$router.push({ name: "memberProgress" });
+      },
+      kanban() {
+        this.$router.push({ name: "allTasksForMember" });
+      },
+      dashboard() {
+        this.$router.push({ name: "memberDashboard" });
+      },
+      member() {
+        this.$router.push({ name: "orgView" });
+      },
+      logout() {
+        localStorage.removeItem("orgId");
+        localStorage.removeItem("email");
+        localStorage.removeItem("id");
+        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
+        this.$router.push({ name: "memberLogin" });
+      },
+      menuCollapse() {
+        if (!this.menuCollapsed) {
+          const menuBody = document.getElementById("nav-content");
+          menuBody.classList.add("mobile-navbar-content");
+          menuBody.classList.remove("remove-navbar-content");
+          document.getElementsByClassName("hamburger")[0].innerHTML =
+            '<i class="fa-solid fa-xmark"></i>';
+          document.getElementsByClassName("accounts-mob")[0].style.display =
+            "none";
+        } else {
+          const menuBody = document.getElementById("nav-content");
+          menuBody.classList.remove("mobile-navbar-content");
+          menuBody.classList.add("remove-navbar-content");
+          document.getElementsByClassName("hamburger")[0].innerHTML =
+            '<i class="fa-solid fa-bars" ></i>';
+          document.getElementsByClassName("accounts-mob")[0].style.display =
+            "flex";
+        }
+        this.menuCollapsed = !this.menuCollapsed;
+      },
+      async clearNotice(idx) {
+        axios
+          .post("http://localhost:3000/clearNotification", {
+            id: localStorage.getItem("id"),
+            notification: idx,
+          })
+          .then((res) => {
+            this.notifications = res;
+          });
+      },
+    },
+    async mounted() {
+      let token = localStorage.getItem("token");
+      // console.log("p");
+      if (!token) {
+        this.$router.push({ name: "signUp" });
+      }
+      // axios
+      //   .post("http://localhost:3000/getNotificationsForMember", {
+        //     id: localStorage.getItem("id"),
+        //     token: localStorage.getItem("token"),
+        //     email: localStorage.getItem("email"),
+        //   })
+        //   .then((res) => {
+          //     console.log("Hi"+res);
+          //     this.notifications = res.data.notifications;
+          //     // console.log("N", this.notifications);
+          //   })
+          // .catch(() => {
+          //   alert("Session Expired! Please relogin again.");
+          //   localStorage.removeItem("email");
+          //   localStorage.removeItem("id");
+          //   localStorage.removeItem("token");
+          //   localStorage.removeItem("name");
+          //   localStorage.removeItem("phoneNo");
+          //   this.$router.push({ name: "memberLogin" });
+          // });
+    },
+  };
+  </script>
+
+   <style scoped>
   .accounts {
     display: flex;
     align-items: center;
@@ -139,99 +236,3 @@
     cursor: pointer;
   }
   </style>
-  
-  <script>
-  import axios from "axios";
-  export default {
-    name: "MobileNavbar",
-    props: ["name"],
-    data() {
-      return {
-        notifications: [],
-      };
-    },
-    methods: {
-      profile() {
-        this.$router.push({ name: "/member/profile" });
-      },
-      progress() {
-        this.$router.push({ name: "/member/progress" });
-      },
-      kanban() {
-        this.$router.push({ name: "/member/orgKanban" });
-      },
-      dashboard() {
-        this.$router.push({ name: "/member/dashBoard" });
-      },
-      member() {
-        this.$router.push({ name: "/member/addMembers" });
-      },
-      logout() {
-        localStorage.removeItem("orgId");
-        localStorage.removeItem("email");
-        localStorage.removeItem("id");
-        localStorage.removeItem("token");
-        // localStorage.removeItem("token");
-        this.$router.push({ name: "logIn" });
-      },
-      menuCollapse() {
-        if (!this.menuCollapsed) {
-          const menuBody = document.getElementById("nav-content");
-          menuBody.classList.add("mobile-navbar-content");
-          menuBody.classList.remove("remove-navbar-content");
-          document.getElementsByClassName("hamburger")[0].innerHTML =
-            '<i class="fa-solid fa-xmark"></i>';
-          document.getElementsByClassName("accounts-mob")[0].style.display =
-            "none";
-        } else {
-          const menuBody = document.getElementById("nav-content");
-          menuBody.classList.remove("mobile-navbar-content");
-          menuBody.classList.add("remove-navbar-content");
-          document.getElementsByClassName("hamburger")[0].innerHTML =
-            '<i class="fa-solid fa-bars" ></i>';
-          document.getElementsByClassName("accounts-mob")[0].style.display =
-            "flex";
-        }
-        this.menuCollapsed = !this.menuCollapsed;
-      },
-      async clearNotice(idx) {
-        axios
-          .post("http://localhost:3000/clearNotification", {
-            id: localStorage.getItem("id"),
-            notification: idx,
-          })
-          .then((res) => {
-            this.notifications = res;
-          });
-      },
-    },
-    async mounted() {
-      let token = localStorage.getItem("token");
-      console.log("p");
-      if (!token) {
-        this.$router.push({ name: "signUp" });
-      }
-      axios
-        .post("http://localhost:3000/getNotificationsForMember", {
-          id: localStorage.getItem("id"),
-          token: token,
-          email: localStorage.getItem("email"),
-        })
-        .then((res) => {
-          this.notifications = res.data.notifications;
-          console.log("N", this.notifications);
-        })
-        .catch(() => {
-          alert("Session Expired! Please relogin again.");
-          localStorage.removeItem("email");
-          localStorage.removeItem("id");
-          localStorage.removeItem("token");
-          localStorage.removeItem("name");
-          localStorage.removeItem("phoneNo");
-          // localStorage.removeItem("email")
-          this.$router.push({ name: "logIn" });
-        });
-    },
-  };
-  </script>
-  

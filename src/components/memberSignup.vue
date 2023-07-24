@@ -118,7 +118,10 @@ export default {
             localStorage.setItem("id", response.data.id);
             localStorage.setItem("name",response.data.name);
             localStorage.setItem("phoneNo",response.data.phoneNo);
-            if(response.data.orgId){
+            if(response.data.orgId == 'null'){
+              localStorage.setItem("orgId", 1);
+            }
+            else{
               localStorage.setItem("orgId", response.data.orgId);
             }
             if (this.message != "E-mail already Exists.")
@@ -135,10 +138,7 @@ export default {
     },
   },
   mounted() {
-    let user = localStorage.getItem("email");
-    if (user) {
-      this.$router.push({ name: "homePage" });
-    }
+  
   },
 };
 </script>

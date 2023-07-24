@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form @submit="changed">
+    <form @submit.prevent="changed">
       <div class="row">
         <h4>Edit Profile</h4>
         <div class="input-group input-group-icon">
@@ -27,7 +27,7 @@
           <input type="password" placeholder="Password" />
           <div class="input-icon"><i class="fa fa-key"></i></div>
         </div>
-        <button type="submit">Submit</button>
+        <button @click="changed" type="submit">Submit</button>
       </div>
     </form>
   </div>
@@ -57,26 +57,34 @@ export default {
     };
   },
   methods: {
-    async changed(e) {
+     async changed(e) {
+      console.log("Same");
       this.editedDetails = {
         name: e.target[0].value,
         email: e.target[1].value,
         phoneNo: e.target[2].value,
         location: e.target[3].value,
       };
-
+      console.log("555");
+      console.log(this.editedDetails.name);
+      console.log(e.target[0].value);
+      console.log("555");
       // Checking whether Org or Member
+      console.log("edName");
+      console.log(this.editedDetails.name);
       let orgID = localStorage.getItem("orgId");
-      if (orgID === "null" || orgID) {
+      if (orgID === 'null' || orgID) {
         console.log("Its a Member");
 
         // For Members
         axios
           .patch("http://localhost:3000/editMemberDetails", {
-            unsanitisedId: localStorage.getItem("id"),
+            id: localStorage.getItem("id"),
             editDetails: this.editedDetails,
           })
-          .then(() => {
+          .then((res) => {
+            console.log("res recieved");
+            console.log(res);
             axios
               .post("http://localhost:3000/getMemberDetails", {
                 id: localStorage.getItem("id"),
@@ -135,12 +143,11 @@ export default {
           id: localStorage.getItem("id"),
         })
         .then((res) => {
-          console.log("Res Data" + res.data.member);
+          // console.log("Res Data" + res.data.member);
           this.entity = res.data.member;
           this.editedDetails = {
             name: this.entity.name,
             email: this.entity.email,
-            location: this.entity.location,
             phoneNo: this.entity.phoneNo,
           };
           // console.log(this.entity._id);
@@ -151,7 +158,7 @@ export default {
     else {
       this.isLocationVisible = true;
 
-      console.log("Its an Organisation");
+      // console.log("Its an Organisation");
       axios
         .post("http://localhost:3000/getOrganisationDetails", {
           unsanitisedId: localStorage.getItem("id"),

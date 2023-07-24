@@ -10,7 +10,7 @@
           </div>
   
           <div>
-            <MemberMobileNavbar :name="'hello'"></MemberMobileNavbar>
+            <memberMobileNavbar :name="'hello'"></memberMobileNavbar>
           </div>
           <div>
            <MemberHeader :name="'Hello'"></MemberHeader>
@@ -411,7 +411,7 @@
   import axios from "axios";
   import { Bar, Line, Pie } from "vue-chartjs";
   import MemberLeftCol from "./memberLeftCol.vue";
-  import MemberMobileNavbar from "./memberMobileNavbar.vue";
+  import memberMobileNavbar from "./memberMobileNavbar.vue";
   import MemberHeader from "./memberHeader.vue"
   import {
     Chart as ChartJS,
@@ -441,7 +441,7 @@
   
   export default {
     name: "OrgProfile",
-    components: { Bar, Line, Pie, MemberLeftCol, MemberMobileNavbar, MemberHeader },
+    components: { Bar, Line, Pie, MemberLeftCol, memberMobileNavbar, MemberHeader },
     data() {
       return {
         name: "",

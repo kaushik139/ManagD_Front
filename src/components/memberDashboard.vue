@@ -2,10 +2,7 @@
     <div class="dashboard-section">
       <div class="sections">
         <div class="left-col">
-          <button class="button-menu" @click="profile">Profile</button>
-          <button class="button-menu" @click="orgView">Organisations</button>
-          <button class="button-menu" @click="progress">Check Progress</button>
-          <button class="button-menu" @click="memberDashboard">Dashboard</button>
+            <MemberLeftCol></MemberLeftCol>
         </div>
   
         <div class="right-col">
@@ -14,69 +11,21 @@
           </div>
   
           <div class="mobile-navbar">
-            <div class="hamburger" @click="menuCollapse">
-              <i class="fa-solid fa-bars"></i>
-            </div>
-            <div class="accounts accounts-mob">
-              <i class="fa-solid fa-bell"></i>
-              <div style="display: flex; align-items: center; gap: 5px">
-                <span>Hi! {{ member.name }}!</span>
-                <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-              </div>
-            </div>
-            <div class="remove-navbar-content" id="nav-content">
-              <button class="button-menu" @click="profile">Profile</button>
-              <button class="button-menu" @click="orgView">Organisations</button>
-              <button class="button-menu" @click="progress">Check Progress</button>
-              <button class="button-menu" @click="memberDashboard">Dashboard</button>
-            </div>
+            <memberMobileNavbar></memberMobileNavbar>
           </div>
           <div class="row-one">
-            <div class="search-sec">
-              <input
-                class="search"
-                type="text"
-                @change="searchResults"
-                placeholder="Search"
-              />
-              <button class="search-button">
-                <i class="fa-solid fa-magnifying-glass"></i>
-              </button>
-            </div>
-            <div class="accounts accounts-lg">
-              <i class="fa-solid fa-bell"></i>
-              <div style="display: flex; align-items: center; gap: 5px">
-                <span>Hi! {{ member.name }}!</span>
-                <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
-              </div>
-            </div>
+            <MemberHeader></MemberHeader>
           </div>
           <div class="view-area">
-            <div style="overflow-x: auto" class="table">
-              <!-- <div style="width: 100%">Current Members</div>  
-              <table style="border-radius: 10px;">
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                </tr>
-                <tr
-                  v-for="(member, index) in members"
-                  :key="member._id"
-                  @click="selectCurrentMember(index)"
-                >
-                  <td>{{ member.name }}</td>
-                  <td>
-                    <a href="mailto:{{ member.email }}">{{ member.email }}</a>
-                  </td>
-                </tr>
-              </table> -->
-            </div>
+         <div class="view-area-left">
+            <h3>Onging Tasks</h3>
+        </div>
             <div class="view-area-right">
               <div>
                 <h3>User Details</h3>
               </div>
               <div>
-                <p>Name: {{ member.name }}</p>
+                <p>Name: <span style="text-transform: uppercase">{{ member.name }}</span></p>
                 <p>Email: {{ member.email }}</p>
                 <p>Phone Number: {{ member.phoneNo }}</p>
                 <!-- <p>Tasks: {{ currentMember.phoneNo }}</p> -->
@@ -93,8 +42,16 @@
 
 <script>
 import axios from "axios";
+import memberMobileNavbar from "./memberMobileNavbar.vue";
+import MemberHeader from "./memberHeader.vue";
+import MemberLeftCol from "./memberLeftCol.vue";
 export default {
   name: "memberDashboard",
+  components: {
+    memberMobileNavbar,
+    MemberHeader,
+    MemberLeftCol,
+  },
   data() {
     return {
       name: "",
@@ -289,6 +246,17 @@ export default {
     /* justify-content: center; */
   }
   
+   .view-area-left {
+    background-color: #504dff;
+    padding: 15px;
+    color: white;
+    font-weight: 800;
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px gray;
+    font-size: 14px;
+    min-width: 500px;
+    min-height: 160px;
+  }
   .view-area-right {
     background-color: #504dff;
     padding: 15px;
