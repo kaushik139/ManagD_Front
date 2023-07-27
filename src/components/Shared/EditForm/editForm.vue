@@ -57,7 +57,7 @@ export default {
     };
   },
   methods: {
-     async changed(e) {
+    async changed(e) {
       console.log("Same");
       let nameMember = e.target[0].value;
       this.editedDetails = {
@@ -74,7 +74,7 @@ export default {
       console.log("edName");
       console.log(this.editedDetails.name);
       let orgID = localStorage.getItem("orgId");
-      if (orgID === 'null' || orgID) {
+      if (orgID === "null" || orgID) {
         console.log(this.editedDetails);
 
         // For Members
@@ -82,6 +82,8 @@ export default {
           .post("http://localhost:3000/editMemberDetails", {
             id: localStorage.getItem("id"),
             editDetails: this.editedDetails,
+            token: localStorage.getItem("token"),
+            email: localStorage.getItem("email"),
           })
           .then((res) => {
             console.log("res recieved");
@@ -89,6 +91,8 @@ export default {
             axios
               .post("http://localhost:3000/getMemberDetails", {
                 id: localStorage.getItem("id"),
+                token: localStorage.getItem("token"),
+                email: localStorage.getItem("email"),
               })
               .then((res) => {
                 console.log(res.data.member);
@@ -109,11 +113,15 @@ export default {
           .patch("http://localhost:3000/editOrganisationDetails", {
             unsanitisedId: localStorage.getItem("id"),
             editDetails: this.editedDetails,
+            token: localStorage.getItem("token"),
+            email: localStorage.getItem("email"),
           })
           .then(() => {
             axios
               .post("http://localhost:3000/getOrganisationDetails", {
                 unsanitisedId: localStorage.getItem("id"),
+                token: localStorage.getItem("token"),
+                email: localStorage.getItem("email"),
               })
               .then((res) => {
                 this.organisation = res.data;
@@ -142,6 +150,8 @@ export default {
       axios
         .post("http://localhost:3000/getMemberDetails", {
           id: localStorage.getItem("id"),
+          token: localStorage.getItem("token"),
+          email: localStorage.getItem("email"),
         })
         .then((res) => {
           // console.log("Res Data" + res.data.member);
@@ -163,6 +173,8 @@ export default {
       axios
         .post("http://localhost:3000/getOrganisationDetails", {
           unsanitisedId: localStorage.getItem("id"),
+          token: localStorage.getItem("token"),
+          email: localStorage.getItem("email"),
         })
         .then((res) => {
           this.entity = res.data;

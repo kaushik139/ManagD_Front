@@ -279,6 +279,8 @@ export default {
         axios
             .post("http://localhost:3000/getAllMembers", {
             id: localStorage.getItem("id"),
+            token: localStorage.getItem("token"),
+            email: localStorage.getItem("email")
         })
             .then((res) => {
             this.members = res.data.members;
@@ -287,6 +289,8 @@ export default {
         axios
             .post("http://localhost:3000/getTasksForOrganisation", {
             id: localStorage.getItem("id"),
+            token: localStorage.getItem("token"),
+            email: localStorage.getItem("email")
         })
             .then((res) => {
             this.calendar = res.data.tasks;

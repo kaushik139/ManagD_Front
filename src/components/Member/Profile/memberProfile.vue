@@ -145,6 +145,8 @@ export default {
         .post("http://localhost:3000/clearNotification", {
           id: localStorage.getItem("id"),
           notification: idx,
+          email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
         })
         .then((res) => {
           this.notifications = res.data.notifications;
@@ -174,6 +176,8 @@ export default {
       axios
         .post("http://localhost:3000/getOrganisationDetails", {
           unsanitisedId: ID,
+          email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
         })
         .then((res) => {
           this.currentOrganisation = res.data.name;
@@ -194,6 +198,8 @@ export default {
       axios
         .post("http://localhost:3000/getAllMembers", {
           id: id,
+          email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
         })
         .then((res) => {
           // console.log("API Fired!!!");

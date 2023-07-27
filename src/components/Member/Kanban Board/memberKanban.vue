@@ -171,12 +171,14 @@
               </p>
             </div>
           </div>
+          <button @click="goToTask(card._id)">See More</button>
+
         </div>
         <!-- <br /> -->
       </div>
 
       <div class="card_Add" @click="AddTask(1)">
-        <img src="../assets/plus.png" alt="plus" class="icon1" />
+        <img src="../../../assets/plus.png" alt="plus" class="icon1" />
         <h4>Add Task</h4>
         <!-- <h5 v-if="message1" class="message1">Task Added Successfully!</h5> -->
         <!-- <h5 v-if="message5" class="message2">Please Fill all the Fields!</h5> -->
@@ -236,12 +238,14 @@
               </p>
             </div>
           </div>
+          <button @click="goToTask(card._id)">See More</button>
+
         </div>
         <!-- <br /> -->
       </div>
 
       <div class="card_Add" @click="AddTask(2)">
-        <img src="../assets/plus.png" alt="plus" class="icon1" />
+        <img src="../../../assets/plus.png" alt="plus" class="icon1" />
         <h4>Add Task</h4>
       </div>
     </div>
@@ -300,12 +304,13 @@
               </p>
             </div>
           </div>
+          <button @click="goToTask(card._id)">See More</button>
         </div>
         <!-- <br /> -->
       </div>
 
       <div class="card_Add" @click="AddTask(3)">
-        <img src="../assets/plus.png" alt="plus" class="icon1" />
+        <img src="../../../assets/plus.png" alt="plus" class="icon1" />
         <h4>Add Task</h4>
       </div>
     </div>
@@ -375,6 +380,9 @@ export default {
     close() {
       this.taskDialog = false;
     },
+    goToTask(id){
+      this.$router.push(`/member/task/${id}`)
+    },
     selectMember(e) {
       if (e.target.value === "Select") return;
       this.addedMembers.push(e.target.value);
@@ -390,6 +398,8 @@ export default {
         .post("http://localhost:3000/getGitHubIssues", {
           username: document.getElementById("gitUsername").value,
           repo: document.getElementById("gitRepo").value,
+          email: localStorage.getItem("email"),
+        token: localStorage.getItem("token")
         })
         .then((res) => {
           this.issues = res.data;
@@ -397,6 +407,7 @@ export default {
         });
     },
     submitForm(e) {
+      console.log(e.target[8].value);
       axios
         .post("http://localhost:3000/addTask", {
           title: e.target[0].value,
@@ -409,8 +420,10 @@ export default {
           assignees: this.addedMembers,
           orgId: localStorage.getItem("orgId"),
           createdBy: localStorage.getItem("id"),
-          status: "Ongoing",
+          status: e.target[8].value,
           progress: 0,
+          email: localStorage.getItem("email"),
+        token: localStorage.getItem("token")
         })
         .then((res) => {
           alert(res);
@@ -454,12 +467,16 @@ export default {
           toEdit: {
             status: updatedStatus,
           },
+          email: localStorage.getItem("email"),
+        token: localStorage.getItem("token")
         })
         .then(() => {
           // this.$router.go();
           axios
             .post("http://localhost:3000/getMemberTasks", {
               id: localStorage.getItem("id"),
+              email: localStorage.getItem("email"),
+              token: localStorage.getItem("token")
             })
             .then((res) => {
               console.log(res);
@@ -470,7 +487,7 @@ export default {
         });
     },
     home(){
-        this.$router.push({name:"dashBoard"})
+        this.$router.push({name:"memberDashboard"})
     }
   },
 
@@ -478,6 +495,8 @@ export default {
     axios
       .post("http://localhost:3000/getAllMembers", {
         id: localStorage.getItem("orgId"),
+        email: localStorage.getItem("email"),
+        token: localStorage.getItem("token")
       })
       .then((res) => {
         this.organisationMembers = res.data.members;
@@ -486,6 +505,8 @@ export default {
     axios
       .post("http://localhost:3000/getMemberTasks", {
         id: localStorage.getItem("id"),
+        email: localStorage.getItem("email"),
+        token: localStorage.getItem("token")
       })
       .then((res) => {
         console.log(res);

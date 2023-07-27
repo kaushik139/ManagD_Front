@@ -154,7 +154,9 @@ export default {
     async clearNotice(idx){
       axios.post("http://localhost:3000/clearNotification",{
         id:localStorage.getItem('id'),
-        notification:idx
+        notification:idx,
+        email: localStorage.getItem('email'),
+        token:localStorage.getItem('token')
       }).then((res)=>{
         this.notifications=res.data.notifications;
       })

@@ -398,6 +398,8 @@ export default {
         .post("http://localhost:3000/getGitHubIssues", {
           username: document.getElementById("gitUsername").value,
           repo: document.getElementById("gitRepo").value,
+          token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
         })
         .then((res) => {
           this.issues = res.data;
@@ -417,8 +419,10 @@ export default {
           assignees: this.addedMembers,
           orgId: localStorage.getItem("id"),
           createdBy: localStorage.getItem("id"),
-          status: "Ongoing",
+          status: e.target[8].value,
           progress: 0,
+          token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
         })
         .then((res) => {
           alert(res);
@@ -462,12 +466,16 @@ export default {
           toEdit: {
             status: updatedStatus,
           },
+          token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
         })
         .then(() => {
           // this.$router.go();
           axios
             .post("http://localhost:3000/getTasksForOrganisation", {
               id: localStorage.getItem("id"),
+              token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
             })
             .then((res) => {
               console.log(res);
@@ -486,6 +494,8 @@ export default {
     axios
       .post("http://localhost:3000/getAllMembers", {
         id: localStorage.getItem("orgId"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
       })
       .then((res) => {
         this.organisationMembers = res.data.members;
@@ -494,6 +504,8 @@ export default {
     axios
       .post("http://localhost:3000/getTasksForOrganisation", {
         id: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
       })
       .then((res) => {
         console.log(res);

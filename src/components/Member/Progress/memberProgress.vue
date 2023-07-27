@@ -654,6 +654,8 @@
           axios
             .post("http://localhost:3000/getTask", {
               id: x,
+              email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
             })
             .then((res) => {
               taskArray.push(res);
@@ -792,6 +794,8 @@
           .post("http://localhost:3000/clearNotification", {
             id: localStorage.getItem("id"),
             notification: idx,
+            email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
           })
           .then((res) => {
             this.notifications = res;
@@ -836,6 +840,8 @@
       axios
         .post("http://localhost:3000/getMemberTasks", {
           id: localStorage.getItem("id"),
+          email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
         })
         .then((res) => {
           console.log("TASKS",res);
@@ -920,6 +926,8 @@
       axios
         .post("http://localhost:3000/getAllMembers", {
           id: localStorage.getItem("id"),
+          email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
         })
         .then((res) => {
           console.log(res);
@@ -941,6 +949,8 @@
       axios
         .post("http://localhost:3000/getAllMembers", {
           id: localStorage.getItem("id"),
+          email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
         })
         .then((res) => {
           this.currentMembers = res.data.members;

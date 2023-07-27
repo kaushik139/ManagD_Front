@@ -153,6 +153,8 @@ export default {
         .post("http://localhost:3000/acceptInvitation", {
           id: this.id,
           organisationId: Oid,
+          email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
         })
         .then(() => {
           this.orgId = Oid;
@@ -165,7 +167,9 @@ export default {
     rejectORG(Oid) {
       axios.post("http://localhost:3000/rejectInvitation", {
         id: this.id,
-        organisationId: Oid,
+        orgEmail: Oid,
+        email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
       });
     },
     leave() {
@@ -174,6 +178,8 @@ export default {
       axios.post("http://localhost:3000/editMemberDetails", {
         id: localStorage.getItem("id"),
         editDetails: { orgId: null },
+        email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
       });
       this.accept = !this.accept;
     },
@@ -216,6 +222,8 @@ export default {
         .post("http://localhost:3000/clearNotification", {
           id: localStorage.getItem("id"),
           notification: idx,
+          email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
         })
         .then((res) => {
           this.notifications = res.data.notifications;
@@ -229,6 +237,8 @@ export default {
       axios
         .post("http://localhost:3000/getOrganisationDetails", {
           unsanitisedId: ID,
+          email: localStorage.getItem('email'),
+          token: localStorage.getItem('token')
         })
         .then((res) => {
           if (res) {

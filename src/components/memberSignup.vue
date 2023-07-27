@@ -27,52 +27,81 @@
       pattern="[6-9]{1}[0-9]{9}"
     /><br />
     <!-- Password 1 -->
-    <input v-if="this.isPasswordVisible == false"
+    <input
+      v-if="this.isPasswordVisible == false"
       type="password"
       v-model="pass"
       placeholder="Enter Password"
       required
-      class="text"/>
-      <input 
+      class="text"
+    />
+    <input
       v-if="this.isPasswordVisible == true"
       type="test"
       v-model="pass"
       placeholder="Enter Password"
       required
-      class="text"/>
-      <i v-if="this.isPasswordVisible == false" 
-    @click="this.isPasswordVisible = !this.isPasswordVisible" id="eyeOpen"
-      class="fa-solid fa-eye" style="color: #504dff"></i>
-    <i v-if="this.isPasswordVisible == true" 
-    @click="this.isPasswordVisible = !this.isPasswordVisible" id="eyeClose"
-    class="fa-solid fa-eye-slash" style="color: #504dff;"></i>
+      class="text"
+    />
+    <i
+      v-if="this.isPasswordVisible == false"
+      @click="this.isPasswordVisible = !this.isPasswordVisible"
+      id="eyeOpen"
+      class="fa-solid fa-eye"
+      style="color: #504dff"
+    ></i>
+    <i
+      v-if="this.isPasswordVisible == true"
+      @click="this.isPasswordVisible = !this.isPasswordVisible"
+      id="eyeClose"
+      class="fa-solid fa-eye-slash"
+      style="color: #504dff"
+    ></i>
     <br />
     <!-- Password 2 -->
-    <input v-if="this.isPasswordVisible2 == false"
+    <input
+      v-if="this.isPasswordVisible2 == false"
       type="password"
       v-model="pass2"
       placeholder="Re-enter Password"
       required
-      class="text"/>
-      <input 
+      class="text"
+    />
+    <input
       v-if="this.isPasswordVisible2 == true"
       type="test"
       v-model="pass2"
       placeholder="Re-enter Password"
       required
-      class="text"/>
-      <i v-if="this.isPasswordVisible2 == false" 
-    @click="this.isPasswordVisible2 = !this.isPasswordVisible2" id="eyeOpen"
-      class="fa-solid fa-eye" style="color: #504dff;"></i>
-    <i v-if="this.isPasswordVisible2 == true" 
-    @click="this.isPasswordVisible2 = !this.isPasswordVisible2" id="eyeClose"
-    class="fa-solid fa-eye-slash" style="color: #504dff;"></i>
-    <br>
-    <h6 v-show="this.noMatchPassword == true" id="matcher">
-      Passwords do not Match! Please re-enter Password!</h6>
+      class="text"
+    />
+    <i
+      v-if="this.isPasswordVisible2 == false"
+      @click="this.isPasswordVisible2 = !this.isPasswordVisible2"
+      id="eyeOpen"
+      class="fa-solid fa-eye"
+      style="color: #504dff"
+    ></i>
+    <i
+      v-if="this.isPasswordVisible2 == true"
+      @click="this.isPasswordVisible2 = !this.isPasswordVisible2"
+      id="eyeClose"
+      class="fa-solid fa-eye-slash"
+      style="color: #504dff"
+    ></i>
     <br />
-    <button id="b1" type="submit" v-on:click="signUp">Sign Up</button
-    ><br /><br />Already a user? <a href="#" @click="login">Log In</a><br />
+    <h6 v-show="this.noMatchPassword == true" id="matcher">
+      Passwords do not Match! Please re-enter Password!
+    </h6>
+    <br />
+    <button id="b1" type="submit" v-on:click="getOTP">Sign Up</button>
+
+    <form @submit.prevent="signUp" v-if="!otpHide">
+      <input type="text" placeholder="Enter OTP" />
+      <button type="submit">Submit</button>
+    </form>
+
+    <br /><br />Already a user? <a href="#" @click="login">Log In</a><br />
     For Organisations <a href="#" @click="oSignUp">Organisation SignUp</a>
   </div>
 </template>
@@ -87,9 +116,10 @@ export default {
       pass: "",
       pass2: "",
       phone: "",
-      isPasswordVisible: '',
-      isPasswordVisible2: '',
+      isPasswordVisible: "",
+      isPasswordVisible2: "",
       noMatchPassword: false,
+      otpHide: true,
     };
   },
 
@@ -97,49 +127,63 @@ export default {
     login() {
       this.$router.push({ name: "memberLogin" });
     },
-    oSignUp(){
-      this.$router.push({name: "signUp"})
+    oSignUp() {
+      this.$router.push({ name: "signUp" });
     },
-    signUp() {
-      if (this.name && this.mail && this.pass && this.phone && 
-      this.pass == this.pass2) {
+    getOTP() {
+      axios
+        .post("http://localhost:3000/sendOTP", { email: this.mail })
+        .then(() => {
+          this.otpHide = false;
+        });
+    },
+    signUp(e) {
+      if (
+        this.name &&
+        this.mail &&
+        this.pass &&
+        this.phone &&
+        this.pass == this.pass2
+      ) {
         axios
           .post("http://localhost:3000/memberSignup", {
             email: this.mail,
             name: this.name,
             password: this.pass,
             phoneNo: this.phone,
+            receivedOtp: e.target[0].value,
           })
           .then((response) => {
             this.message = response.data;
-            alert("Sign Up Successful! Welcome to ManagD");
-            localStorage.setItem("email", response.data.email);
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("id", response.data.id);
-            localStorage.setItem("name",response.data.name);
-            localStorage.setItem("phoneNo",response.data.phoneNo);
-            if(response.data.orgId == 'null'){
-              localStorage.setItem("orgId", 1);
+            if (response.data.message === "401") {
+              alert("Invalid OTP");
+            } else {
+              if (response.data.message === "Organisation already exists") {
+                alert("Email exists");
+                this.$router.push({ name: "login" });
+              } else if (this.pass != this.pass2) {
+                this.noMatchPassword = true;
+                this.pass2 = "";
+              }
+              alert("Sign Up Successful! Welcome to ManagD");
+              localStorage.setItem("email", response.data.email);
+              localStorage.setItem("token", response.data.token);
+              localStorage.setItem("id", response.data.id);
+              localStorage.setItem("name", this.name);
+              localStorage.setItem("phoneNo", this.phone);
+              if (response.data.orgId == "null") {
+                localStorage.setItem("orgId", 1);
+              } else {
+                localStorage.setItem("orgId", response.data.orgId);
+              }
             }
-            else{
-              localStorage.setItem("orgId", response.data.orgId);
-            }
-            if (this.message != "E-mail already Exists.")
-              this.$router.push({ name: "memberDashboard" });
           });
-         } 
-         else if(this.pass != this.pass2){
-          this.noMatchPassword = true;
-          this.pass2 = "";
-         }
-         else {
+      } else {
         alert("Please fill the required details");
       }
     },
   },
-  mounted() {
-  
-  },
+  mounted() {},
 };
 </script>
 
@@ -182,17 +226,17 @@ h3 {
   align-self: center;
   position: relative;
 }
-#eyeOpen{
+#eyeOpen {
   margin: 24px 0px 0px -45px;
   z-index: 999;
-  position:absolute;
+  position: absolute;
 }
-#eyeClose{
+#eyeClose {
   margin: 24px 0px 0px -45px;
   z-index: 999;
-  position:absolute;
+  position: absolute;
 }
-#matcher{
+#matcher {
   color: red;
   margin: 0px 0px -20px 0px;
 }
