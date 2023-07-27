@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     async changed(e) {
-      console.log("Same");
+      // console.log("Same");
       let nameMember = e.target[0].value;
       this.editedDetails = {
         name: nameMember,
@@ -66,16 +66,16 @@ export default {
         phoneNo: e.target[2].value,
         // location: e.target[3].value,
       };
-      console.log("555");
-      console.log(this.editedDetails.name);
-      console.log(e.target[0].value);
-      console.log("555");
+      // console.log("555");
+      // console.log(this.editedDetails.name);
+      // console.log(e.target[0].value);
+      // console.log("555");
       // Checking whether Org or Member
-      console.log("edName");
-      console.log(this.editedDetails.name);
+      // console.log("edName");
+      // console.log(this.editedDetails.name);
       let orgID = localStorage.getItem("orgId");
       if (orgID === "null" || orgID) {
-        console.log(this.editedDetails);
+        // console.log(this.editedDetails);
 
         // For Members
         axios
@@ -85,9 +85,9 @@ export default {
             token: localStorage.getItem("token"),
             email: localStorage.getItem("email"),
           })
-          .then((res) => {
-            console.log("res recieved");
-            console.log(res);
+          .then(() => {
+            // console.log("res recieved");
+            // console.log(res);
             axios
               .post("http://localhost:3000/getMemberDetails", {
                 id: localStorage.getItem("id"),

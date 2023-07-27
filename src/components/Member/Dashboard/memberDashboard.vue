@@ -15,25 +15,48 @@
           <MemberHeader></MemberHeader>
         </div>
         <div class="view-area">
-          <div class="view-area-left">
-            <h3>Onging Tasks</h3>
-          </div>
-          <div class="view-area-right">
-            <div>
-              <h3>User Details</h3>
+          <div class="top_area">
+            <div v-if="onGoingTasks.length" class="view-area-left">
+              <h3  style="color: #504dff">
+                Onging Tasks
+              </h3>              
+              <!-- <div class="scroll"> -->
+              <table v-if="this.onGoingTasks.length">
+                <tr>
+                  <th style="width: 15%"><u>Name</u></th>
+                  <th style="width: 65%"><u>Description</u></th>
+                  <th style="width: 20%"><u>End Date</u></th>
+                </tr>
+                <tr v-for="(tasks, index) in onGoingTasks" :key="index">
+                  <td>{{ tasks.title }}</td>
+                  <td>{{ tasks.description }}</td>
+                  <td>{{ tasks.endDate }}</td>
+                </tr>
+              </table>
             </div>
-            <div>
-              <p>
-                Name:
-                <span style="text-transform: uppercase">{{ member.name }}</span>
-              </p>
-              <p>Email: {{ member.email }}</p>
-              <p>Phone Number: {{ member.phoneNo }}</p>
-              <!-- <p>Tasks: {{ currentMember.phoneNo }}</p> -->
+            <div class="view-area-left2" v-else>
+            <h2  style="color: #504dff">No Ongoing Tasks!</h2>
+          </div>
+            <div class="view-area-right">
+              <div>
+                <h3>User Details</h3>
+              </div>
+              <div>
+                <p>
+                  Name:
+                  <span style="text-transform: uppercase">{{
+                    member.name
+                  }}</span>
+                </p>
+                <p>Email: {{ member.email }}</p>
+                <p>Phone Number: {{ member.phoneNo }}</p>
+                <!-- <p>Tasks: {{ currentMember.phoneNo }}</p> -->
+              </div>
             </div>
           </div>
         </div>
-
+        <!-- </div> -->
+        <br />
         <h3>Calendar</h3>
         <VCalendar expanded :attributes="attributes" />
       </div>
@@ -65,6 +88,7 @@ export default {
       attributes: [],
       menuCollapsed: false,
       orgId: "",
+      onGoingTasks: [],
     };
   },
 
@@ -127,13 +151,7 @@ export default {
       email: localStorage.getItem("email"),
       phoneNo: localStorage.getItem("phoneNo"),
     };
-    // axios
-    //   .post("http://localhost:3000/getAllMembers", {
-    //     id: localStorage.getItem("id"),
-    //   })
-    //   .then((res) => {
-    //     this.orgId = res.data.members.orgId;
-    //   });
+   
 
     axios
       .post("http://localhost:3000/getMemberTasks", {
@@ -142,10 +160,24 @@ export default {
         email: localStorage.getItem("email"),
       })
       .then((res) => {
-        this.calendar = res.data.tasks;
+        this.calendar = res.data.taskList;
         let cnt = 0;
-        // console.log(this.calendar)
+        // console.log(res.data.taskList);
+        // console.log(this.calendar);
         let sample = [];
+
+        for (let i = 0; i < this.calendar.length; i++) {
+          if (this.calendar[i].status == "Ongoing") {
+            let kimetsu = this.calendar[i];
+            let no_yiba = new Date(kimetsu.endDate).toLocaleDateString();
+            kimetsu.endDate = no_yiba;
+            // this.onGoingTasks.push(this.calendar[i]);
+            this.onGoingTasks.push(kimetsu);
+          }
+          // console.log(this.calendar[i].status);
+          // console.log(i);
+        }
+
         for (var x in this.calendar) {
           //   console.log(this.calendar[x]);
           const startAttribute = {
@@ -188,13 +220,141 @@ export default {
 </script>
 
 <style scoped>
-tr {
+.scroll {
+  overflow-y: scroll;
+  height: 80px;
+  box-shadow: 5px 5px 5px 5px #2d2b94;
   border-radius: 10px;
+  background: white;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #504dff;
+  border-radius: 15px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #504dff;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2a27d1;
+}
+
+table {
+  width: 100%;
+  height: 80px;
+  padding: 5px;
+  border: none;
+  background: white;
+  color: black;
+}
+th {
+  margin: 10px;
+  box-shadow: 1px 1px 1px 1px #2d2b94;
+  background: #504dff;
+  border-radius: 10px 2px 10px 2px;
+  color: white;
+}
+
+tr {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #dadada;
+}
+
+tr:hover {
+  background-color: #504dff;
+  color: white;
 }
 
 td {
   border-radius: 10px;
+  border: none;
 }
+
+.top_area {
+  display: flex;
+  gap: 4%;
+  min-width: 90%;
+  justify-content: center;
+}
+.view-area-left {
+  padding: 15px;
+  color: white;
+  font-weight: 800;
+  border-radius: 15px;
+  font-size: 14px;
+  min-width: 60%;
+  height: 150px;
+  width: 60%;
+  overflow-y: scroll;
+  box-shadow: 10px 10px 10px 0px #2d2b94;
+  background: white;
+  /* margin-right: 300px; */
+  margin-left: 20px;
+}
+
+.view-area-left2 {
+  padding: 15px;
+  color: white;
+  font-weight: 800;
+  border-radius: 15px;
+  font-size: 14px;
+  min-width: 50%;
+  height: 150px;
+  width: 60%;
+  box-shadow: 10px 10px 10px 0px #2d2b94;
+  background: white;
+  /* margin-right: 300px; */
+  margin-left: 20px;
+}
+.view-area-right {
+  background-color: #504dff;
+  padding: 15px;
+  color: white;
+  font-weight: 800;
+  border-radius: 15px;
+  box-shadow: 10px 10px 10px 0px #2d2b94;
+  font-size: 14px;
+  height: 150px;
+  width: 25%;
+  min-width: 25%;
+  /* margin-left: 700px; */
+  /* margin-top: -180px;   */
+}
+
+/* .table {
+  width: 60%;
+}
+table {
+  border: 1px solid black;
+  margin-top: 20px;
+} */
+/* tr:nth-child(even) {
+  background-color: #504dff;
+}
+tr:nth-child(odd) {
+  background-color: #dadada;
+} */
+
+/* tr:nth-child(1) {
+  background-color: white;
+} */
+
+/* tr:nth-child(1):hover {
+  background-color: white;
+} */
 
 .mobile-navbar {
   display: flex;
@@ -256,54 +416,6 @@ td {
   /* justify-content: center; */
 }
 
-.view-area-left {
-  background-color: #504dff;
-  padding: 15px;
-  color: white;
-  font-weight: 800;
-  border-radius: 15px;
-  box-shadow: 0px 0px 10px gray;
-  font-size: 14px;
-  min-width: 500px;
-  min-height: 160px;
-}
-.view-area-right {
-  background-color: #504dff;
-  padding: 15px;
-  color: white;
-  font-weight: 800;
-  border-radius: 15px;
-  box-shadow: 0px 0px 10px gray;
-  font-size: 14px;
-}
-.table {
-  width: 60%;
-}
-table {
-  border: 1px solid black;
-  width: 100%;
-  margin-top: 20px;
-}
-td {
-  border: 1px solid black;
-}
-tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-tr:nth-child(odd) {
-  background-color: #dadada;
-}
-
-tr:nth-child(1) {
-  background-color: white;
-}
-
-tr:hover {
-  background-color: #504dff;
-}
-tr:nth-child(1):hover {
-  background-color: white;
-}
 .accounts {
   display: flex;
   align-items: center;
@@ -456,3 +568,4 @@ tr:nth-child(1):hover {
 .button-menu:focus {
 }
 </style>
+ 
