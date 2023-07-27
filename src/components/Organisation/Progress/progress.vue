@@ -668,6 +668,8 @@ export default {
         axios
           .post("http://localhost:3000/getTask", {
             id: x,
+            token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
           })
           .then((res) => {
             taskArray.push(res);
@@ -806,39 +808,12 @@ export default {
         .post("http://localhost:3000/clearNotification", {
           id: localStorage.getItem("id"),
           notification: idx,
+          token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
         })
         .then((res) => {
           this.notifications = res;
         });
-    },
-
-    logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("email");
-      localStorage.removeItem("id");
-      this.$router.push({ name: "logIn" });
-    },
-    login() {
-      this.$router.push({ name: "memberLogin" });
-    },
-    signUp() {
-      if (this.name && this.mail && this.pass && this.phone) {
-        axios
-          .post("http://localhost:3000/memberSignup", {
-            email: this.mail,
-            name: this.name,
-            password: this.pass,
-            phoneNo: this.phone,
-          })
-          .then((response) => {
-            this.message = response.data;
-            alert(this.message);
-            if (this.message != "E-mail already Exists.")
-              this.$router.push({ name: "login" });
-          });
-      } else {
-        alert("Please fill the required details");
-      }
     },
   },
   async mounted() {
@@ -850,6 +825,8 @@ export default {
     axios
       .post("http://localhost:3000/getTasksForOrganisation", {
         id: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email:localStorage.getItem("email")
       })
       .then((res) => {
         console.log(res);
@@ -1027,6 +1004,8 @@ export default {
     axios
       .post("http://localhost:3000/getAllMembers", {
         id: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
       })
       .then((res) => {
         console.log(res);
@@ -1037,6 +1016,8 @@ export default {
     axios
       .post("http://localhost:3000/getOrganisationDetails", {
         unsanitisedId: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
       })
       .then((res) => {
         this.organisation = res.data;
@@ -1048,6 +1029,8 @@ export default {
     axios
       .post("http://localhost:3000/getAllMembers", {
         id: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
       })
       .then((res) => {
         this.currentMembers = res.data.members;

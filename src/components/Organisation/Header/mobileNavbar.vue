@@ -175,7 +175,7 @@ export default {
       this.$router.push({ name: "dashBoard" });
     },
     member() {
-      this.$router.push({ name: "addMembers" });
+      this.$router.push({ name: "memberManagement" });
     },
     logout() {
       localStorage.removeItem("email");
@@ -210,6 +210,8 @@ export default {
         .post("http://localhost:3000/clearNotification", {
           id: localStorage.getItem("id"),
           notification: idx,
+          token: localStorage.getItem("token"),
+            email: localStorage.getItem("email")
         })
         .then((res) => {
           this.notifications = res;

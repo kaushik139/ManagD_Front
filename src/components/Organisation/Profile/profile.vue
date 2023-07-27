@@ -398,6 +398,8 @@ export default {
     axios
       .post("http://localhost:3000/getOrganisationDetails", {
         unsanitisedId: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
       })
       .then((res) => {
         this.organisation = res.data;
@@ -409,6 +411,8 @@ export default {
     axios
       .post("http://localhost:3000/getAllMembers", {
         id: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
       })
       .then((res) => {
         this.currentMembers = res.data.members;

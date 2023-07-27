@@ -31,7 +31,7 @@
                   >{{ member }},</span
                 >
               </div>
-              <button @click="sendInvites" class="members-send">
+              <button v-if="selectedMembers.length" @click="sendInvites" class="members-send">
                 Click to send invitations
               </button>
             </div>
@@ -39,7 +39,7 @@
             <div>
               <h1>Remove Members</h1>
               <form @submit.prevent="submitRemoves($event)">
-                <input type="email" class="email" />
+                <input type="email" class="email" required/>
                 <br /><button type="submit" class="add">Add</button>
               </form>
 
@@ -49,7 +49,7 @@
                   >{{ member }},</span
                 >
               </div>
-              <button @click="removeMember" class="members-send">
+              <button v-if="removedMembers.length" @click="removeMember" class="members-send">
                 Click to remove members
               </button>
             </div>
@@ -100,7 +100,7 @@ td {
 .table {
   width: 80%;
   border-collapse: collapse;
-  /* overflow-x:auto; */
+
 }
 
 th {
@@ -112,7 +112,15 @@ th {
 .tab-div {
   width: 100%;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
+  overflow:auto;
+
+}
+
+@media only screen and (min-width: 992px){
+  .tab-div{
+    justify-content:center;
+  }
 }
 .members-send {
   background: none;
@@ -166,6 +174,7 @@ h3 {
   box-shadow: 0px 0px 10px gray;
   margin-bottom: 30px;
   border-radius: 15px;
+  padding:5px;
   /* margin-bottom:-2px; */
 }
 
@@ -419,6 +428,8 @@ export default {
     axios
       .post("http://localhost:3000/getAllMembers", {
         id: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
       })
       .then((res) => {
         this.members = res.data.members;

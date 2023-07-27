@@ -16,51 +16,199 @@
           <div>
             <MemberHeader :name="organisation.name"></MemberHeader>
           </div>
-        <div class="view-area">
+          <div class="view-area">
+            <div class="task-card">
+              <div style="position: relative">
+                <div class="ribbon" :style="{ color: timeColor }">
+                  {{ timeText }}
+                </div>
+              </div>
 
-          <div class="task-card">
-            <h3>{{ task.title }}</h3>
-            <p>{{ task.description }}</p>
-            <progress :value="task.progress"></progress>
-            <p>From {{ task.startDate }} to {{ task.endDate }}</p>
-            <p><i class="fa-brands fa-github"></i>:</p>
-            <p>Assigned to: {{ issue.assignee?.login }}</p>
-            <p>Latest Pull Request (done 3 hours ago) by dev</p>
-            <button @click="showIframe">Schedule Meet</button>
-          </div>
-          <div style="display:none">
-            <MeetScheduler></MeetScheduler>
-          </div>
-          <div class="dg" v-if="iframeDisplay">
-            <iframe
-            src="https://calendly.com/chrysaor07">
-          </iframe>
-          <div @click="closeIframe">CLOSE</div >
-          <!-- <a href='#' onclick='this.parentNode.parentNode.removeChild(this.parentNode)'>Close</a> -->
+              <form @submit.prevent="editSubmit">
+                <div class="edit-form">
+                  <div>
+                    <label for="title">Title</label>
+                    <input type="text" id="title" :value="task.title" />
+                  </div>
+
+                  <div>
+                    <label for="description">Description</label>
+                    <input
+                      type="text"
+                      id="description"
+                      :value="task.description"
+                    />
+                  </div>
+
+                  <div>
+                    <label for="progress">Progress</label>
+                    <input
+                      type="number"
+                      id="progress"
+                      :value="task.progress"
+                      min="0"
+                      max="99"
+                    />
+                  </div>
+
+                  <div>
+                    <label for="startDate">Start Date</label>
+                    <input
+                      type="date"
+                      id="startDate"
+                      :value="new Date(task.startDate)"
+                    />
+                  </div>
+
+                  <div>
+                    <label for="endDate">End Date</label>
+                    <input
+                      type="date"
+                      id="endDate"
+                      :value="new Date(task.endDate)"
+                    />
+                  </div>
+
+                  <div>
+                    <div
+                      class="list-head"
+                      style="margin-top: 0; width: fit-content"
+                    >
+                      Assigned Members
+                      <i
+                        @click="displayList"
+                        class="arrow fa-solid fa-angle-up"
+                      ></i>
+                    </div>
+                    <ul class="ul-assignees">
+                      <li
+                        class="list-item-assignees"
+                        v-for="(member, index) in this.task.assignees"
+                        :key="index"
+                      >
+                        <div style="display: flex">
+                          {{ member
+                          }}<i
+                            class="fa-solid fa-trash"
+                            @click="trashed(index)"
+                          ></i>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div>
+                    <label for="add-member">Assign Member</label>
+                    <select name="" id="add-member">
+                      <option value="">Select</option>
+                      <option v-for="(member, index) in members" :key="index">
+                        {{ member }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <button type="submit">Update</button>
+              </form>
+
+              <button @click="checkPR">{{!githubPrs?'Check PRs for this issue':'Close'}}</button>
+              
+              <!-- <p>Assigned to: {{ issue.assignee?.login }}</p> -->
+              <div>
+                <select v-if="githubPrs" :key="selecterUpdate" @change="selectPR($event)" >
+                  <option v-for="(pr, index) in prs" :key="pr.id" :value="index">
+                    {{ pr.title }}
+                  </option>
+                </select>
+
+              </div>
+              <div v-if="selectedPR.user" :key="selectorUpdate">
+                <h4>PR Details</h4>
+                <p>By: {{ selectedPR.user.login }}</p>
+                <p>At: {{ new Date(selectedPR.updated_at) }}</p>
+                <a href="{{ selectedPR.html_url }}">link to PR</a>
+              </div>
+              <button @click="showIframe">Schedule Meet</button>
+            </div>
+            <div style="display: none">
+              <MeetScheduler></MeetScheduler>
+            </div>
+            <div class="dg" v-if="iframeDisplay">
+              <iframe src="https://calendly.com/chrysaor07"> </iframe>
+              <div @click="closeIframe">CLOSE</div>
+              <!-- <a href='#' onclick='this.parentNode.parentNode.removeChild(this.parentNode)'>Close</a> -->
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  </div>
 </template>
 <style scoped>
 
-.dg{
+button, input[type="submit"], input[type="reset"] {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  background-color: #504dff;
+  color: white;
+  padding: 8px 15px 8px 15px;
+  border-radius: 5px;
+  display: block;
+  margin:0 auto;
+  margin-top:10px;
+}
+.ul-assignees {
+  list-style-type: none;
+  display: none;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+
+.list-head {
+}
+
+.list-head:hover .ul-assignees {
+  display: block;
+  color: red;
+}
+.edit-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.edit-form div {
+  width: 40%;
+  margin: 20px;
+}
+.ribbon {
+  position: absolute;
+  margin-top: 30px;
+  font-weight: 900;
+  margin-left: -20px;
+  transform: rotate(-60deg);
+}
+
+.dg {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top:100px;
-  top:70px;
+  /* margin-top:100px; */
+  top: 70px;
   /* width: 100%; */
   /* position: absolute; */
   /* background-color: red; */
   position: absolute;
 }
 
-iframe{
-  height:400px;
+iframe {
+  height: 400px;
   width: 600px;
 }
 .task-card {
@@ -70,7 +218,8 @@ iframe{
   width: 70%;
   /* margin-top: -10%; */
   background-color: white;
-  box-shadow: 0px 0px 10px gray;
+  box-shadow: 0px 0px 7px gray;
+  padding: 20px;
   border-radius: 10px;
   display: relative;
 }
@@ -339,33 +488,105 @@ import MemberHeader from "../Header/memberHeader.vue";
 import MeetScheduler from "../../meetScheduler.vue";
 export default {
   name: "DashBoard",
-  components:{MemberLeftCol, MemberMobileNavbar, MemberHeader, MeetScheduler},
+  components: {
+    MemberLeftCol,
+    MemberMobileNavbar,
+    MemberHeader,
+    MeetScheduler,
+  },
   data() {
     return {
       name: "",
       mail: "",
       pass: "",
       phone: "",
-      members: "",
       currentMember: {},
       organisation: {},
       attributes: [],
       menuCollapsed: false,
       task: {},
-      issue:{},
-      iframeDisplay:false
+      issue: {},
+      iframeDisplay: false,
+      timeColor: "green",
+      timeText: "Complete",
+      boxShadow: " 0px 0px 10px blue",
+      prs: [],
+      selectorUpdate: 0,
+      selectedPR: {},
+      displayLst: false,
+      members: [],
+      githubPrs:false
     };
   },
 
   methods: {
-    showIframe(){
-      this.iframeDisplay=true;
+    trashed(index) {
+      this.task.assignees.splice(index, 1);
+      console.log(this.task);
     },
-    closeIframe(){
-      this.iframeDisplay=false;
+    displayList() {
+      let listHead =
+        document.getElementsByClassName("list-head")[0].firstElementChild;
+      let list = document.getElementsByClassName("ul-assignees")[0];
+      if (!this.displayLst) {
+        listHead.classList.add("fa-angle-down");
+        listHead.classList.remove("fa-angle-up");
+        list.style.display = "flex";
+      } else {
+        listHead.classList.remove("fa-angle-down");
+        listHead.classList.add("fa-angle-up");
+        list.style.display = "none";
+      }
+      this.displayLst = !this.displayLst;
     },
-    handleFocusOut(){
-      console.log("hererererer")
+    async checkPR() {
+      this.githubPrs=!this.githubPrs
+      axios
+        .post("http://localhost:3000/getGitHubPrs", {
+          username: this.task.githubUsername,
+          repo: this.task.githubRepo,
+          number: this.task.githubIssue,
+          email: localStorage.getItem("email"),
+          token: localStorage.getItem("token"),
+        })
+        .then((res) => {
+          this.prs = res.data;
+          this.selectorUpdate++;
+          // console.log(res.data.json())
+        });
+    },
+    async editSubmit(e) {
+      const toEdit = {
+        title: e.target[0].value,
+        description: e.target[1].value,
+        progress: e.target[2].value,
+        startDate: e.target[3].value,
+        endDate: e.target[4].value,
+        assignees: this.task.assignees,
+      };
+      if (e.target[5].value) {
+        toEdit.assignees.push(e.target[5].value);
+      }
+      console.log(toEdit);
+      axios.post("http://localhost:3000/editTask", {
+        id: this.$route.params.id,
+        email: localStorage.getItem("email"),
+        token: localStorage.getItem("token"),
+        toEdit,
+      });
+    },
+    async selectPR(event) {
+      console.log(event.target.value);
+      this.selectedPR = this.prs[event.target.value];
+    },
+    showIframe() {
+      this.iframeDisplay = true;
+    },
+    closeIframe() {
+      this.iframeDisplay = false;
+    },
+    handleFocusOut() {
+      console.log("hererererer");
     },
     profile() {
       this.$router.push({ name: "profile" });
@@ -401,34 +622,6 @@ export default {
     member() {
       this.$router.push({ name: "addMembers" });
     },
-    logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("email");
-      localStorage.removeItem("id");
-      this.$router.push({ name: "logIn" });
-    },
-    login() {
-      this.$router.push({ name: "memberLogin" });
-    },
-    signUp() {
-      if (this.name && this.mail && this.pass && this.phone) {
-        axios
-          .post("http://localhost:3000/memberSignup", {
-            email: this.mail,
-            name: this.name,
-            password: this.pass,
-            phoneNo: this.phone,
-          })
-          .then((response) => {
-            this.message = response.data;
-            alert(this.message);
-            if (this.message != "E-mail already Exists.")
-              this.$router.push({ name: "login" });
-          });
-      } else {
-        alert("Please fill the required details");
-      }
-    },
 
     selectCurrentMember(x) {
       this.currentMember = this.members[x];
@@ -444,20 +637,65 @@ export default {
     axios
       .post("http://localhost:3000/getTask", {
         id: taskId,
+        email: localStorage.getItem("email"),
+        token: localStorage.getItem("token"),
       })
       .then((res) => {
         this.task = res.data.task;
+        if (this.task.status === "Ongoing") {
+          if (new Date(this.task.endDate).getTime() > new Date().getTime) {
+            this.timeColor = "red";
+            this.timeText = "Delay";
+            this.boxShadow = "0px 0px 10px red";
+          } else {
+            this.timeColor = "blue";
+            this.timeText = "Ongoing";
+            this.boxShadow = "0px 0px 10px blue";
+          }
+        } else if (this.task.status === "Halted") {
+          this.timeColor = "yellow";
+          this.timeText = "Halted";
+          this.boxShadow = "0px 0px 10px yellow";
+        } else if (this.task.status === "Completed") {
+          this.timeColor = "green";
+          this.timeText = "Completed";
+          this.boxShadow = "0px 0px 10px green";
+        }
         console.log(this.task);
-        // axios
-        //   .post("http://localhost:3000/getGitHubIssueDetails", {
-        //     username: this.task.githubUsername,
-        //     repo: this.task.githubRepo,
-        //     number: this.task.githubIssue,
-        //   })
-        //   .then((res)=>
-        //   {this.issue=res.data
-        // console.log(this.issue)});
+
+
+        axios
+          .post("http://localhost:3000/getAllMembers", {
+            id: localStorage.getItem("orgId"),
+            email: localStorage.getItem("email"),
+            token: localStorage.getItem("token"),
+          })
+          .then((res) => {
+            for(let i=0;i<res.data.members.length;i++){
+              if(!this.task.assignees.includes(res.data.members[i].email)){
+                this.members.push(res.data.members[i].email);
+              }
+            }
+          });
+
+
+
+        axios
+          .post("http://localhost:3000/getGitHubIssueDetails", {
+            username: this.task.githubUsername,
+            repo: this.task.githubRepo,
+            number: this.task.githubIssue,
+            token: localStorage.getItem("token"),
+            email: localStorage.getItem("email"),
+          })
+          .then((res) => {
+            this.issue = res.data;
+            console.log(this.issue);
+          });
+
+
       });
+
   },
 };
 </script>
