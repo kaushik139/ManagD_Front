@@ -85,7 +85,7 @@ export default {
             token: localStorage.getItem("token"),
             email: localStorage.getItem("email"),
           })
-          .then((res) => {
+          .then(() => {
             
             
             axios
