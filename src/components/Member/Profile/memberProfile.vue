@@ -10,11 +10,11 @@
         <div>
           <memberMobileNavbar></memberMobileNavbar>
         </div>
-        <div>
+        <div :key="this.isEdited">
           <MemberHeader></MemberHeader>
 
         </div>
-        <div class="view-area">
+        <div class="view-area" :key="this.isEdited">
           <div>
             <h3 style="text-transform: uppercase">
               {{ member.name }}'s Profile
@@ -22,7 +22,7 @@
           </div>
           <div class="dialog-container" v-if="dialogOpen">
             <dialog id="dialog">
-              <editForm />
+              <editForm @submit="first(),closed()" />
               <button @click="closed" className="close">
                 <i class="fa-solid fa-circle-xmark"></i>
               </button>
@@ -101,12 +101,17 @@ export default {
       orgId: localStorage.getItem("orgId"),
       otherMembers: [],
       areOtherMembers: false,
+      isEdited: false,
     };
   },
 
   methods: {
     closed() {
       this.dialogOpen = false;
+      this.first();
+      console.log("hi");
+      this.isEdited = ! this.isEdited;
+
     },
     opened() {
       this.dialogOpen = true;
@@ -166,6 +171,11 @@ export default {
         })
         .then((res) => {
           this.member = res.data.member;
+          console.log(res.data.member);
+          localStorage.setItem("name", res.data.member.name);
+          localStorage.setItem("phoneNo", res.data.member.phoneNo);
+          localStorage.setItem("email", res.data.member.email);
+
           // this.notifications = res.data.member.notifications;
           this.organisation = res.data.member;
           //  
@@ -215,9 +225,9 @@ export default {
           }
         });
     },
-  },
-  async mounted() {
-    if (!this.token) {
+
+    first(){
+      if (!this.token) {
       this.$router.push({ name: "memberLogin" });
     }
     if(localStorage.getItem("orgId") === 'null'){
@@ -236,6 +246,11 @@ export default {
             this.ifJoinedOrg = true;
           }
 
+    },
+
+  },
+  async mounted() {
+   this.first();
     },
   
 

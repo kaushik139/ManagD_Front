@@ -34,7 +34,7 @@
     </div>
     <div class="remove-navbar-content" id="nav-content">
       <button class="button-menu" @click="profile">Profile</button>
-      <button class="button-menu" @click="member">Member Management</button>
+      <button class="button-menu" @click="org">Organisation Management</button>
       <button class="button-menu" @click="progress">Check Progress</button>
       <button class="button-menu" @click="dashboard">Dashboard</button>
       <button class="button-menu" @click="kanban">Kanban Board</button>
@@ -174,19 +174,19 @@ export default {
   },
   methods: {
     profile() {
-      this.$router.push({ name: "profile" });
+      this.$router.push({ name: "memberProfile" });
     },
     progress() {
-      this.$router.push({ name: "progress" });
+      this.$router.push({ name: "memberProgress" });
     },
     kanban() {
-      this.$router.push({ name: "orgKanban" });
+      this.$router.push({ name: "memberKanban" });
     },
     dashboard() {
-      this.$router.push({ name: "dashBoard" });
+      this.$router.push({ name: "memberDashBoard" });
     },
-    member() {
-      this.$router.push({ name: "addMembers" });
+    org() {
+      this.$router.push({ name: "organisationManagement" });
     },
     logout() {
       localStorage.removeItem("email");
@@ -195,7 +195,7 @@ export default {
       localStorage.removeItem("id");
       localStorage.removeItem("token");
       localStorage.removeItem("orgId");
-      this.$router.push({ name: "logIn" });
+      this.$router.push({ name: "memberLogin" });
     },
     menuCollapse() {
       if (!this.menuCollapsed) {

@@ -39,7 +39,7 @@
             </span>
             <i v-else class="fa-solid fa-bell"></i>
             <div style="display: flex; align-items: center; gap: 5px">
-              <span>Hi! {{ name }}!</span>
+              Hi <span style="text-transform: uppercase">{{ name }}</span>
               <i class="fa-solid fa-right-from-bracket" @click="logout"></i>
             </div>
           </div>
@@ -149,7 +149,7 @@ export default {
       localStorage.removeItem("token");
       localStorage.removeItem("email");
       localStorage.removeItem("id");
-      this.$router.push({ name: "logIn" });
+      this.$router.push({ name: "memberLogin" });
     },
     async clearNotice(idx){
       axios.post("https://managd-backend-server.onrender.com/clearNotification",{
@@ -160,12 +160,11 @@ export default {
       }).then((res)=>{
         this.notifications=res.data.notifications;
       })
-    }
-  },
-  async mounted() {
-    let token = localStorage.getItem("token");
+    },
+    first(){
+      let token = localStorage.getItem("token");
     if (!token) {
-      this.$router.push({ name: "signUp" });
+      this.$router.push({ name: "memberLogin" });
     }
     this.name = localStorage.getItem('name');
     axios
@@ -186,8 +185,13 @@ export default {
         localStorage.removeItem("name");
         localStorage.removeItem("phoneNo");
         localStorage.removeItem("orgId");
-        this.$router.push({ name: "logIn" });
+        this.$router.push({ name: "memberLogin" });
       });
+    },
+  },
+  async mounted() {
+    this.first();
+
   },
 };
 </script>
