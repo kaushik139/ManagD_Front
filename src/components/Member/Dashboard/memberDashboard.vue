@@ -76,7 +76,7 @@ export default {
       this.$router.push({ name: "progress" });
     },
     searchResults() {
-      // console.log(event.value);
+      // 
     },
     orgView() {
       this.$router.push({ name: "orgView" });
@@ -127,16 +127,9 @@ export default {
       email: localStorage.getItem("email"),
       phoneNo: localStorage.getItem("phoneNo"),
     };
-    // axios
-    //   .post("http://localhost:3000/getAllMembers", {
-    //     id: localStorage.getItem("id"),
-    //   })
-    //   .then((res) => {
-    //     this.orgId = res.data.members.orgId;
-    //   });
 
     axios
-      .post("http://localhost:3000/getMemberTasks", {
+      .post("https://managd-backend-server.onrender.com/getMemberTasks", {
         id: localStorage.getItem("id"),
         token: localStorage.getItem("token"),
         email: localStorage.getItem("email"),
@@ -144,10 +137,10 @@ export default {
       .then((res) => {
         this.calendar = res.data.tasks;
         let cnt = 0;
-        // console.log(this.calendar)
+        // 
         let sample = [];
         for (var x in this.calendar) {
-          //   console.log(this.calendar[x]);
+          //   
           const startAttribute = {
             key: x,
             content: "yellow",

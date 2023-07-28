@@ -645,14 +645,14 @@
     methods: {
       selecterchange(e) {
   
-        console.log(e.target.value);
+        
         const member = this.membersList[e.target.value];
-        console.log({member});
+        
         const taskArray = [];
         member.tasks.map((x) => {
-          console.log({x})
+          
           axios
-            .post("http://localhost:3000/getTask", {
+            .post("https://managd-backend-server.onrender.com/getTask", {
               id: x,
               email: localStorage.getItem('email'),
           token: localStorage.getItem('token')
@@ -677,19 +677,19 @@
   
               // console.
               // log({onGoing:onGoing})
-              console.log({completed});
+              
               const monthComplete = new Map();
               const monthHalted = new Map();
               const monthOngoing = new Map();
               const monthDelayed = new Map();
               completed.map((x) => {
-                console.log({X:x})
+                
                 if (!monthComplete.get(new Date(x.data.task.endDate).getMonth())) {
                   monthComplete.set(new Date(x.data.task.endDate).getMonth(), 1);
                 } else {
                   const value =
                     monthComplete.get(new Date(x.data.task.endDate).getMonth()) + 1;
-                  console.log("V", value);
+                  
                   monthComplete.set(new Date(x.data.task.endDate).getMonth(), value);
                 }
               });
@@ -724,14 +724,14 @@
                 }
               });
   
-              console.log({month:monthComplete})
+              
   
               monthComplete.forEach((value, key) => {
                 this.lineData.datasets[0].data[key] = value;
                 this.lineData5.datasets[0].data[key] = value;
               });
   
-              console.log("LD",this.lineData)
+              
   
               monthHalted.forEach((value, key) => {
                 this.lineData2.datasets[0].data[key] = value;
@@ -746,12 +746,12 @@
                 this.lineData5.datasets[3].data[key] = value;
               });
   
-              console.log({monthHalted})
+              
               this.comp=!this.comp;
               this.hlt=!this.hlt;
               this.del=!this.del;
               this.ong=!this.ong;
-              // console.log({halted:halted})
+              // 
             });
         });
       },
@@ -760,7 +760,7 @@
       },
       opened() {
         this.dialogOpen = true;
-        console.log(this.dialogOpen);
+        
       },
       member() {
         this.$router.push({ name: "addMembers" });
@@ -791,7 +791,7 @@
   
       async clearNotice(idx) {
         axios
-          .post("http://localhost:3000/clearNotification", {
+          .post("https://managd-backend-server.onrender.com/clearNotification", {
             id: localStorage.getItem("id"),
             notification: idx,
             email: localStorage.getItem('email'),
@@ -814,7 +814,7 @@
       signUp() {
         if (this.name && this.mail && this.pass && this.phone) {
           axios
-            .post("http://localhost:3000/memberSignup", {
+            .post("https://managd-backend-server.onrender.com/memberSignup", {
               email: this.mail,
               name: this.name,
               password: this.pass,
@@ -838,13 +838,13 @@
     //   }
   
       axios
-        .post("http://localhost:3000/getMemberTasks", {
+        .post("https://managd-backend-server.onrender.com/getMemberTasks", {
           id: localStorage.getItem("id"),
           email: localStorage.getItem('email'),
           token: localStorage.getItem('token')
         })
         .then((res) => {
-          console.log("TASKS",res);
+          
           const monthComplete = new Map();
           const monthHalted = new Map();
           const monthOngoing = new Map();
@@ -858,11 +858,11 @@
               } else {
                 const value =
                   monthComplete.get(new Date(x.endDate).getMonth()) + 1;
-                console.log("V", value);
+                
                 monthComplete.set(new Date(x.endDate).getMonth(), value);
               }
             } else if (x.status === "Halted") {
-              console.log("H", x);
+              
               if (!monthHalted.get(new Date(x.endDate).getMonth())) {
                 monthHalted.set(new Date(x.endDate).getMonth(), 1);
               } else {
@@ -886,11 +886,11 @@
                 monthDelayed.set(new Date(x.endDate).getMonth(), value);
               }
             }
-            console.log(x.assignees);
+            
             for (var j = 0; j < x.assignees.length; j++) {
               if (assignedMembers.get(x.assignees[j])) {
                 const current = assignedMembers.get(x.assignees[j]);
-                // console.log(current)
+                // 
                 assignedMembers.set(x.assignees[j], [...current, x.title]);
               } else {
                 assignedMembers.set(x.assignees[j], x.title);
@@ -920,52 +920,52 @@
               this.del=!this.del;
               this.ong=!this.ong;
   
-          console.log({ assignedMembers });
+          
         })
   
       axios
-        .post("http://localhost:3000/getAllMembers", {
+        .post("https://managd-backend-server.onrender.com/getAllMembers", {
           id: localStorage.getItem("id"),
           email: localStorage.getItem('email'),
           token: localStorage.getItem('token')
         })
         .then((res) => {
-          console.log(res);
+          
           this.membersList = res.data.members;
-          // console.log(this.membersList);
+          // 
         });
   
     //   axios
-    //     .post("http://localhost:3000/getOrganisationDetails", {
+    //     .post("https://managd-backend-server.onrender.com/getOrganisationDetails", {
     //       unsanitisedId: localStorage.getItem("id"),
     //     })
     //     .then((res) => {
     //       this.organisation = res.data;
-    //       console.log(this.organisation._id);
+    //       
     //     });
   
-      console.log(localStorage.getItem("id"));
+      
   
       axios
-        .post("http://localhost:3000/getAllMembers", {
+        .post("https://managd-backend-server.onrender.com/getAllMembers", {
           id: localStorage.getItem("id"),
           email: localStorage.getItem('email'),
           token: localStorage.getItem('token')
         })
         .then((res) => {
           this.currentMembers = res.data.members;
-          console.log(this.currentMembers);
+          
         });
-      console.log({ token });
+      
       axios
-        .post("http://localhost:3000/getNotificationsForMember", {
+        .post("https://managd-backend-server.onrender.com/getNotificationsForMember", {
           id: localStorage.getItem("id"),
           token: token,
           email: localStorage.getItem("email"),
         })
         .then((res) => {
           this.notifications = res.data.notifications;
-          console.log(this.notifications);
+          
         })
         
     },

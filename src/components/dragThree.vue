@@ -400,18 +400,18 @@ export default {
       if (e.target.value === "Select") return;
       this.addedMembers.push(e.target.value);
       this.organisationMembers = this.organisationMembers.filter((x) => {
-        // console.log(x.email !== e.target.value);
+        // 
         return x.email !== e.target.value;
       });
 
-      // console.log(this.organisationMembers);
+      // 
 
       // this.organisationMembers.splice(1)
     },
 
     submitForm(e) {
       axios
-        .post("http://localhost:3000/addTask", {
+        .post("https://managd-backend-server.onrender.com/addTask", {
           title: e.target[0].value,
           description: e.target[1].value,
           githubUsername: e.target[2].value,
@@ -430,7 +430,7 @@ export default {
         });
     },
     Test() {
-      // console.log(this.box);
+      // 
     },
 
     AddTask(list) {
@@ -581,25 +581,25 @@ export default {
     // },
 
     startDrag(evt, card, status) {
-      // console.log(evt, card, status);
+      // 
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("cardID", status);
-      // console.log("OO");
-      // console.log(card);
-      // console.log(status)
+      // 
+      // 
+      // 
     },
 
     onDrop(evt, list) {
-      // console.log("PPPPPP");
+      // 
       const cardID = evt.dataTransfer.getData("cardID");
       // const card = this.box.find((card) => card.id === cardID);
       // card.status = list;
-      // console.log("Q", cardID);
+      // 
       const updatedStatus =
         list === 1 ? "Ongoing" : list === 2 ? "Halted" : "Completed";
       axios
-        .post("http://localhost:3000/editTask", {
+        .post("https://managd-backend-server.onrender.com/editTask", {
           id: cardID,
           toEdit: {
             status: updatedStatus,
@@ -607,32 +607,32 @@ export default {
         })
         .then(() => {
           this.$router.go();
-          // console.log(res);
+          // 
         });
-      // console.log("W", list);
+      // 
 
       // switch(list)
-      // console.log(card.status)
+      // 
     },
   },
 
   mounted() {
     axios
-      .post("http://localhost:3000/getAllMembers", {
+      .post("https://managd-backend-server.onrender.com/getAllMembers", {
         id: localStorage.getItem("orgId"),
       })
       .then((res) => {
         this.organisationMembers = res.data.members;
-        // console.log(this.organisationMembers);
+        // 
       });
 
     axios
-      .post("http://localhost:3000/getMemberTasks", {
+      .post("https://managd-backend-server.onrender.com/getMemberTasks", {
         id: localStorage.getItem("id"),
       })
       .then((res) => {
         this.box = res.data.taskList;
-        // console.log(this.box);
+        // 
         // this.confirm_task(this.list)
       });
   },

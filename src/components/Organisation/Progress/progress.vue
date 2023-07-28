@@ -659,14 +659,14 @@ export default {
   methods: {
     selecterchange(e) {
 
-      console.log(e.target.value);
+      
       const member = this.membersList[e.target.value];
-      console.log({member});
+      
       const taskArray = [];
       member.tasks.map((x) => {
-        console.log({x})
+        
         axios
-          .post("http://localhost:3000/getTask", {
+          .post("https://managd-backend-server.onrender.com/getTask", {
             id: x,
             token: localStorage.getItem("token"),
         email: localStorage.getItem("email")
@@ -691,19 +691,19 @@ export default {
 
             // console.
             // log({onGoing:onGoing})
-            console.log({completed});
+            
             const monthComplete = new Map();
             const monthHalted = new Map();
             const monthOngoing = new Map();
             const monthDelayed = new Map();
             completed.map((x) => {
-              console.log({X:x})
+              
               if (!monthComplete.get(new Date(x.data.task.endDate).getMonth())) {
                 monthComplete.set(new Date(x.data.task.endDate).getMonth(), 1);
               } else {
                 const value =
                   monthComplete.get(new Date(x.data.task.endDate).getMonth()) + 1;
-                console.log("V", value);
+                
                 monthComplete.set(new Date(x.data.task.endDate).getMonth(), value);
               }
             });
@@ -738,14 +738,14 @@ export default {
               }
             });
 
-            console.log({month:monthComplete})
+            
 
             monthComplete.forEach((value, key) => {
               this.lineData.datasets[0].data[key] = value;
               this.lineData5.datasets[0].data[key] = value;
             });
 
-            console.log("LD",this.lineData)
+            
 
             monthHalted.forEach((value, key) => {
               this.lineData2.datasets[0].data[key] = value;
@@ -760,12 +760,12 @@ export default {
               this.lineData5.datasets[3].data[key] = value;
             });
 
-            console.log({monthHalted})
+            
             this.comp=!this.comp;
             this.hlt=!this.hlt;
             this.del=!this.del;
             this.ong=!this.ong;
-            // console.log({halted:halted})
+            // 
           });
       });
     },
@@ -774,7 +774,7 @@ export default {
     },
     opened() {
       this.dialogOpen = true;
-      console.log(this.dialogOpen);
+      
     },
     member() {
       this.$router.push({ name: "addMembers" });
@@ -805,7 +805,7 @@ export default {
 
     async clearNotice(idx) {
       axios
-        .post("http://localhost:3000/clearNotification", {
+        .post("https://managd-backend-server.onrender.com/clearNotification", {
           id: localStorage.getItem("id"),
           notification: idx,
           token: localStorage.getItem("token"),
@@ -823,13 +823,13 @@ export default {
     }
 
     axios
-      .post("http://localhost:3000/getTasksForOrganisation", {
+      .post("https://managd-backend-server.onrender.com/getTasksForOrganisation", {
         id: localStorage.getItem("id"),
         token: localStorage.getItem("token"),
         email:localStorage.getItem("email")
       })
       .then((res) => {
-        console.log(res);
+        
         const monthComplete = new Map();
         const monthHalted = new Map();
         const monthOngoing = new Map();
@@ -838,17 +838,17 @@ export default {
 
         res.data.tasks.map((x) => {
           if (x.status === "Completed") {
-            console.log("C", x);
+            
             if (!monthComplete.get(new Date(x.endDate).getMonth())) {
               monthComplete.set(new Date(x.endDate).getMonth(), 1);
             } else {
               const value =
                 monthComplete.get(new Date(x.endDate).getMonth()) + 1;
-              console.log("V", value);
+              
               monthComplete.set(new Date(x.endDate).getMonth(), value);
             }
           } else if (x.status === "Halted") {
-            console.log("H", x);
+            
             if (!monthHalted.get(new Date(x.endDate).getMonth())) {
               monthHalted.set(new Date(x.endDate).getMonth(), 1);
             } else {
@@ -872,11 +872,11 @@ export default {
               monthDelayed.set(new Date(x.endDate).getMonth(), value);
             }
           }
-          console.log(x.assignees);
+          
           for (var j = 0; j < x.assignees.length; j++) {
             if (assignedMembers.get(x.assignees[j])) {
               const current = assignedMembers.get(x.assignees[j]);
-              // console.log(current)
+              // 
               assignedMembers.set(x.assignees[j], [...current, x.title]);
             } else {
               assignedMembers.set(x.assignees[j], x.title);
@@ -906,7 +906,7 @@ export default {
             this.del=!this.del;
             this.ong=!this.ong;
 
-        console.log({ assignedMembers });
+        
 
         // assignedMembers.forEach((value, key) => {
         //   this.pieData.labels.push(key);
@@ -919,7 +919,7 @@ export default {
         //     for(let j=0;j<assigned.length;j++){
         //         if(assignedMembers.get(assigned[j])){
         //             const current = assignedMembers.get(assigned[j]);
-        //             // console.log(current)
+        //             // 
         //             assignedMembers.set(assigned[j],[...current,res.data.tasks[i].title]);
         //         }
         //         else{
@@ -927,7 +927,7 @@ export default {
 
         //         }
         //     }
-        //     console.log("PP",assignedMembers)
+        //     
         // }
       });
 
@@ -942,22 +942,22 @@ export default {
     //         obj.backgroundColor.push(color);
     //         obj.data.push(value.length);
 
-    //         // console.log("L",value.length)
+    //         // 
     //         // const data = this.pieData.datasets[0].data;
-    //         // console.log(this.pieData.datasets[0].data)
+    //         // 
     //         // this.pieData.datasets[0].data.push(1)
     //         // dat.push(value.length)
-    //         console.log(value.length)
+    //         
     //     })
-    //     console.log({obj})
+    //     
     //     this.pieData.datasets[0]=obj
-    //     console.log("T",this.pieData.datasets)
+    //     
     //     // for(var i=0;i<)
     //     // this.pieData.datasets[0].data = [...this.pieData.datasets[0].data,...dat]
 
     //   });
 
-    //   axios.post("http://localhost:3000/getTasksForOrganisation",{
+    //   axios.post("https://managd-backend-server.onrender.com/getTasksForOrganisation",{
     //     id:localStorage.getItem('id')
     //   }).then((res)=>{
     //     const assignedMembers = new Map();
@@ -967,7 +967,7 @@ export default {
     //         for(let j=0;j<assigned.length;j++){
     //             if(assignedMembers.get(assigned[j])){
     //                 const current = assignedMembers.get(assigned[j]);
-    //                 // console.log(current)
+    //                 // 
     //                 assignedMembers.set(assigned[j],[...current,res.data.tasks[i].title]);
     //             }
     //             else{
@@ -986,66 +986,66 @@ export default {
     //         const color='#'+(Math.random() * 0xFFFFFF << 0).toString(16).padStart(6, '0');
     //         obj.backgroundColor.push(color);
     //         obj.data.push(value.length);
-    //         // console.log("L",value.length)
+    //         // 
     //         // const data = this.pieData.datasets[0].data;
-    //         // console.log(this.pieData.datasets[0].data)
+    //         // 
     //         // this.pieData.datasets[0].data.push(1)
     //         // dat.push(value.length)
-    //         console.log(value.length)
+    //         
     //     })
 
     //     this.pieData.datasets[0]=obj
     //     // for(var i=0;i<)
     //     // this.pieData.datasets[0].data = [...this.pieData.datasets[0].data,...dat]
 
-    //     console.log(this.pieData)
+    //     
     //   })
 
     axios
-      .post("http://localhost:3000/getAllMembers", {
+      .post("https://managd-backend-server.onrender.com/getAllMembers", {
         id: localStorage.getItem("id"),
         token: localStorage.getItem("token"),
         email: localStorage.getItem("email")
       })
       .then((res) => {
-        console.log(res);
+        
         this.membersList = res.data.members;
-        // console.log(this.membersList);
+        // 
       });
 
     axios
-      .post("http://localhost:3000/getOrganisationDetails", {
+      .post("https://managd-backend-server.onrender.com/getOrganisationDetails", {
         unsanitisedId: localStorage.getItem("id"),
         token: localStorage.getItem("token"),
         email: localStorage.getItem("email")
       })
       .then((res) => {
         this.organisation = res.data;
-        console.log(this.organisation._id);
+        
       });
 
-    console.log(localStorage.getItem("id"));
+    
 
     axios
-      .post("http://localhost:3000/getAllMembers", {
+      .post("https://managd-backend-server.onrender.com/getAllMembers", {
         id: localStorage.getItem("id"),
         token: localStorage.getItem("token"),
         email: localStorage.getItem("email")
       })
       .then((res) => {
         this.currentMembers = res.data.members;
-        console.log(this.currentMembers);
+        
       });
-    console.log({ token });
+    
     axios
-      .post("http://localhost:3000/getNotificationsForOrganisation", {
+      .post("https://managd-backend-server.onrender.com/getNotificationsForOrganisation", {
         id: localStorage.getItem("id"),
         token: token,
         email: localStorage.getItem("email"),
       })
       .then((res) => {
         this.notifications = res.data.notifications;
-        console.log(this.notifications);
+        
       })
       .catch(() => {
         alert("Session Expired! Please relogin again.");

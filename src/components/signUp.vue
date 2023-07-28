@@ -123,17 +123,17 @@ export default {
       this.$router.push({ name: "memberSignup" });
     },
     getOTP(){
-      axios.post("http://localhost:3000/sendOTP",{email:this.mail}).then(()=>{
+      axios.post("https://managd-backend-server.onrender.com/sendOTP",{email:this.mail}).then(()=>{
         this.otpHide=false;
       })
     },
     signUp(e) {
-      console.log("E",e)
+      
       // If all details are provided, then post the request to the server
       if (this.name && this.mail && this.pass && this.location && this.phone
       && this.pass == this.pass2) {
         axios
-          .post("http://localhost:3000/addOrganisation", {
+          .post("https://managd-backend-server.onrender.com/addOrganisation", {
             email: this.mail,
             name: this.name,
             password: this.pass,
@@ -147,7 +147,7 @@ export default {
               alert("Invalid OTP")
             }else{
 
-              console.log(response)
+              
               
                           if(response.data.message === 'Organisation already exists'){
 alert("Email exists")

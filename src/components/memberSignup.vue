@@ -132,7 +132,7 @@ export default {
     },
     getOTP() {
       axios
-        .post("http://localhost:3000/sendOTP", { email: this.mail })
+        .post("https://managd-backend-server.onrender.com/sendOTP", { email: this.mail })
         .then(() => {
           this.otpHide = false;
         });
@@ -146,7 +146,7 @@ export default {
         this.pass == this.pass2
       ) {
         axios
-          .post("http://localhost:3000/memberSignup", {
+          .post("https://managd-backend-server.onrender.com/memberSignup", {
             email: this.mail,
             name: this.name,
             password: this.pass,

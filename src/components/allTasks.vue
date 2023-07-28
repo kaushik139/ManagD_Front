@@ -379,20 +379,20 @@ export default {
 
     getGit() {
       axios
-        .post("http://localhost:3000/getGitHubIssues", {
+        .post("https://managd-backend-server.onrender.com/getGitHubIssues", {
           username: document.getElementById("gitUsername").value,
           repo: document.getElementById("gitRepo").value,
         })
         .then((res) => {
           this.issues = res.data;
 
-          console.log(this.issues);
+          
 
         });
     },
     submitForm(e) {
       axios
-        .post("http://localhost:3000/addTask", {
+        .post("https://managd-backend-server.onrender.com/addTask", {
           title: e.target[0].value,
           description: e.target[1].value,
           githubUsername: e.target[2].value,
@@ -414,11 +414,11 @@ export default {
     Test() {},
     AddTask(list) {
       this.taskDialog = true;
-      // console.log({ list });
+      // 
       if (list === 1) {
         this.Show1 = "Ongoing";
       } else if (list === 2) {
-        // console.log("here");
+        // 
         this.Show1 = "Halted";
       } else if (list === 3) {
         this.Show1 = "Completed";
@@ -431,7 +431,7 @@ export default {
     },
 
     startDrag(evt, card, status) {
-      // console.log(evt, card, status);
+      // 
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("cardID", status);
@@ -442,7 +442,7 @@ export default {
       const updatedStatus =
         list === 1 ? "Ongoing" : list === 2 ? "Halted" : "Completed";
       axios
-        .post("http://localhost:3000/editTask", {
+        .post("https://managd-backend-server.onrender.com/editTask", {
           id: cardID,
           toEdit: {
             status: updatedStatus,
@@ -456,7 +456,7 @@ export default {
 
   mounted() {
     axios
-      .post("http://localhost:3000/getAllMembers", {
+      .post("https://managd-backend-server.onrender.com/getAllMembers", {
         id: localStorage.getItem("orgId"),
       })
       .then((res) => {
@@ -464,13 +464,13 @@ export default {
       });
 
     axios
-      .post("http://localhost:3000/getTasksForOrganisation", {
+      .post("https://managd-backend-server.onrender.com/getTasksForOrganisation", {
         id: localStorage.getItem("id"),
       })
       .then((res) => {
-        // console.log(res);
+        // 
         this.box = res.data.tasks;
-        // console.log(this.box);
+        // 
       });
   },
   computed: {
