@@ -522,7 +522,7 @@ export default {
   methods: {
     trashed(index) {
       this.task.assignees.splice(index, 1);
-      console.log(this.task);
+      
     },
     displayList() {
       let listHead =
@@ -542,7 +542,7 @@ export default {
     async checkPR() {
       this.githubPrs=!this.githubPrs
       axios
-        .post("http://localhost:3000/getGitHubPrs", {
+        .post("https://managd-backend-server.onrender.com/getGitHubPrs", {
           username: this.task.githubUsername,
           repo: this.task.githubRepo,
           number: this.task.githubIssue,
@@ -552,7 +552,7 @@ export default {
         .then((res) => {
           this.prs = res.data;
           this.selectorUpdate++;
-          // console.log(res.data.json())
+          // 
         });
     },
     async editSubmit(e) {
@@ -567,8 +567,8 @@ export default {
       if (e.target[5].value) {
         toEdit.assignees.push(e.target[5].value);
       }
-      console.log(toEdit);
-      axios.post("http://localhost:3000/editTask", {
+      
+      axios.post("https://managd-backend-server.onrender.com/editTask", {
         id: this.$route.params.id,
         email: localStorage.getItem("email"),
         token: localStorage.getItem("token"),
@@ -576,7 +576,7 @@ export default {
       });
     },
     async selectPR(event) {
-      console.log(event.target.value);
+      
       this.selectedPR = this.prs[event.target.value];
     },
     showIframe() {
@@ -586,14 +586,14 @@ export default {
       this.iframeDisplay = false;
     },
     handleFocusOut() {
-      console.log("hererererer");
+      
     },
     profile() {
       this.$router.push({ name: "profile" });
     },
 
     searchResults(event) {
-      console.log(event.value);
+      
     },
 
     menuCollapse() {
@@ -635,7 +635,7 @@ export default {
 
     const taskId = this.$route.params.id;
     axios
-      .post("http://localhost:3000/getTask", {
+      .post("https://managd-backend-server.onrender.com/getTask", {
         id: taskId,
         email: localStorage.getItem("email"),
         token: localStorage.getItem("token"),
@@ -661,11 +661,11 @@ export default {
           this.timeText = "Completed";
           this.boxShadow = "0px 0px 10px green";
         }
-        console.log(this.task);
+        
 
 
         axios
-          .post("http://localhost:3000/getAllMembers", {
+          .post("https://managd-backend-server.onrender.com/getAllMembers", {
             id: localStorage.getItem("orgId"),
             email: localStorage.getItem("email"),
             token: localStorage.getItem("token"),
@@ -681,7 +681,7 @@ export default {
 
 
         axios
-          .post("http://localhost:3000/getGitHubIssueDetails", {
+          .post("https://managd-backend-server.onrender.com/getGitHubIssueDetails", {
             username: this.task.githubUsername,
             repo: this.task.githubRepo,
             number: this.task.githubIssue,
@@ -690,7 +690,7 @@ export default {
           })
           .then((res) => {
             this.issue = res.data;
-            console.log(this.issue);
+            
           });
 
 

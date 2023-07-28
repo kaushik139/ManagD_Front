@@ -150,7 +150,7 @@ export default {
     },
     acceptORG(Oid) {
       axios
-        .post("http://localhost:3000/acceptInvitation", {
+        .post("https://managd-backend-server.onrender.com/acceptInvitation", {
           id: this.id,
           organisationId: Oid,
           email: localStorage.getItem('email'),
@@ -165,7 +165,7 @@ export default {
         });
     },
     rejectORG(Oid) {
-      axios.post("http://localhost:3000/rejectInvitation", {
+      axios.post("https://managd-backend-server.onrender.com/rejectInvitation", {
         id: this.id,
         orgEmail: Oid,
         email: localStorage.getItem('email'),
@@ -175,7 +175,7 @@ export default {
     leave() {
       this.orgId = null;
       localStorage.removeItem("orgId");
-      axios.post("http://localhost:3000/editMemberDetails", {
+      axios.post("https://managd-backend-server.onrender.com/editMemberDetails", {
         id: localStorage.getItem("id"),
         editDetails: { orgId: null },
         email: localStorage.getItem('email'),
@@ -219,7 +219,7 @@ export default {
 
     async clearNotice(idx) {
       axios
-        .post("http://localhost:3000/clearNotification", {
+        .post("https://managd-backend-server.onrender.com/clearNotification", {
           id: localStorage.getItem("id"),
           notification: idx,
           email: localStorage.getItem('email'),
@@ -235,7 +235,7 @@ export default {
 
     getOrganisationDetails(ID, status) {
       axios
-        .post("http://localhost:3000/getOrganisationDetails", {
+        .post("https://managd-backend-server.onrender.com/getOrganisationDetails", {
           unsanitisedId: ID,
           email: localStorage.getItem('email'),
           token: localStorage.getItem('token')
@@ -253,7 +253,7 @@ export default {
 
     getMemberDetails(){
       axios
-      .post("http://localhost:3000/getMemberDetails", {
+      .post("https://managd-backend-server.onrender.com/getMemberDetails", {
         id: localStorage.getItem("id"),
         token: localStorage.getItem("token"),
         email: localStorage.getItem("email"),

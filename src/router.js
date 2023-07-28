@@ -22,7 +22,7 @@ import organisationManagement from "./components/Member/Organisation Management/
 
 import meetScheduler from  "./components/meetScheduler.vue"
 
-
+import resetPasswordMember from "./components/resetPasswordMember.vue"
 import resetPassword from "./components/resetPasswordOrg.vue"
 const routes = [
     {
@@ -124,6 +124,11 @@ const routes = [
     name:'resetPasswordOrg',
     component: resetPassword,
     path:'/organisation/resetpassword'
+   },
+   {
+    name:'resetPasswordMember',
+    component: resetPasswordMember,
+    path:'/member/resetpassword'
    }
 ]
 

@@ -244,7 +244,7 @@ export default {
             this.$router.push({ name: "progress" });
         },
         searchResults(event) {
-            console.log(event.value);
+            
         },
         dashboard() {
             this.$router.push({ name: "dashBoard" });
@@ -277,7 +277,7 @@ export default {
             phoneNo: localStorage.getItem("phoneNo"),
         };
         axios
-            .post("http://localhost:3000/getAllMembers", {
+            .post("https://managd-backend-server.onrender.com/getAllMembers", {
             id: localStorage.getItem("id"),
             token: localStorage.getItem("token"),
             email: localStorage.getItem("email")
@@ -287,7 +287,7 @@ export default {
             this.currentMember = this.members[0];
         });
         axios
-            .post("http://localhost:3000/getTasksForOrganisation", {
+            .post("https://managd-backend-server.onrender.com/getTasksForOrganisation", {
             id: localStorage.getItem("id"),
             token: localStorage.getItem("token"),
             email: localStorage.getItem("email")
@@ -295,10 +295,10 @@ export default {
             .then((res) => {
             this.calendar = res.data.tasks;
             let cnt = 0;
-            console.log(this.calendar);
+            
             let sample = [];
             for (var x in this.calendar) {
-                //   console.log(this.calendar[x]);
+                //   
                 const startAttribute = {
                     key: x,
                     content: "yellow",

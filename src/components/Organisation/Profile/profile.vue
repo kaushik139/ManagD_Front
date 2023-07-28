@@ -350,7 +350,7 @@ export default {
     },
     opened() {
       this.dialogOpen = true;
-      console.log(this.dialogOpen);
+      
     },
     member() {
       this.$router.push({ name: "addMembers" });
@@ -373,7 +373,7 @@ export default {
     signUp() {
       if (this.name && this.mail && this.pass && this.phone) {
         axios
-          .post("http://localhost:3000/memberSignup", {
+          .post("https://managd-backend-server.onrender.com/memberSignup", {
             email: this.mail,
             name: this.name,
             password: this.pass,
@@ -396,29 +396,29 @@ export default {
       this.$router.push({ name: "signUp" });
     }
     axios
-      .post("http://localhost:3000/getOrganisationDetails", {
+      .post("https://managd-backend-server.onrender.com/getOrganisationDetails", {
         unsanitisedId: localStorage.getItem("id"),
         token: localStorage.getItem("token"),
         email: localStorage.getItem("email")
       })
       .then((res) => {
         this.organisation = res.data;
-        console.log(this.organisation._id);
+        
       });
 
-    console.log(localStorage.getItem("id"));
+    
 
     axios
-      .post("http://localhost:3000/getAllMembers", {
+      .post("https://managd-backend-server.onrender.com/getAllMembers", {
         id: localStorage.getItem("id"),
         token: localStorage.getItem("token"),
         email: localStorage.getItem("email")
       })
       .then((res) => {
         this.currentMembers = res.data.members;
-        console.log(this.currentMembers);
+        
       });
-    console.log({ token });
+    
 
   },
 };

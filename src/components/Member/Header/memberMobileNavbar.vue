@@ -77,6 +77,8 @@
 .button-menu {
   height: 7%;
   background-color: white;
+  margin:5px;
+  width:70%;
   border: none;
   padding: 0;
   font: inherit;
@@ -217,7 +219,7 @@ export default {
     },
     async clearNotice(idx) {
       axios
-        .post("http://localhost:3000/clearNotification", {
+        .post("https://managd-backend-server.onrender.com/clearNotification", {
           id: localStorage.getItem("id"),
           notification: idx,
           email: localStorage.getItem("email"),
@@ -230,19 +232,19 @@ export default {
   },
   async mounted() {
     let token = localStorage.getItem("token");
-    // console.log("p");
+    
     if (!token) {
       this.$router.push({ name: "signUp" });
     }
     axios
-      .post("http://localhost:3000/getNotificationsForMember", {
+      .post("https://managd-backend-server.onrender.com/getNotificationsForMember", {
         id: localStorage.getItem("id"),
         token: token,
         email: localStorage.getItem("email"),
       })
       .then((res) => {
         this.notifications = res.data.notifications;
-        // console.log("N", this.notifications);
+        
       })
   },
 };

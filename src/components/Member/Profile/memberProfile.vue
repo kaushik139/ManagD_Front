@@ -147,7 +147,7 @@ export default {
 
     async clearNotice(idx) {
       axios
-        .post("http://localhost:3000/clearNotification", {
+        .post("https://managd-backend-server.onrender.com/clearNotification", {
           id: localStorage.getItem("id"),
           notification: idx,
           email: localStorage.getItem('email'),
@@ -164,7 +164,7 @@ export default {
 
     getMemberDetails() {
       axios
-        .post("http://localhost:3000/getMemberDetails", {
+        .post("https://managd-backend-server.onrender.com/getMemberDetails", {
           id: localStorage.getItem("id"),
           token: localStorage.getItem("token"),
           email: localStorage.getItem("email"),
@@ -178,21 +178,21 @@ export default {
 
           // this.notifications = res.data.member.notifications;
           this.organisation = res.data.member;
-          //  console.log(res.data.member);
+          //  
         });
     },
 
     getOrganisationDetails(ID) {
       axios
-        .post("http://localhost:3000/getOrganisationDetails", {
+        .post("https://managd-backend-server.onrender.com/getOrganisationDetails", {
           unsanitisedId: ID,
           email: localStorage.getItem('email'),
           token: localStorage.getItem('token')
         })
         .then((res) => {
           this.currentOrganisation = res.data.name;
-          // console.log("CurrOrg");
-          // console.log(res.data.name);
+          // 
+          // 
         });
     },
 
@@ -206,16 +206,16 @@ export default {
 
     getAllMembers(id) {
       axios
-        .post("http://localhost:3000/getAllMembers", {
+        .post("https://managd-backend-server.onrender.com/getAllMembers", {
           id: id,
           email: localStorage.getItem('email'),
           token: localStorage.getItem('token')
         })
         .then((res) => {
-          // console.log("API Fired!!!");
+          // 
           if (res.data.members.length) {
-            // console.log(res.data.members);
-            // console.log("_id:" + res.data.members[0]._id);
+            // 
+            // 
             for (let i = 0; i < res.data.members.length; i++) {
               if (res.data.members[i]._id != this.id) {
                 this.otherMembers.push(res.data.members[i]);
@@ -236,7 +236,7 @@ export default {
     this.getMemberDetails();
     let orgId = localStorage.getItem("orgId");
     if(localStorage.getItem("orgId")) {
-      // console.log("hi");
+      // 
       this.getOrganisationDetails(orgId);
       this.getAllMembers(this.orgId);
     } else {

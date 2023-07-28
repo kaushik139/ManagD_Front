@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     async changed(e) {
-      // console.log("Same");
+      
       let nameMember = e.target[0].value;
       this.editedDetails = {
         name: nameMember,
@@ -66,43 +66,43 @@ export default {
         phoneNo: e.target[2].value,
         // location: e.target[3].value,
       };
-      // console.log("555");
-      // console.log(this.editedDetails.name);
-      // console.log(e.target[0].value);
-      // console.log("555");
+      
+      
+      
+      
       // Checking whether Org or Member
-      // console.log("edName");
-      // console.log(this.editedDetails.name);
+      
+      
       let orgID = localStorage.getItem("orgId");
       if (orgID === "null" || orgID) {
-        // console.log(this.editedDetails);
+        
 
         // For Members
         axios
-          .post("http://localhost:3000/editMemberDetails", {
+          .post("https://managd-backend-server.onrender.com/editMemberDetails", {
             id: localStorage.getItem("id"),
             editDetails: this.editedDetails,
             token: localStorage.getItem("token"),
             email: localStorage.getItem("email"),
           })
           .then(() => {
-            // console.log("res recieved");
-            // console.log(res);
+            
+            
             axios
-              .post("http://localhost:3000/getMemberDetails", {
+              .post("https://managd-backend-server.onrender.com/getMemberDetails", {
                 id: localStorage.getItem("id"),
                 token: localStorage.getItem("token"),
                 email: localStorage.getItem("email"),
               })
               .then((res) => {
-                console.log(res.data.member);
+                
                 this.entity = res.data.member;
                 this.editedDetails = {
                   name: this.entity.name,
                   email: this.entity.email,
                   phoneNo: this.entity.phoneNo,
                 };
-                // console.log(this.entity._id);
+                // 
               });
           });
       }
@@ -110,7 +110,7 @@ export default {
       // For Org:
       else {
         axios
-          .patch("http://localhost:3000/editOrganisationDetails", {
+          .patch("https://managd-backend-server.onrender.com/editOrganisationDetails", {
             unsanitisedId: localStorage.getItem("id"),
             editDetails: this.editedDetails,
             token: localStorage.getItem("token"),
@@ -118,7 +118,7 @@ export default {
           })
           .then(() => {
             axios
-              .post("http://localhost:3000/getOrganisationDetails", {
+              .post("https://managd-backend-server.onrender.com/getOrganisationDetails", {
                 unsanitisedId: localStorage.getItem("id"),
                 token: localStorage.getItem("token"),
                 email: localStorage.getItem("email"),
@@ -131,7 +131,7 @@ export default {
                   location: this.organisation.location,
                   phoneNo: this.organisation.phoneNo,
                 };
-                // console.log(this.organisation._id)
+                // 
               });
           });
       }
@@ -148,20 +148,20 @@ export default {
     if (orgID == "null" || orgID) {
       // For Members
       axios
-        .post("http://localhost:3000/getMemberDetails", {
+        .post("https://managd-backend-server.onrender.com/getMemberDetails", {
           id: localStorage.getItem("id"),
           token: localStorage.getItem("token"),
           email: localStorage.getItem("email"),
         })
         .then((res) => {
-          // console.log("Res Data" + res.data.member);
+          // 
           this.entity = res.data.member;
           this.editedDetails = {
             name: this.entity.name,
             email: this.entity.email,
             phoneNo: this.entity.phoneNo,
           };
-          // console.log(this.entity._id);
+          // 
         });
     }
 
@@ -169,9 +169,9 @@ export default {
     else {
       this.isLocationVisible = true;
 
-      // console.log("Its an Organisation");
+      // 
       axios
-        .post("http://localhost:3000/getOrganisationDetails", {
+        .post("https://managd-backend-server.onrender.com/getOrganisationDetails", {
           unsanitisedId: localStorage.getItem("id"),
           token: localStorage.getItem("token"),
           email: localStorage.getItem("email"),
