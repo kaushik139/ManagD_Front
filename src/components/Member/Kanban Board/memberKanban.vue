@@ -11,21 +11,22 @@
         <div class="title">Add Task</div>
         <!-- <div class="subtitle">Let's create your account!</div> -->
         <div class="input-container ic1">
-          <input id="firstname" class="input" type="text" placeholder=" " />
+          <input id="title" class="input" type="text" placeholder=" " />
           <div class="cut cut-title"></div>
-          <label for="firstname" class="placeholder">Title</label>
+          <label for="title" class="placeholder">Title</label>
         </div>
         <div class="input-container ic1">
           <textarea
-            id="firstname"
+            id="description"
             class="input"
             type="text-area"
             rows="4"
             cols="50"
             placeholder=" "
+            style="padding-top:15px"
           />
           <div class="cut"></div>
-          <label for="firstname" class="placeholder">Description</label>
+          <label for="description"  class="placeholder">Description</label>
         </div>
         <div class="input-container ic1">
           <input
@@ -35,8 +36,8 @@
             type="text"
             placeholder=" "
           />
-          <div class="cut cut-title" style="width: 55px"></div>
-          <label for="firstname" class="placeholder">GitHub Username</label>
+          <div class="cut cut-username"></div>
+          <label for="gitUsername" class="placeholder">GitHub Username</label>
         </div>
         <div class="input-container ic1">
           <input
@@ -46,11 +47,11 @@
             type="text"
             placeholder=" "
           />
-          <div class="cut cut-title" style="width: 55px"></div>
-          <label for="firstname" class="placeholder">GitHub Repo</label>
+          <div class="cut cut-repo"></div>
+          <label for="gitRepo" class="placeholder">GitHub Repo</label>
         </div>
         <div class="input-container ic1">
-          <select id="firstname" class="input" type="text" placeholder=" ">
+          <select id="gitIssues" class="input" type="text" placeholder=" ">
             <option
               v-for="(issue, index) in issues"
               :key="index"
@@ -59,24 +60,24 @@
               {{ issue.title }}
             </option>
           </select>
-          <div class="cut"></div>
+          <div class="cut cut-issues"></div>
 
-          <label for="firstname" class="placeholder">GitHub Repo</label>
+          <label for="gitIssues" class="placeholder">GitHub Issues</label>
         </div>
         <div class="input-container ic2">
-          <input id="lastname" class="input" type="date" placeholder=" " />
+          <input id="start-date" class="input" type="date" placeholder=" " />
           <div class="cut"></div>
-          <label for="lastname" class="placeholder">Start Date</label>
+          <label for="start-date" class="placeholder">Start Date</label>
         </div>
         <div class="input-container ic2">
-          <input id="lastname" class="input" type="date" placeholder=" " />
+          <input id="end-date" class="input" type="date" placeholder=" " />
           <div class="cut"></div>
-          <label for="lastname" class="placeholder">End Date</label>
+          <label for="end-date" class="placeholder">End Date</label>
         </div>
 
         <div class="input-container ic2">
           <select
-            id="lastname"
+            id="org-members"
             class="input"
             type="text"
             placeholder=" "
@@ -89,7 +90,7 @@
             </option>
           </select>
           <div class="cut cut-members"></div>
-          <label for="lastname" class="placeholder">Assigned Members</label>
+          <label for="org-members" class="placeholder">Assigned Members</label>
         </div>
         <div
           class="avatar-row"
@@ -102,19 +103,19 @@
 
         <div class="input-container ic2" :key="changed">
           <input
-            id="lastname"
+            id="status"
             class="input"
             disabled
             type="text"
             placeholder=" "
             :value="Show1"
           />
-          <div class="cut"></div>
-          <label for="lastname" class="placeholder">Status</label>
+          <div class="cut cut-status"></div>
+          <label for="status" class="placeholder">Status</label>
         </div>
 
         <button type="submit" class="submit">Submit</button>
-        <button @click="close">Close</button>
+        <button @click="close" class="submit">Close</button>
       </form>
     </div>
 
@@ -158,7 +159,7 @@
           <p v-if="card.extension">
             {{ card.extension }}
           </p>
-          <p style="margin-top: 10px">Created By: ADMIN</p>
+          <!-- <p style="margin-top: 10px">Created By: ADMIN</p> -->
           <div>
             Assigned to:
             <div style="margin-top: 10px">
@@ -225,7 +226,7 @@
           <p v-if="card.extension">
             {{ card.extension }}
           </p>
-          <p style="margin-top: 10px">Created By: ADMIN</p>
+          <!-- <p style="margin-top: 10px">Created By: ADMIN</p> -->
           <div>
             Assigned to:
             <div style="margin-top: 10px">
@@ -291,7 +292,7 @@
           <p v-if="card.extension">
             {{ card.extension }}
           </p>
-          <p style="margin-top: 10px">Created By: ADMIN</p>
+          <!-- <p style="margin-top: 10px">Created By: ADMIN</p> -->
           <div>
             Assigned to:
             <div style="margin-top: 10px">
@@ -395,7 +396,7 @@ export default {
 
     getGit() {
       axios
-        .post("http://localhost:3000/getGitHubIssues", {
+        .post("https://managd-backend-server.onrender.com/getGitHubIssues", {
           username: document.getElementById("gitUsername").value,
           repo: document.getElementById("gitRepo").value,
           email: localStorage.getItem("email"),
@@ -403,13 +404,13 @@ export default {
         })
         .then((res) => {
           this.issues = res.data;
-          console.log(this.issues);
+          
         });
     },
     submitForm(e) {
-      console.log(e.target[8].value);
+      
       axios
-        .post("http://localhost:3000/addTask", {
+        .post("https://managd-backend-server.onrender.com/addTask", {
           title: e.target[0].value,
           description: e.target[1].value,
           githubUsername: e.target[2].value,
@@ -433,11 +434,11 @@ export default {
     Test() {},
     AddTask(list) {
       this.taskDialog = true;
-      console.log({ list });
+      
       if (list === 1) {
         this.Show1 = "Ongoing";
       } else if (list === 2) {
-        console.log("here");
+        
         this.Show1 = "Halted";
       } else if (list === 3) {
         this.Show1 = "Completed";
@@ -450,7 +451,7 @@ export default {
     },
 
     startDrag(evt, card, status) {
-      console.log(evt, card, status);
+      
       evt.dataTransfer.dropEffect = "move";
       evt.dataTransfer.effectAllowed = "move";
       evt.dataTransfer.setData("cardID", status);
@@ -462,7 +463,7 @@ export default {
       const updatedStatus =
         list === 1 ? "Ongoing" : list === 2 ? "Halted" : "Completed";
       axios
-        .post("http://localhost:3000/editTask", {
+        .post("https://managd-backend-server.onrender.com/editTask", {
           id: cardID,
           toEdit: {
             status: updatedStatus,
@@ -473,15 +474,15 @@ export default {
         .then(() => {
           // this.$router.go();
           axios
-            .post("http://localhost:3000/getMemberTasks", {
+            .post("https://managd-backend-server.onrender.com/getMemberTasks", {
               id: localStorage.getItem("id"),
               email: localStorage.getItem("email"),
               token: localStorage.getItem("token")
             })
             .then((res) => {
-              console.log(res);
+              
               this.box = res.data.taskList;
-              console.log(this.box);
+              
               disp.value++;
             });
         });
@@ -493,7 +494,7 @@ export default {
 
   mounted() {
     axios
-      .post("http://localhost:3000/getAllMembers", {
+      .post("https://managd-backend-server.onrender.com/getAllMembers", {
         id: localStorage.getItem("orgId"),
         email: localStorage.getItem("email"),
         token: localStorage.getItem("token")
@@ -503,15 +504,15 @@ export default {
       });
 
     axios
-      .post("http://localhost:3000/getMemberTasks", {
+      .post("https://managd-backend-server.onrender.com/getMemberTasks", {
         id: localStorage.getItem("id"),
         email: localStorage.getItem("email"),
         token: localStorage.getItem("token")
       })
       .then((res) => {
-        console.log(res);
+        
         this.box = res.data.taskList;
-        console.log(this.box);
+        
       });
 
     this.organisationName = localStorage.getItem("name");
@@ -654,7 +655,7 @@ progress:before {
   padding: 20px;
   width: 50%;
   height: auto;
-  margin-top: 10%;
+  margin-top: 30%;
   background-color: rgb(248, 249, 250);
   box-shadow: 0px 0px 8px gray;
 }
@@ -727,6 +728,23 @@ progress:before {
   width: 50px;
 }
 
+.cut-repo{
+  width: 90px; 
+}
+
+.cut-username{
+  width:120px;
+}
+
+.cut-issues{
+  width: 95px;
+}
+
+.cut-status{
+  width:60px;
+}
+
+
 .input:focus ~ .cut,
 .input:not(:placeholder-shown) ~ .cut {
   transform: translateY(8px);
@@ -779,7 +797,7 @@ progress:before {
 .centered {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 48%;
   transform: translate(-50%, -50%);
   padding: 10px;
   width: 100%;

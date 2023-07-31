@@ -68,9 +68,11 @@
 
 .button-menu {
   height: 7%;
-  background-color: white;
+  background-color: #504dff;
   border: none;
   padding: 0;
+  margin:15px;
+  width:70%;
   font: inherit;
   cursor: pointer;
   outline: inherit;
@@ -207,7 +209,7 @@ export default {
     },
     async clearNotice(idx) {
       axios
-        .post("http://localhost:3000/clearNotification", {
+        .post("https://managd-backend-server.onrender.com/clearNotification", {
           id: localStorage.getItem("id"),
           notification: idx,
           token: localStorage.getItem("token"),
@@ -220,19 +222,19 @@ export default {
   },
   async mounted() {
     let token = localStorage.getItem("token");
-    console.log("p");
+    
     if (!token) {
       this.$router.push({ name: "signUp" });
     }
     axios
-      .post("http://localhost:3000/getNotificationsForOrganisation", {
+      .post("https://managd-backend-server.onrender.com/getNotificationsForOrganisation", {
         id: localStorage.getItem("id"),
         token: token,
         email: localStorage.getItem("email"),
       })
       .then((res) => {
         this.notifications = res.data.notifications;
-        console.log("N", this.notifications);
+        
       })
       .catch(() => {
         alert("Session Expired! Please relogin again.");

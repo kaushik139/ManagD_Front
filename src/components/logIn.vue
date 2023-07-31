@@ -31,7 +31,13 @@
     <br />
     <br />
     <button id="b1" type="submit" v-on:click="login">Log In</button
-    ><br /><br />Not a user? <a href="#" @click="signup">Sign Up</a><br />
+    >
+    <p style="font-size: 14px;">Forgot Password? <span id="forgot" @click="forgot">Click here</span></p>
+    
+    <p style="font-size: 14px;">
+
+    Not a user? <a href="#" @click="signup">Sign Up</a>
+    </p>
   </div>
 </template>
 
@@ -50,6 +56,9 @@ export default {
   },
 
   methods: {
+    forgot(){
+      this.$router.push({name:"resetPasswordOrg"})
+    },
     signup() {
       this.$router.push({ name: "signUp" });
     },
@@ -58,12 +67,12 @@ export default {
         alert(`Please fill all the fields.`);
       } else {
         axios
-          .post("http://localhost:3000/loginOrganisation", {
+          .post("https://managd-backend-server.onrender.com/loginOrganisation", {
             email: this.mail,
             password: this.pass,
           })
           .then((response) => {
-            // console.log(response.status);
+            // 
             if (response.status === 200) {
               localStorage.setItem("email", response.data.email);
               localStorage.setItem("token", response.data.token);
@@ -92,6 +101,15 @@ export default {
 </script>
 
 <style scoped>
+#forgot{
+  color:blue;
+  cursor: pointer;
+
+}
+#forgot:hover{
+  color:#504dff;
+  text-decoration: underline;
+}
 a {
   text-decoration: none;
   color: rgb(3, 66, 120);

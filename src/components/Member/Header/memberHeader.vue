@@ -153,7 +153,7 @@ export default {
       this.$router.push({ name: "memberLogin" });
     },
     async clearNotice(idx){
-      axios.post("http://localhost:3000/clearNotification",{
+      axios.post("https://managd-backend-server.onrender.com/clearNotification",{
         id:localStorage.getItem('id'),
         notification:idx,
         email: localStorage.getItem('email'),
@@ -169,14 +169,14 @@ export default {
     }
     this.name = localStorage.getItem('name');
     axios
-      .post("http://localhost:3000/getNotificationsForMember", {
+      .post("https://managd-backend-server.onrender.com/getNotificationsForMember", {
         id: localStorage.getItem("id"),
         token: token,
         email: localStorage.getItem("email"),
       })
       .then((res) => {
         this.notifications = res.data.notifications;
-        // console.log("N", this.notifications);
+        
       })
       .catch(() => {
         alert("Session Expired! Please relogin again.");

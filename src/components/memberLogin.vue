@@ -32,8 +32,13 @@
     class="fa-solid fa-eye-slash" style="color: #504dff;"></i>
     <br />
     <br />
-    <button id="b1" type="submit" v-on:click="login">Log In</button
-    ><br /><br />Not a user? <a href="#" @click="signup">Sign Up</a><br />
+    
+    <button id="b1" type="submit" v-on:click="login">Log In</button>
+      <p style="font-size: 14px;">Forgot Password? <span id="forgot" @click="forgot">Click here</span></p>
+    <p style="font-size: 14px;">
+      Not a user? <a href="#" @click="signup">Sign Up</a>
+
+    </p>
   </div>
 </template>
 
@@ -53,6 +58,9 @@ export default {
   },
 
   methods: {
+    forgot(){
+      this.$router.push({name:"resetPasswordMember"})
+    },
     signup() {
       this.$router.push({ name: "memberSignup" });
     },
@@ -61,7 +69,7 @@ export default {
         alert(`Please fill all the fields.`);
       } else {
         axios
-          .post("http://localhost:3000/memberLogin", {
+          .post("https://managd-backend-server.onrender.com/memberLogin", {
             email: this.mail,
             password: this.pass,
           })
@@ -73,9 +81,9 @@ export default {
               localStorage.setItem("id", response.data.id);
               localStorage.setItem("name", response.data.name);
               localStorage.setItem("phoneNo", response.data.phoneNo);
-              console.log(response.data.orgId);
+              
               if(response.data.orgId == 'null'){
-                console.log("detected");
+                
               localStorage.setItem("orgId", 1);
             }
             else{
@@ -86,9 +94,9 @@ export default {
               alert(response.data);
             }
           })
-          .catch((error) => {
+          .catch(() => {
             alert("ERROR");
-            console.log(error);
+            
           });
       }
     },
@@ -103,6 +111,15 @@ export default {
 </script>
 
 <style scoped>
+#forgot{
+  color:blue;
+  cursor: pointer;
+
+}
+#forgot:hover{
+  color:#504dff;
+  text-decoration: underline;
+}
 a {
   text-decoration: none;
   color: rgb(3, 66, 120);

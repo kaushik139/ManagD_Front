@@ -372,7 +372,7 @@ export default {
     },
     async removeMember() {
       axios
-        .post("http://localhost:3000/removeMember", {
+        .post("https://managd-backend-server.onrender.com/removeMember", {
           id: this.organisation.id,
           email: this.organisation.email,
           token: localStorage.getItem("token"),
@@ -384,19 +384,19 @@ export default {
           this.removedMembers=[];
           this.selectedMembers=[];
           axios
-      .post("http://localhost:3000/getAllMembers", {
+      .post("https://managd-backend-server.onrender.com/getAllMembers", {
         id: localStorage.getItem("id"),
       })
       .then((res) => {
         this.members = res.data.members;
-        console.log(this.members);
+        
       });
         });
     },
 
     async sendInvites() {
       axios
-        .post("http://localhost:3000/addMember", {
+        .post("https://managd-backend-server.onrender.com/addMember", {
           id: this.organisation.id,
           email: this.organisation.email,
           token: localStorage.getItem("token"),
@@ -411,7 +411,7 @@ export default {
     },
     submit(event) {
       this.selectedMembers.push(...[event.target[0].value]);
-      console.log(this.selectedMembers);
+      
     },
   },
   mounted() {
@@ -426,14 +426,14 @@ export default {
       phoneNo: localStorage.getItem("phoneNo"),
     };
     axios
-      .post("http://localhost:3000/getAllMembers", {
+      .post("https://managd-backend-server.onrender.com/getAllMembers", {
         id: localStorage.getItem("id"),
         token: localStorage.getItem("token"),
         email: localStorage.getItem("email")
       })
       .then((res) => {
         this.members = res.data.members;
-        console.log(this.members);
+        
       });
   },
 };
