@@ -243,9 +243,7 @@ export default {
         progress() {
             this.$router.push({ name: "progress" });
         },
-        searchResults(event) {
-            
-        },
+
         dashboard() {
             this.$router.push({ name: "dashBoard" });
         },

@@ -94,7 +94,7 @@ export default {
               alert(response.data);
             }
           })
-          .catch((error) => {
+          .catch(() => {
             alert("ERROR");
             
           });

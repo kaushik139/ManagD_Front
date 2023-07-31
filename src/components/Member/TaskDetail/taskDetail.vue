@@ -110,16 +110,25 @@
                 <button type="submit">Update</button>
               </form>
 
-              <button @click="checkPR">{{!githubPrs?'Check PRs for this issue':'Close'}}</button>
-              
+              <button @click="checkPR">
+                {{ !githubPrs ? "Check PRs for this issue" : "Close" }}
+              </button>
+
               <!-- <p>Assigned to: {{ issue.assignee?.login }}</p> -->
               <div>
-                <select v-if="githubPrs" :key="selecterUpdate" @change="selectPR($event)" >
-                  <option v-for="(pr, index) in prs" :key="pr.id" :value="index">
+                <select
+                  v-if="githubPrs"
+                  :key="selecterUpdate"
+                  @change="selectPR($event)"
+                >
+                  <option
+                    v-for="(pr, index) in prs"
+                    :key="pr.id"
+                    :value="index"
+                  >
                     {{ pr.title }}
                   </option>
                 </select>
-
               </div>
               <div v-if="selectedPR.user" :key="selectorUpdate">
                 <h4>PR Details</h4>
@@ -128,12 +137,15 @@
                 <a href="{{ selectedPR.html_url }}">link to PR</a>
               </div>
               <button @click="showIframe">Schedule Meet</button>
+              <button @click="deleteTask" style="background-color: red">
+                Delete
+              </button>
             </div>
             <div style="display: none">
               <MeetScheduler></MeetScheduler>
             </div>
             <div class="dg" v-if="iframeDisplay">
-              <iframe src="https://calendly.com/chrysaor07"> </iframe>
+              <iframe src="https://calendly.com"> </iframe>
               <div @click="closeIframe">CLOSE</div>
               <!-- <a href='#' onclick='this.parentNode.parentNode.removeChild(this.parentNode)'>Close</a> -->
             </div>
@@ -144,22 +156,23 @@
   </div>
 </template>
 <style scoped>
-
-button, input[type="submit"], input[type="reset"] {
-	background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
+button,
+input[type="submit"],
+input[type="reset"] {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
   background-color: #504dff;
   color: white;
   padding: 8px 15px 8px 15px;
   border-radius: 5px;
   display: block;
-  margin:0 auto;
-  margin-top:10px;
+  margin: 0 auto;
+  margin-top: 10px;
 }
 .ul-assignees {
   list-style-type: none;
@@ -515,14 +528,28 @@ export default {
       selectedPR: {},
       displayLst: false,
       members: [],
-      githubPrs:false
+      githubPrs: false,
     };
   },
 
   methods: {
     trashed(index) {
       this.task.assignees.splice(index, 1);
-      
+    },
+    deleteTask() {
+      axios
+        .post("http://localhost:3000/deleteTask", {
+          taskId: this.task._id,
+          email: localStorage.getItem("email"),
+          token: localStorage.getItem("token"),
+        })
+        .then((res) => {
+          if (res.status !== 200) {
+            alert("Something went wrong!");
+          } else {
+            this.$router.push({ name: "orgKanban" });
+          }
+        });
     },
     displayList() {
       let listHead =
@@ -540,7 +567,7 @@ export default {
       this.displayLst = !this.displayLst;
     },
     async checkPR() {
-      this.githubPrs=!this.githubPrs
+      this.githubPrs = !this.githubPrs;
       axios
         .post("https://managd-backend-server.onrender.com/getGitHubPrs", {
           username: this.task.githubUsername,
@@ -552,7 +579,7 @@ export default {
         .then((res) => {
           this.prs = res.data;
           this.selectorUpdate++;
-          // 
+          //
         });
     },
     async editSubmit(e) {
@@ -567,7 +594,7 @@ export default {
       if (e.target[5].value) {
         toEdit.assignees.push(e.target[5].value);
       }
-      
+
       axios.post("https://managd-backend-server.onrender.com/editTask", {
         id: this.$route.params.id,
         email: localStorage.getItem("email"),
@@ -576,7 +603,6 @@ export default {
       });
     },
     async selectPR(event) {
-      
       this.selectedPR = this.prs[event.target.value];
     },
     showIframe() {
@@ -585,15 +611,9 @@ export default {
     closeIframe() {
       this.iframeDisplay = false;
     },
-    handleFocusOut() {
-      
-    },
+    handleFocusOut() {},
     profile() {
       this.$router.push({ name: "profile" });
-    },
-
-    searchResults(event) {
-      
     },
 
     menuCollapse() {
@@ -661,8 +681,6 @@ export default {
           this.timeText = "Completed";
           this.boxShadow = "0px 0px 10px green";
         }
-        
-
 
         axios
           .post("https://managd-backend-server.onrender.com/getAllMembers", {
@@ -671,31 +689,28 @@ export default {
             token: localStorage.getItem("token"),
           })
           .then((res) => {
-            for(let i=0;i<res.data.members.length;i++){
-              if(!this.task.assignees.includes(res.data.members[i].email)){
+            for (let i = 0; i < res.data.members.length; i++) {
+              if (!this.task.assignees.includes(res.data.members[i].email)) {
                 this.members.push(res.data.members[i].email);
               }
             }
           });
 
-
-
         axios
-          .post("https://managd-backend-server.onrender.com/getGitHubIssueDetails", {
-            username: this.task.githubUsername,
-            repo: this.task.githubRepo,
-            number: this.task.githubIssue,
-            token: localStorage.getItem("token"),
-            email: localStorage.getItem("email"),
-          })
+          .post(
+            "https://managd-backend-server.onrender.com/getGitHubIssueDetails",
+            {
+              username: this.task.githubUsername,
+              repo: this.task.githubRepo,
+              number: this.task.githubIssue,
+              token: localStorage.getItem("token"),
+              email: localStorage.getItem("email"),
+            }
+          )
           .then((res) => {
             this.issue = res.data;
-            
           });
-
-
       });
-
   },
 };
 </script>
