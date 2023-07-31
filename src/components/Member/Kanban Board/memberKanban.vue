@@ -325,7 +325,7 @@ import axios from "axios";
 const disp = ref(0);
 
 export default {
-  name: "dragThree",
+  name: "memberKanban",
   components: {
     // dragBoardHead,
   },
@@ -538,7 +538,8 @@ export default {
 
 <style scoped>
 .kanban-header {
-  margin-top: -60px;
+  width: 98.5%;
+  margin-top: -70px;
   font-weight: 900;
   font-size: 1.4rem;
   font-family: "Nunito", sans-serif !important;
@@ -546,6 +547,7 @@ export default {
   color: white;
   box-shadow: 0px 0px 5px gray;
   padding: 10px;
+  position: fixed;
   /* display: flex;
   justify-content: center; */
 }

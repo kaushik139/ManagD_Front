@@ -21,7 +21,7 @@
           </div>
           <div class="dialog-container" v-if="dialogOpen">
             <dialog id="dialog">
-              <editForm></editForm>
+              <editForm @submit="closed()"></editForm>
               <button @click="closed" className="close">
                 <i class="fa-solid fa-circle-xmark"></i>
               </button>
@@ -34,7 +34,7 @@
             <div class="org-detail-p">Location: {{ organisation.location }}</div>
             <div><button class="edit-btn" @click="opened"><span>Edit</span></button></div>
         </div>
-
+        <div v-if="this.areMembers == true">
           <h3>Current Members</h3>
           <div class="member-table">
             <table>
@@ -51,12 +51,114 @@
                 <td>{{ member._id }}</td>
               </tr>
             </table>
-          </div>
+          </div></div>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import axios from "axios";
+import editForm from "../../Shared/EditForm/editForm.vue";
+import LeftCol from "../LeftCol/leftCol.vue";
+import MobileNavbar from "../Header/mobileNavbar.vue";
+import Header from "../Header/header.vue";
+export default {
+  name: "OrgProfile",
+  components: {
+    editForm,
+    LeftCol,
+    MobileNavbar,
+    Header
+},
+  data() {
+    return {
+      name: "",
+      mail: "",
+      pass: "",
+      phone: "",
+      members: "",
+      organisation: {},
+      currentMembers: [],
+      notifications: [],
+      dialogOpen: false,
+      areMembers: false,
+    };
+  },
+
+  methods: {
+    profile(){
+        this.$router.push({name:'profile'})
+    },
+    progress(){
+        this.$router.push({name:'progress'})
+    },
+    closed() {
+      this.dialogOpen = false;
+      this.first();
+      this.first();
+    },
+    opened() {
+      this.dialogOpen = true;
+      console.log(this.dialogOpen);
+    },
+    member() {
+      this.$router.push({ name: "addMembers" });
+    },
+
+    dashboard() {
+      this.$router.push({ name: "dashBoard" });
+    },
+
+
+    logout() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+      localStorage.removeItem("id");
+      this.$router.push({ name: "logIn" });
+    },
+
+    first(){
+      let token = localStorage.getItem("token");
+    if (!token) {
+      this.$router.push({ name: "signUp" });
+    }
+    axios
+      .post("http://localhost:3000/getOrganisationDetails", {
+        unsanitisedId: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
+      })
+      .then((res) => {
+        this.organisation = res.data;
+        console.log(this.organisation._id);
+      });
+
+    console.log(localStorage.getItem("id"));
+
+    axios
+      .post("http://localhost:3000/getAllMembers", {
+        id: localStorage.getItem("id"),
+        token: localStorage.getItem("token"),
+        email: localStorage.getItem("email")
+      })
+      .then((res) => {
+        this.currentMembers = res.data.members;
+        if( this.currentMembers.length ){
+          this.areMembers = true;
+        }
+      });
+
+    },
+  },
+  async mounted() {
+    this.first();
+  },
+};
+</script>
+
+
 <style scoped>
 
 .org-detail-p{
@@ -310,116 +412,3 @@ dialog {
 
 
 </style>
-<script>
-import axios from "axios";
-import editForm from "../../Shared/EditForm/editForm.vue";
-import LeftCol from "../LeftCol/leftCol.vue";
-import MobileNavbar from "../Header/mobileNavbar.vue";
-import Header from "../Header/header.vue";
-export default {
-  name: "OrgProfile",
-  components: {
-    editForm,
-    LeftCol,
-    MobileNavbar,
-    Header
-},
-  data() {
-    return {
-      name: "",
-      mail: "",
-      pass: "",
-      phone: "",
-      members: "",
-      organisation: {},
-      currentMembers: [],
-      notifications: [],
-      dialogOpen: false,
-    };
-  },
-
-  methods: {
-    profile(){
-        this.$router.push({name:'profile'})
-    },
-    progress(){
-        this.$router.push({name:'progress'})
-    },
-    closed() {
-      this.dialogOpen = false;
-    },
-    opened() {
-      this.dialogOpen = true;
-      
-    },
-    member() {
-      this.$router.push({ name: "addMembers" });
-    },
-
-    dashboard() {
-      this.$router.push({ name: "dashBoard" });
-    },
-
-
-    logout() {
-      localStorage.removeItem("token");
-      localStorage.removeItem("email");
-      localStorage.removeItem("id");
-      this.$router.push({ name: "logIn" });
-    },
-    login() {
-      this.$router.push({ name: "memberLogin" });
-    },
-    signUp() {
-      if (this.name && this.mail && this.pass && this.phone) {
-        axios
-          .post("https://managd-backend-server.onrender.com/memberSignup", {
-            email: this.mail,
-            name: this.name,
-            password: this.pass,
-            phoneNo: this.phone,
-          })
-          .then((response) => {
-            this.message = response.data;
-            alert(this.message);
-            if (this.message != "E-mail already Exists.")
-              this.$router.push({ name: "login" });
-          });
-      } else {
-        alert("Please fill the required details");
-      }
-    },
-  },
-  async mounted() {
-    let token = localStorage.getItem("token");
-    if (!token) {
-      this.$router.push({ name: "signUp" });
-    }
-    axios
-      .post("https://managd-backend-server.onrender.com/getOrganisationDetails", {
-        unsanitisedId: localStorage.getItem("id"),
-        token: localStorage.getItem("token"),
-        email: localStorage.getItem("email")
-      })
-      .then((res) => {
-        this.organisation = res.data;
-        
-      });
-
-    
-
-    axios
-      .post("https://managd-backend-server.onrender.com/getAllMembers", {
-        id: localStorage.getItem("id"),
-        token: localStorage.getItem("token"),
-        email: localStorage.getItem("email")
-      })
-      .then((res) => {
-        this.currentMembers = res.data.members;
-        
-      });
-    
-
-  },
-};
-</script>

@@ -125,6 +125,7 @@
 
 .dropdown {
   display: none;
+  cursor: not-allowed;
 }
 
 .active:hover .dropdown {

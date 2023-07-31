@@ -13,7 +13,7 @@ signup(){
 this.$router.push({name:'signUp'})
 },
 login(){
-this.$router.push({name:'login'})
+this.$router.push({name:'logIn'})
 },
 memberSignup(){
   this.$router.push({name:'memberSignup'})

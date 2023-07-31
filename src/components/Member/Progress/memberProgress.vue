@@ -1,4 +1,4 @@
-<template>
+<template >
     <div class="profile">
       <div class="sections">
         <div class="left-col">

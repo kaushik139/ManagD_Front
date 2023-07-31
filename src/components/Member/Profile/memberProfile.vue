@@ -11,7 +11,7 @@
           <memberMobileNavbar></memberMobileNavbar>
         </div>
         <div :key="this.isEdited">
-          <MemberHeader></MemberHeader>
+          <MemberHeader :key="this.isEdited"></MemberHeader>
 
         </div>
         <div class="view-area" :key="this.isEdited">
@@ -43,7 +43,7 @@
           <button class="edit-btn" @click="opened"><span>Edit</span></button>
           <!-- members that are part of same organisation -->
           <br />
-          <div v-if="this.areOtherMembers">
+          <div v-if="this.areOtherMembers" >
             <h4>
               Other members from
               <span style="text-transform: uppercase">{{currentOrganisation}}</span>
@@ -323,25 +323,7 @@ export default {
   width: 10px;
   /* border-radius: 100%; */
 }
-.member-table {
-  display: flex;
-  justify-content: center;
-  overflow-x: auto;
-  height:200px;
-}
-table {
-  width: 80%;
-}
-tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-tr:hover {
-  background-color: #ddd;
-}
-th {
-  background-color: #504dff;
-  color: white;
-}
+
 
 .mobile-navbar {
   display: flex;
@@ -579,11 +561,66 @@ dialog {
   background: transparent;
 }
 
-table {
+#table {
   width: 100%;
-  height: 100px;
+  height: 90px;
   overflow-y: auto;
   overflow-x: hidden;
+  border-radius: 10px;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #504dff;
+  border-radius: 15px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #504dff;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2a27d1;
+}
+
+table {
+  width: 100%;
+  height: 80px;
+  padding: 5px;
+  border: none;
+  background: white;
+  color: black;
+}
+th {
+  margin: 10px;
+  box-shadow: 1px 1px 1px 1px #2d2b94;
+  background: #504dff;
+  border-radius: 10px 2px 10px 2px;
+  color: white;
+}
+
+tr {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #dadada;
+}
+
+tr:hover {
+  background-color: #504dff;
+  color: white;
+}
+
+td {
+  border-radius: 10px;
+  border: none;
 }
 /* .button-menu:focus {} */
 </style>

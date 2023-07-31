@@ -94,7 +94,7 @@ export default {
   mounted() {
     let token = localStorage.getItem("token");
     if (token) {
-      this.$router.push({ name: "homePage" });
+      this.$router.push({ name: "signUp" });
     }
   },
 };
