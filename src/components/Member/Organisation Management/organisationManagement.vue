@@ -92,7 +92,7 @@ import MemberLeftCol from "../LeftCol/memberLeftCol.vue";
 import MemberMobileNavbar from "../Header/memberMobileNavbar.vue";
 import MemberHeader from "../Header/memberHeader.vue";
 export default {
-  name: "orgView",
+  name: "organisationManagement",
   components: {MemberLeftCol, MemberMobileNavbar, MemberHeader},
   data() {
     return {
@@ -657,6 +657,7 @@ dialog {
   border: 2px solid red;
   border-radius: 10px;
   background: white;
+  z-index: 999;
 }
 #confirmHeadding{
   margin-top: 60px;

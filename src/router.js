@@ -31,7 +31,7 @@ const routes = [
         path: '/dragThree'
     },
    {
-        name:'allTasksForMember',
+        name:'memberKanban',
         component: memberKanban,
         path:"/member/kanban"
    },
@@ -81,7 +81,7 @@ const routes = [
     path: '/organisation/profile'
    },
    {
-    name:'orgView',
+    name:'organisationManagement',
     component: organisationManagement,
     path: '/member/organisation/manage'
    },

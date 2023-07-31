@@ -220,13 +220,7 @@ export default {
 </script>
 
 <style scoped>
-.scroll {
-  overflow-y: scroll;
-  height: 80px;
-  box-shadow: 5px 5px 5px 5px #2d2b94;
-  border-radius: 10px;
-  background: white;
-}
+
 
 /* width */
 ::-webkit-scrollbar {
