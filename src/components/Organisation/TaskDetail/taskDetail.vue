@@ -592,9 +592,7 @@
         this.$router.push({ name: "profile" });
       },
   
-      searchResults(event) {
-        
-      },
+
   
       menuCollapse() {
         if (!this.menuCollapsed) {
